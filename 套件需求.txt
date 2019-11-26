@@ -1,0 +1,10 @@
+ 需先使用pip安裝：
+   numpy
+   pandas
+
+ 商業套件：
+   gurobipy （開發時使用的是免費學術版。商業使用有30天免費試用）
+
+ python3已經包含（不須另外安裝）的套件：
+   datetime
+   calendar
