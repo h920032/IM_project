@@ -140,19 +140,16 @@ def TranName_t2n(text, names):
 """
 Calculation of NW & NM from last month 
 """
-def calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE):
-    if (lastday_ofmonth == "Fri") :
-                    
-        for i in range (lastday_row):
-            if(lastmonth.iloc[i,(lastday_column-1)] == "N1") :
-             
-                temp_name = str(lastmonth.iloc[i,0])
-                #print (temp_name)
-                for i in range (nEMPLOYEE):
-                    if (temp_name == str(EMPLOYEE_t.loc[i,'id'])) :
-                       # print (temp_name)
-                        EMPLOYEE_t.at[i,'NW'] = 1
-    print (EMPLOYEE_t["NW"]) 
+def calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE):	
+        for i in range (lastday_row):	
+		if(lastmonth.iloc[i,(lastday_column-1)] == "N1") :
+	
+                        temp_name = str(lastmonth.iloc[i,0])
+		
+                        for i in range (nEMPLOYEE):			
+                                if (temp_name == str(EMPLOYEE_t.loc[i,'id'])) :
+                                        EMPLOYEE_t.at[i,'NW'] = 1
+#    print (EMPLOYEE_t["NW"]) 
     
 def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE):  
     if (lastday_ofmonth != "Fri") :
@@ -220,4 +217,4 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
                            if (temp_name == str(EMPLOYEE_t.loc[k,'id'])) : 
                                EMPLOYEE_t.at[k,'NM'] = int(EMPLOYEE_t.iloc[k,9]) + 1
     
-    print (EMPLOYEE_t["NM"])
+#    print (EMPLOYEE_t["NM"])
