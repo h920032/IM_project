@@ -476,7 +476,7 @@ for i in range(0,nEMPLOYEE): #假日全部填X
     NO_WORK.append("X")
 # j = 1
 for i in range(0,mDAY):
-    if (i+1) not in DATES: #date_list[i].weekday()==5 or date_list[i].weekday()==6:
+    if (i+1) not in DATES:
         new[date_name[i]] = NO_WORK
     else:
         new[date_name[i]] = df_x[i+1].values.tolist()
@@ -505,8 +505,7 @@ for i in range(0,24):
     NO_PEOPLE.append('X')
 j = 0
 for i in range(0,mDAY):
-    print('i=',i,datetime[i],'; j=',j)
-    if date_list[i].weekday()==5 or date_list[i].weekday()==6:
+    if (i+1) not in DATES:
         new_2[date_name[i]]=NO_PEOPLE
     else:
         new_2[date_name[i]]=output_people[j]
