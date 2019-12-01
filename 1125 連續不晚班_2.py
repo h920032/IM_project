@@ -1,7 +1,7 @@
 from gurobipy import *
 import numpy as np
 import pandas as pd
-import data.tool as tl
+import data.fixed.tool as tl
 import datetime, calendar
 #=============================================================================#
 # 11/25 更新：
@@ -36,7 +36,7 @@ result_x = './排班結果.csv'
 result_y = './冗員與缺工人數.csv'
 result = './其他資訊.xlsx'
 #basic
-A_t = pd.read_csv(dir_name + 'fix_class_time.csv', header = 0, index_col = 0)
+A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
 DEMAND_t = pd.read_csv(dir_name+"進線人力.csv", header = 0, index_col = 0).T
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
 print('DATES = ',end='')
@@ -48,7 +48,7 @@ EMPLOYEE_t = pd.read_csv(dir_name+"EMPLOYEE.csv", header = 0)
 
 
 #####NM 及 NW 從人壽提供之上個月的班表裡面計算(郭？)
-lastmonth = pd.read_csv('排班結果_only_id.csv')
+lastmonth = pd.read_csv('上個月排班結果.csv')
 lastday_column = len(lastmonth.columns) 
 lastday_row = lastmonth.shape[0]
 lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
@@ -74,14 +74,14 @@ SKILL_NAME = list(E_SKILL_t.columns)        #SKILL_NAME - 找員工組合、班�
 P_t = pd.read_csv(dir_name + '軟限制權重.csv', header = None, index_col = 0) 
 
 #const
-Kset_t = pd.read_csv(dir_name + 'fix_classes.csv', header = None, index_col = 0) #class set
-SKset_t = pd.read_csv(dir_name + 'skills_classes.csv', header = None, index_col = 0) #class set for skills
+Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
+SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0) #class set for skills
 M_t = pd.read_csv(dir_name+"特定班別、休假.csv", header = None, skiprows=[0])
-L_t = pd.read_csv(dir_name+"下限.csv", header = None, skiprows=[0])
-U_t = pd.read_csv(dir_name+"上限.csv", header = None, skiprows=[0])
-Ratio_t = pd.read_csv(dir_name+"CSR年資占比.csv",header = None, skiprows=[0])
+L_t = pd.read_csv(dir_name+"parameters/下限.csv", header = None, skiprows=[0])
+U_t = pd.read_csv(dir_name+"parameters/上限.csv", header = None, skiprows=[0])
+Ratio_t = pd.read_csv(dir_name+"parameters/CSR年資占比.csv",header = None, skiprows=[0])
 SENIOR_bp = Ratio_t[3]
-timelimit = pd.read_csv(dir_name+"時間限制.csv", header = 0)
+timelimit = pd.read_csv(dir_name+"parameters/時間限制.csv", header = 0)
 nightdaylimit = EMPLOYEE_t['night_perWeek'] #pd.read_csv(dir_name+"晚班天數限制.csv", header = 0).loc[0][0]
 
 #============================================================================#
