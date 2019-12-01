@@ -46,22 +46,22 @@ EMPLOYEE_t = pd.read_csv(dir_name+"EMPLOYEE.csv", header = 0)
 
 
 #####NM 及 NW 從人壽提供之上個月的班表裡面計算
-if month>1:
-	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv')
-else:
-	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv')
-lastday_column = len(lastmonth.columns) 
-lastday_row = lastmonth.shape[0]
-lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
-nEMPLOYEE = EMPLOYEE_t.shape[0]
+# if month>1:
+# 	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv')
+# else:
+# 	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv')
+# lastday_column = len(lastmonth.columns) 
+# lastday_row = lastmonth.shape[0]
+# lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
+# nEMPLOYEE = EMPLOYEE_t.shape[0]
 
-#上個月的最後一天是週五，且有排晚班者，有則是1，沒有則是0
+# #上個月的最後一天是週五，且有排晚班者，有則是1，沒有則是0
 
-tl.calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
+# tl.calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
 
-#上個月為斷頭週，並計算該週總共排了幾次晚班
+# #上個月為斷頭週，並計算該週總共排了幾次晚班
 
-tl.calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
+# tl.calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
 NM_t = EMPLOYEE_t['NM']
 NW_t = EMPLOYEE_t['NW']
 #####
@@ -78,13 +78,30 @@ P_t = pd.read_csv(dir_name + 'parameters/軟限制權重.csv', header = None, in
 #const
 Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
 SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0) #class set for skills
-M_t = pd.read_csv(dir_name + "特定班別、休假.csv", header = None, skiprows=[0])
-L_t = pd.read_csv(dir_name + "parameters/下限.csv", header = None, skiprows=[0])
-U_t = pd.read_csv(dir_name + "parameters/上限.csv", header = None, skiprows=[0])
-Ratio_t = pd.read_csv(dir_name + "parameters/CSR年資占比.csv",header = None, skiprows=[0])
-SENIOR_bp = Ratio_t[3]
-timelimit = pd.read_csv(dir_name + "parameters/時間限制.csv", header = 0)
-nightdaylimit = EMPLOYEE_t['night_perWeek'] #pd.read_csv(dir_name+"晚班天數限制.csv", header = 0).loc[0][0]
+# 下面的try/except都是為了因應條件全空時
+try:
+	M_t = pd.read_csv(dir_name + "特定班別、休假.csv", header = None, skiprows=[0])
+except:
+	M_t = pd.DataFrame()
+try:
+	L_t = pd.read_csv(dir_name + "parameters/下限.csv", header = None, skiprows=[0])
+except:
+	L_t = pd.DataFrame()
+try:
+	U_t = pd.read_csv(dir_name + "parameters/上限.csv", header = None, skiprows=[0])
+except:
+	U_t = pd.DataFrame()
+try:
+	Ratio_t = pd.read_csv(dir_name + "parameters/CSR年資占比.csv",header = None, skiprows=[0])
+	SENIOR_bp = Ratio_t[3]
+except:
+	Ratio_t = pd.DataFrame()
+	SENIOR_bp = []
+try:
+	timelimit = pd.read_csv(dir_name + "parameters/時間限制.csv", header = 0)
+except:
+	timelimit = 300	#預設跑五分鐘
+nightdaylimit = EMPLOYEE_t['night_perWeek']
 
 #============================================================================#
 # Create a new model
@@ -126,8 +143,8 @@ ASSIGN = []                        #ASSIGN_ijk - 員工i指定第j天須排班�
 
 for c in range(M_t.shape[0]):
     e = tl.TranName_t2n(M_t.iloc[c,0], E_ID)
-    k = tl.TranK_t2n( str(M_t.iloc[c,2]) )
     d = tl.TranName_t2n(M_t.iloc[c,1], DATES)
+    k = tl.TranK_t2n( str(M_t.iloc[c,2]) )
     ASSIGN.append( (e, d, k) )
 
 LMNIGHT = NM_t.values            #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
@@ -427,9 +444,9 @@ with pd.ExcelWriter(result) as writer:
 output_name = []
 output_id = []
 for i in range(0,nEMPLOYEE):
-    output_id.append(str(EMPLOYEE_t.id.values.tolist()[i]))
+    output_id.append(str(EMPLOYEE_t.ID.values.tolist()[i]))
 for i in range(0,nEMPLOYEE):
-    output_name.append(EMPLOYEE_t.name_Chinese.values.tolist()[i])
+    output_name.append(EMPLOYEE_t.Name_Chinese.values.tolist()[i])
 mDAY = int(calendar.monthrange(year,month)[1])
 date_list = []
 date_name = []
@@ -488,6 +505,7 @@ for i in range(0,24):
     NO_PEOPLE.append('X')
 j = 0
 for i in range(0,mDAY):
+    print('i=',i,datetime[i],'; j=',j)
     if date_list[i].weekday()==5 or date_list[i].weekday()==6:
         new_2[date_name[i]]=NO_PEOPLE
     else:
