@@ -12,13 +12,11 @@ import datetime, calendar
 # 11/26 更新：
 #   ＊更動第七限制式
 #   ＊D_MONFRI變數刪除
-# <<<<<<< HEAD
-# 測試
-# =======
 # 11/26 更新：
 #   ＊路徑檔
-
-# >>>>>>> 66e76df5430519af37b7e550a549e7b1e307641c
+# ======
+# 12/1 更新：
+#	＊資料存放路徑
 #=============================================================================#
 
 
@@ -26,15 +24,15 @@ import datetime, calendar
 # settings 方便隨時修改的部分
 #=============================================================================#
 year = 2019
-month = 1
+month = 3
 #=============================================================================#
 #import data
 
 f = open('path.txt', "r")
 dir_name = f.read().replace('\n', '')
-result_x = './排班結果.csv'
-result_y = './冗員與缺工人數.csv'
-result = './其他資訊.xlsx'
+result_x = './排班結果_'+str(year)+'_'+str(month)+'.csv'
+result_y = './冗員與缺工人數_'+str(year)+'_'+str(month)+'.csv'
+result = './其他資訊_'+str(year)+'_'+str(month)+'.xlsx'
 #basic
 A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
 DEMAND_t = pd.read_csv(dir_name+"進線人力.csv", header = 0, index_col = 0).T
@@ -47,8 +45,11 @@ EMPLOYEE_t = pd.read_csv(dir_name+"EMPLOYEE.csv", header = 0)
 
 
 
-#####NM 及 NW 從人壽提供之上個月的班表裡面計算(郭？)
-lastmonth = pd.read_csv('上個月排班結果.csv')
+#####NM 及 NW 從人壽提供之上個月的班表裡面計算
+if month>1:
+	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv')
+else:
+	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv')
 lastday_column = len(lastmonth.columns) 
 lastday_row = lastmonth.shape[0]
 lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
@@ -65,23 +66,24 @@ NM_t = EMPLOYEE_t['NM']
 NW_t = EMPLOYEE_t['NW']
 #####
 
-E_NAME = list(EMPLOYEE_t['name_English'])   #E_NAME - 對照名字與員工index時使用
+E_NAME = list(EMPLOYEE_t['Name_English'])   #E_NAME - 對照名字與員工index時使用
+E_ID = list(EMPLOYEE_t['ID'])   			#E_ID - 對照ID與員工index時使用
 E_SENIOR_t = EMPLOYEE_t['Senior']
 E_POSI_t = EMPLOYEE_t['Position']
 E_SKILL_t = EMPLOYEE_t[['skill-phone','skill-CD','skill-chat','skill-outbound']]
 SKILL_NAME = list(E_SKILL_t.columns)        #SKILL_NAME - 找員工組合、班別組合時使用
 
-P_t = pd.read_csv(dir_name + '軟限制權重.csv', header = None, index_col = 0) 
+P_t = pd.read_csv(dir_name + 'parameters/軟限制權重.csv', header = None, index_col = 0) 
 
 #const
 Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
 SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0) #class set for skills
-M_t = pd.read_csv(dir_name+"特定班別、休假.csv", header = None, skiprows=[0])
-L_t = pd.read_csv(dir_name+"parameters/下限.csv", header = None, skiprows=[0])
-U_t = pd.read_csv(dir_name+"parameters/上限.csv", header = None, skiprows=[0])
-Ratio_t = pd.read_csv(dir_name+"parameters/CSR年資占比.csv",header = None, skiprows=[0])
+M_t = pd.read_csv(dir_name + "特定班別、休假.csv", header = None, skiprows=[0])
+L_t = pd.read_csv(dir_name + "parameters/下限.csv", header = None, skiprows=[0])
+U_t = pd.read_csv(dir_name + "parameters/上限.csv", header = None, skiprows=[0])
+Ratio_t = pd.read_csv(dir_name + "parameters/CSR年資占比.csv",header = None, skiprows=[0])
 SENIOR_bp = Ratio_t[3]
-timelimit = pd.read_csv(dir_name+"parameters/時間限制.csv", header = 0)
+timelimit = pd.read_csv(dir_name + "parameters/時間限制.csv", header = 0)
 nightdaylimit = EMPLOYEE_t['night_perWeek'] #pd.read_csv(dir_name+"晚班天數限制.csv", header = 0).loc[0][0]
 
 #============================================================================#
@@ -123,7 +125,7 @@ DEMAND = DEMAND_t.values.tolist()  #DEMAND_jt - 日子j於時段t的需求人數
 ASSIGN = []                        #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
 
 for c in range(M_t.shape[0]):
-    e = tl.TranName_t2n(M_t.iloc[c,0], E_NAME)
+    e = tl.TranName_t2n(M_t.iloc[c,0], E_ID)
     k = tl.TranK_t2n( str(M_t.iloc[c,2]) )
     d = tl.TranName_t2n(M_t.iloc[c,1], DATES)
     ASSIGN.append( (e, d, k) )

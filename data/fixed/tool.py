@@ -125,7 +125,7 @@ def TranK_t2n(text):
 	try:
 		c = K_type.index(text)
 	except:
-		print(text,"-> ?")
+		print('class indexr to class name code:',text,"-> ?")
 		c = None
 	return  c
 
@@ -133,7 +133,7 @@ def TranName_t2n(text, names):
 	try:
 		c = names.index(text)
 	except:
-		print(text,"-> ?")
+		print('index to name:',text,"-> ?")
 		c = None
 	return c
 
