@@ -142,7 +142,7 @@ Calculation of NW & NM from last month
 """
 def calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE):	
         for i in range (lastday_row):	
-            if(lastmonth.iloc[i,(lastday_column-1)] == "N1") :
+            if(lastmonth.iloc[i,(lastday_column-1)] == "N1" or lastmonth.iloc[i,(lastday_column-1)] == "M1" or lastmonth.iloc[i,(lastday_column-1)] == "W6") :
                 temp_name = str(lastmonth.iloc[i,0])
 
                 for i in range (nEMPLOYEE):			
@@ -160,7 +160,7 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
             
             for i in range(lastday_row) :     
                 for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1") :
+                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
                    
                         temp_name = str(temp_dataframe.iloc[i,0])
 
@@ -176,7 +176,7 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
          
             for i in range(lastday_row) :
                 for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1") :
+                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
                    
                         temp_name = str(temp_dataframe.iloc[i,0])
                    
@@ -192,7 +192,7 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
         
             for i in range(lastday_row) :
                 for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1") :
+                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
                   
                         temp_name = str(temp_dataframe.iloc[i,0])
                    
@@ -208,7 +208,7 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
         
             for i in range (lastday_row):
                 for j in range (len(temp_dataframe.columns)) :
-                    if(temp_dataframe.iloc[i,j] == "N1") :
+                    if(temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
                     
                        temp_name = str(temp_dataframe.iloc[i,0])
                     
