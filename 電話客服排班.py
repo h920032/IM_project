@@ -47,9 +47,9 @@ EMPLOYEE_t = pd.read_csv(dir_name+"EMPLOYEE.csv", header = 0)
 
 ####NM 及 NW 從人壽提供之上個月的班表裡面計算
 if month>1:
-	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv')
+	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv', engine='python')
 else:
-	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv')
+	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv', engine='python')
 lastday_column = len(lastmonth.columns) 
 lastday_row = lastmonth.shape[0]
 lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
