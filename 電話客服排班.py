@@ -45,23 +45,23 @@ EMPLOYEE_t = pd.read_csv(dir_name+"EMPLOYEE.csv", header = 0)
 
 
 
-#####NM 及 NW 從人壽提供之上個月的班表裡面計算
-# if month>1:
-# 	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv')
-# else:
-# 	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv')
-# lastday_column = len(lastmonth.columns) 
-# lastday_row = lastmonth.shape[0]
-# lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
-# nEMPLOYEE = EMPLOYEE_t.shape[0]
+####NM 及 NW 從人壽提供之上個月的班表裡面計算
+if month>1:
+	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv')
+else:
+	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv')
+lastday_column = len(lastmonth.columns) 
+lastday_row = lastmonth.shape[0]
+lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
+nEMPLOYEE = EMPLOYEE_t.shape[0]
 
-# #上個月的最後一天是週五，且有排晚班者，有則是1，沒有則是0
+#上個月的最後一天是週五，且有排晚班者，有則是1，沒有則是0
 
-# tl.calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
+tl.calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
 
-# #上個月為斷頭週，並計算該週總共排了幾次晚班
+#上個月為斷頭週，並計算該週總共排了幾次晚班
 
-# tl.calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
+tl.calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
 NM_t = EMPLOYEE_t['NM']
 NW_t = EMPLOYEE_t['NW']
 #####
