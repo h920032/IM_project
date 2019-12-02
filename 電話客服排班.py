@@ -35,7 +35,7 @@ result_y = './冗員與缺工人數_'+str(year)+'_'+str(month)+'.csv'
 result = './其他資訊_'+str(year)+'_'+str(month)+'.xlsx'
 #basic
 A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
-DEMAND_t = pd.read_csv(dir_name+"進線人力.csv", header = 0, index_col = 0).T
+DEMAND_t = pd.read_csv(dir_name+"進線人力.csv", header = 0, index_col = 0,engine='python').T
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
 print('DATES = ',end='')
 print(DATES)
@@ -73,7 +73,7 @@ E_POSI_t = EMPLOYEE_t['Position']
 E_SKILL_t = EMPLOYEE_t[['skill-phone','skill-CD','skill-chat','skill-outbound']]
 SKILL_NAME = list(E_SKILL_t.columns)        #SKILL_NAME - 找員工組合、班別組合時使用
 
-P_t = pd.read_csv(dir_name + 'parameters/軟限制權重.csv', header = None, index_col = 0) 
+P_t = pd.read_csv(dir_name + 'parameters/軟限制權重.csv', header = None, index_col = 0,engine='python') 
 
 #const
 Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
@@ -311,7 +311,13 @@ for ix,item in enumerate(PERCENT):
 #12,18,19 已在variable限制    
 #============================================================================#
 #process
-m.params.TimeLimit = timelimit.loc[0][0]
+try:
+    m.params.TimeLimit = timelimit.loc[0][0]
+except:
+    if type(timelimit)=='int':
+        m.params.TimeLimit = timelimit
+    else:
+        m.params.TimeLimit = 300  #預設跑五分鐘
 m.optimize()
 
 
