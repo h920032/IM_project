@@ -2,7 +2,7 @@ from gurobipy import *
 import numpy as np
 import pandas as pd
 import data.fixed.tool as tl
-import datetime, calendar
+import datetime, calendar, sys
 #=============================================================================#
 # 11/25 更新：
 #   ＊修正utf-8的csv檔打開會亂碼的問題
@@ -66,8 +66,8 @@ NM_t = EMPLOYEE_t['NM']
 NW_t = EMPLOYEE_t['NW']
 #####
 
-E_NAME = list(EMPLOYEE_t['Name_English'])   #E_NAME - 對照名字與員工index時使用
-E_ID = list(EMPLOYEE_t['ID'])   			#E_ID - 對照ID與員工index時使用
+E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
+E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]   	#E_ID - 對照ID與員工index時使用
 E_SENIOR_t = EMPLOYEE_t['Senior']
 E_POSI_t = EMPLOYEE_t['Position']
 E_SKILL_t = EMPLOYEE_t[['skill-phone','skill-CD','skill-chat','skill-outbound']]
@@ -329,8 +329,7 @@ m.optimize()
 K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
 
 
-employee_name = E_NAME #[tmp+1 for tmp in EMPLOYEE]
-# which_day = [tmp+1 for tmp in DAY]
+employee_name = E_NAME
 which_worktime = []
 for i in EMPLOYEE:
     tmp = []
@@ -340,14 +339,12 @@ for i in EMPLOYEE:
                 tmp.append(K_type[k])
                 break
         else:
-            print('Warning! Employee',i,'(',E_NAME[i],') in day',DATES[j],'do not have any class\n')
-            # print('Warning! Employee',i,'(',E_NAME[i],') in day',(nDAY-j+1),'do not have any class\n')
+            print('CSR ',E_NAME[i],' 在',DATES[j],'號的排班發生錯誤。')
+            print('請嘗試讓程式運行更多時間，或是減少限制條件。\n')
     which_worktime.append(tmp)
         
 
-df_x = pd.DataFrame(which_worktime, index = employee_name, columns = DATES) #which_day)
-# print("\n\n====================員工排班表/row = 員工/col = 第幾天====================\n")
-# print(df_x)
+df_x = pd.DataFrame(which_worktime, index = employee_name, columns = DATES)
 
 
 #Dataframe_y
@@ -377,14 +374,6 @@ less_percent_time = (df_y.loc['SUM_per_time'].drop(['SUM_per_day']).values)/dema
 df_percent_day = pd.DataFrame(less_percent_day, index = DATES, columns = ["Percentage"]) #which_day , columns = ["Percentage"])
 df_percent_time = pd.DataFrame(less_percent_time, index = T_type , columns = ["Percentage"])
 
-# print("\n====================缺工人數表/row = 第幾天/col = 時段====================\n")
-# print(df_y)
-
-# print("\n====================每天缺工百分比表/row = 第幾天====================\n")
-# print(df_percent_day)
-
-# print("\n====================每個時段缺工百分比表/row = 時段====================\n")
-# print(df_percent_time)
 
 #h1h2
 print("\n所有天每個時段人數與需求人數的差距中的最大值 = "+str(int(surplus.x))+"\n")
@@ -403,14 +392,12 @@ for i in EMPLOYEE:
 
 
 df_nightcount = pd.DataFrame(night_work_total, index = employee_name, columns = ['NW_count'])
-# print("\n====================員工本月晚班次數/row = 員工====================\n")
-# print(df_nightcount)
 print("\n員工中每人排晚班總次數的最大值 = "+str(int(nightCount.x))+"\n")
 
 
 
       
-#Dataframe_z
+#休息時間 Dataframe_z
 R_type = ['11:30','12:00','12:30','13:00','13:30']     
 which_week = [tmp+1 for tmp in WEEK] 
 which_resttime = []     
@@ -426,8 +413,7 @@ for i in EMPLOYEE:
 
 
 df_resttime = pd.DataFrame(which_resttime, index=employee_name, columns=which_week)
-# print("\n====================員工每週有哪幾種休息時間/row = 員工/col = 周次====================\n")
-# print(df_resttime)
+
 
 print("Final MIP gap value: %f" % m.MIPGap)
 print("\n目標值 = "+str(m.objVal) + "\n")
@@ -435,6 +421,7 @@ print("\n目標值 = "+str(m.objVal) + "\n")
 
 #============================================================================#
 #輸出其他資訊
+#============================================================================#
 with pd.ExcelWriter(result) as writer:
     df_x.to_excel(writer, sheet_name="員工排班表")
     df_nightcount.to_excel(writer, sheet_name="員工本月晚班次數")
@@ -444,9 +431,10 @@ with pd.ExcelWriter(result) as writer:
     df_y.to_excel(writer, sheet_name="缺工人數表")
     df_resttime.to_excel(writer, sheet_name="員工每週有哪幾種休息時間")
 
+
 #============================================================================#
 #輸出班表
-
+#============================================================================#
 output_name = []
 output_id = []
 for i in range(0,nEMPLOYEE):
@@ -475,19 +463,18 @@ for i in range(1,mDAY+1): #產生日期清單
     else:
         weekday="五"
     date_name.append(date.strftime("%Y-%m-%d")+' ('+weekday+')')
+
 new = pd.DataFrame()
 new['name'] = output_name
 NO_WORK=[]
 for i in range(0,nEMPLOYEE): #假日全部填X
     NO_WORK.append("X")
-# j = 1
+
 for i in range(0,mDAY):
     if (i+1) not in DATES:
         new[date_name[i]] = NO_WORK
     else:
         new[date_name[i]] = df_x[i+1].values.tolist()
-        # new[date_name[i]] = df_x[j].values.tolist()
-        # j = j + 1
 print('check point 2\n')
 new['id']=output_id
 new.set_index("id",inplace=True)
@@ -496,9 +483,18 @@ print(new)
 
 #============================================================================#
 #輸出冗員與缺工人數表
-
+#============================================================================#
 K_type_dict = {1:'O',2:'A2',3:'A3',4:'A4',5:'A5',6:'MS',7:'AS',8:'P2',9:'P3',10:'P4',11:'P5',12:'N1',13:'M1',14:'W6',15:'CD',16:'C2',17:'C3',18:'C4',19:'OB'}
-x_nb = np.vectorize({v: k for k, v in K_type_dict.items()}.get)(np.array(which_worktime))
+try:
+    x_nb = np.vectorize({v: k for k, v in K_type_dict.items()}.get)(np.array(which_worktime))
+except:
+    print('無法輸出缺工冗員表：排班班表不完整，請嘗試讓程式運行更多時間。')
+    try:
+        sys.exit(0)     #出錯的情況下，讓程式退出
+    except:
+        print('\n程式已結束。')
+
+
 people = np.zeros((nDAY,24))
 for i in range(0,nEMPLOYEE):
     for j in range(0,nDAY):
