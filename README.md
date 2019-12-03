@@ -18,7 +18,7 @@
 可上晚班的次數  
 ![](https://github.com/h920032/IM_project/blob/master/img/Picture1.png)
 
-## 班別時間表
+## * 班別時間表
 列: 班別代號/行: 涵蓋時段  
 ![](https://github.com/h920032/IM_project/blob/master/img/Picture2.png)
 
