@@ -64,7 +64,7 @@ P1~4   皆為≧0的數字。 0為無視此條件，100為和主要條件（缺�
 
 
 資料示意圖：  
-![](https://github.com/h920032/IM_project/blob/master/img/Picture8.png)
+![](https://github.com/h920032/IM_project/blob/master/img/Picture8.png)  
 Abe 在 25 號休假  
 Alyssa 在 4號與24號休假  
 Carol 在 18 號休假  
@@ -86,7 +86,7 @@ Carol 在 18 號休假
 |LOWER(j)|日子 j 特定班別所設定的上班人數下限 ∀ j∈D_LOWER|Need:正整數
 
 資料示意圖：  
-![](https://github.com/h920032/IM_project/blob/master/img/Picture9.png)
+![](https://github.com/h920032/IM_project/blob/master/img/Picture9.png)  
 第一列：2號早班值班(不限職位)至少30位  
 第二列：19號所有班別值班「襄理」至少1位  
 
@@ -103,7 +103,7 @@ Carol 在 18 號休假
 |UPPER|每位CSR員工在特定日子排特定班別的次數上限|Limit:正整數
 
 資料示意圖：  
-![](https://github.com/h920032/IM_project/blob/master/img/Picture10.png)
+![](https://github.com/h920032/IM_project/blob/master/img/Picture10.png)  
 解釋：所有CSR最多排 10 次 星期三的晚班  
 
 ## 擁有特定技能CSR員工優先排特定班別限制
@@ -117,7 +117,7 @@ Carol 在 18 號休假
 |S_COMPLE|非“擁有特定技能CSR員工所優先排之特定班別”的班別集合|獨立的表格：第一項是技能名稱，隨後的項目是要優先的班別
 
 資料示意圖：  
-![](https://github.com/h920032/IM_project/blob/master/img/Picture11.png)
+![](https://github.com/h920032/IM_project/blob/master/img/Picture11.png)  
 解釋: 擁有chat技能之CSR員工優先排CD、C2、C3、C4、OB班別  
 
 ## 指定日子與班別之CSR員工年資占比限制
@@ -135,7 +135,7 @@ Carol 在 18 號休假
 |PERCENT|在特定日子中數個指定班別，針對特定群組之CSR員工，必須佔總排班人數的特定比例|Ratio:0~1的數字，包含0和1
 
 資料示意圖：  
-![](https://github.com/h920032/IM_project/blob/master/img/Picture12.png)
+![](https://github.com/h920032/IM_project/blob/master/img/Picture12.png)  
 第一列：所有日子裡的晚班，2年年資以上者需達50%  
 第二列：星期一的早班，1.5年年資以上者需達40%  
 
@@ -145,8 +145,14 @@ Carol 在 18 號休假
 # 輸出格式說明
 ## 排班結果
 (週末顯示為"X")
-
+![](https://github.com/h920032/IM_project/blob/master/img/Picture13.png)
 ## 冗員與缺工人數
-
+![](https://github.com/h920032/IM_project/blob/master/img/Picture14.png)
 ## 其他資訊
-
+|員工排班表|![](https://github.com/h920032/IM_project/blob/master/img/Picture15.png)|
+|---|---
+|員工本月晚班次數|![](https://github.com/h920032/IM_project/blob/master/img/Picture16.png)
+|每個時段缺工百分比表|![](https://github.com/h920032/IM_project/blob/master/img/Picture17.png)
+|每天缺工百分比表|![](https://github.com/h920032/IM_project/blob/master/img/Picture18.png)
+|缺工人數表|![](https://github.com/h920032/IM_project/blob/master/img/Picture19.png)
+|員工每週有哪幾種休息時間|![](https://github.com/h920032/IM_project/blob/master/img/Picture20.png)
