@@ -17,22 +17,27 @@ import datetime, calendar, sys
 # ======
 # 12/1 更新：
 #	＊資料存放路徑
+# 12/3 更新：
+#	＊年月改成csv資料輸入
 #=============================================================================#
 
 
-#=============================================================================#
-# settings 方便隨時修改的部分
-#=============================================================================#
-year = 2019
-month = 4
+
 #=============================================================================#
 #import data
 
 f = open('path.txt', "r")
 dir_name = f.read().replace('\n', '')
+
+#year/month
+date = pd.read_csv(dir_name + 'date.csv', header = None, index_col = 0)
+year = int(date.iloc[0,0])
+month = int(date.iloc[1,0])
+
 result_x = './排班結果_'+str(year)+'_'+str(month)+'.csv'
 result_y = './冗員與缺工人數_'+str(year)+'_'+str(month)+'.csv'
 result = './其他資訊_'+str(year)+'_'+str(month)+'.xlsx'
+
 #basic
 A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
 DEMAND_t = pd.read_csv(dir_name+"進線人力.csv", header = 0, index_col = 0, engine='python').T
@@ -518,4 +523,3 @@ new_2.to_csv(result_y, encoding="utf-8_sig")
 # print(new_2.T)
 
 #============================================================================#
-
