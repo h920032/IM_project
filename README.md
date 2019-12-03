@@ -16,7 +16,7 @@
 ### CSR員工資料表
 欄位: 英文名字、中文名字、員工id、員工年資、員工職位、員工技能、員工上月斷頭周晚班次數、員工上月末日週五是否晚班、員工一週能排的晚班次數  
 可上晚班的次數  
-![](IM_project/img/Picture1.png)
+![](https://github.com/h920032/IM_project/blob/master/img/Picture1.png)
 
 ### 班別時間表
 列: 班別代號/行: 涵蓋時段  
