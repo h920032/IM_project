@@ -20,14 +20,18 @@
 
 ### 班別時間表
 列: 班別代號/行: 涵蓋時段  
+![](https://github.com/h920032/IM_project/blob/master/img/Picture2.png)
 
 ### 班別集合表
 第一項是班別集合名稱，隨後的項目是所涵蓋的班別代號  
+![](https://github.com/h920032/IM_project/blob/master/img/Picture6.png)
 
 ### 進線人力需求表
 列: 上班時段/行: 日期  
+![](https://github.com/h920032/IM_project/blob/master/img/Picture3.png)
 
 ### 上個月排班結果表
+![](https://github.com/h920032/IM_project/blob/master/img/Picture4.png)
 
 # 可調整參數說明
 ### 程式執行時間
