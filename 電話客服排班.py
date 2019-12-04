@@ -19,6 +19,8 @@ import datetime, calendar, sys
 #	＊資料存放路徑
 # 12/3 更新：
 #	＊年月改成csv資料輸入
+# 12/4 更新:
+#   ＊所有中文名稱輸入檔的read_csv函數都加上engine='python'
 #=============================================================================#
 
 
@@ -85,25 +87,25 @@ Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_co
 SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0) #class set for skills
 # 下面的try/except都是為了因應條件全空時
 try:
-	M_t = pd.read_csv(dir_name + "特定班別、休假.csv", header = None, skiprows=[0])
+	M_t = pd.read_csv(dir_name + "特定班別、休假.csv", header = None, skiprows=[0], engine='python')
 except:
 	M_t = pd.DataFrame()
 try:
-	L_t = pd.read_csv(dir_name + "parameters/下限.csv", header = None, skiprows=[0])
+	L_t = pd.read_csv(dir_name + "parameters/下限.csv", header = None, skiprows=[0], engine='python')
 except:
 	L_t = pd.DataFrame()
 try:
-	U_t = pd.read_csv(dir_name + "parameters/上限.csv", header = None, skiprows=[0])
+	U_t = pd.read_csv(dir_name + "parameters/上限.csv", header = None, skiprows=[0], engine='python')
 except:
 	U_t = pd.DataFrame()
 try:
-	Ratio_t = pd.read_csv(dir_name + "parameters/CSR年資占比.csv",header = None, skiprows=[0])
+	Ratio_t = pd.read_csv(dir_name + "parameters/CSR年資占比.csv",header = None, skiprows=[0], engine='python')
 	SENIOR_bp = Ratio_t[3]
 except:
 	Ratio_t = pd.DataFrame()
 	SENIOR_bp = []
 try:
-	timelimit = pd.read_csv(dir_name + "parameters/時間限制.csv", header = 0)
+	timelimit = pd.read_csv(dir_name + "parameters/時間限制.csv", header = 0, engine='python')
 except:
 	timelimit = 300	#預設跑五分鐘
 nightdaylimit = EMPLOYEE_t['night_perWeek']
