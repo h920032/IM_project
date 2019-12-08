@@ -280,10 +280,13 @@ for item in LOWER:
 
 #10 排班次數上限：員工在特定日子、特定班別，排班不能超過多少次
 #與原式較不同
+#for item in UPPER:
+#    for i in EMPLOYEE:	
+#        m.addConstr(quicksum(work[i,j,k] for j in DAYset[item[0]] for k in SHIFTset[item[1]]) <= item[2], "c10")
 for item in UPPER:
-    for i in EMPLOYEE:	
-        m.addConstr(quicksum(work[i,j,k] for j in DAYset[item[0]] for k in SHIFTset[item[1]]) <= item[2], "c10")     
-       
+    for j in DAYset[item[0]]:	
+        m.addConstr(quicksum(work[i,j,k] for i in EMPLOYEE for k in SHIFTset[item[1]]) <= item[2], "c10")  
+        
 #11 計算缺工人數
 for j in DAY:
     for t in TIME:    
