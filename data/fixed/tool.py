@@ -11,14 +11,17 @@ from datetime import datetime, date
 K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
 
 
+# 下面的try/except是為了因應條件全空時
+def readFile(dir, header_=None, skiprows_=[0]):
+    try:
+        t = pd.read_csv(dir, header = header_, skiprows=skiprows_, engine='python')
+    except:
+        t = pd.DataFrame()
+    return t
+
 """===========================================
 	nJ, nW
 ==========================================="""
-# get weekday of 1st date and total days
-# startDay = date(year,month,1).weekday()	#Mon=0,Tue=1...
-# totalDay = (date(year,month+1,1) - date(year,month,1)).days if month<12 else 31
-# print(year,'/',month,' start in weekday',startDay,', total= ',totalDay,' days')
-
 #nW
 def get_nW(year,month):
 	startDay = date(year,month,1).weekday()	#Mon=0,Tue=1...
@@ -84,13 +87,7 @@ def SetDAY(day, total_day):   #第一天上班是星期幾/幾天
         set[ w[(i+day)%5] ].append(i)
     return set
 
-# 下面的try/except是為了因應條件全空時
-def readFile(dir, header_=None, skiprows_=[0]):
-    try:
-        t = pd.read_csv(dir, header = header_, skiprows=skiprows_, engine='python')
-    except:
-        t = pd.DataFrame()
-    return t
+
 
 """===========================================
 	Set Const Functions
