@@ -24,42 +24,55 @@ import datetime, calendar, sys
 12/4 更新:
     所有中文名稱輸入檔的read_csv函數都加上engine='python'
 12/8 更新：
-    更動第16限制式（使支援技能增減）
+    更動第16限制式（使程式能支援技能增減、修改）
+    將檔名改為英文
 #============================================================================="""
 
 
 
-#=============================================================================#
-#import data
-f = open('path.txt', "r")
-dir_name = f.read().replace('\n', '')
+#=======================================================================================================#
+#====================================================================================================#
+#=================================================================================================#
+# import data
+#=================================================================================================#
+#====================================================================================================#
+#=======================================================================================================#
+#讀檔路徑import data
+try:
+    f = open('path.txt', "r")
+    dir_name = f.read().replace('\n', '')
+except:
+    f = './data/'   #預設資料路徑：./data/
 
+#=============================================================================#
+#每月更改的資料
+#=============================================================================#
 #year/month
-date = pd.read_csv(dir_name + 'date.csv', header = None, index_col = 0)
+date = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0)
 year = int(date.iloc[0,0])
 month = int(date.iloc[1,0])
 
-result_x = './排班結果_'+str(year)+'_'+str(month)+'.csv'
-result_y = './冗員與缺工人數_'+str(year)+'_'+str(month)+'.csv'
-result = './其他資訊_'+str(year)+'_'+str(month)+'.xlsx'
-
-#basic
-A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
-DEMAND_t = pd.read_csv(dir_name+"進線人力.csv", header = 0, index_col = 0, engine='python').T
+#指定排班
+M_t = tl.readFile(dir_name + 'per_month/Assign.csv')
+#進線需求預估
+DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0, engine='python').T
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
-print('DATES = ',end='')
-print(DATES)
+
 #employees data
-EMPLOYEE_t = pd.read_csv(dir_name+"EMPLOYEE.csv", header = 0) 
+EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0) 
+E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
+E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
+E_SENIOR_t = EMPLOYEE_t['Senior']
+E_POSI_t = EMPLOYEE_t['Position']
+SKILL_NAME = list(filter(lambda x: re.match('skill-',x), EMPLOYEE_t.columns)) #自動讀取技能名稱
+E_SKILL_t = EMPLOYEE_t[ SKILL_NAME ]            #員工技能表
 
-
-
-
+#=============================================================================#
 ####NM 及 NW 從人壽提供之上個月的班表裡面計算
 if month>1:
-	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year)+'_'+str(month-1)+'.csv', engine='python')
+	lastmonth = pd.read_csv(dir_name + 'per_month/Schedule_'+str(year)+'_'+str(month-1)+'.csv', engine='python')
 else:
-	lastmonth = pd.read_csv(dir_name + '排班結果_'+str(year-1)+'_1.csv', engine='python')
+	lastmonth = pd.read_csv(dir_name + 'per_month/Schedule_'+str(year-1)+'_1.csv', engine='python')
 lastday_column = len(lastmonth.columns) 
 lastday_row = lastmonth.shape[0]
 lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
@@ -74,38 +87,45 @@ NM_t = EMPLOYEE_t['NM']
 NW_t = EMPLOYEE_t['NW']
 #####
 
-#員工相關資料
-E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
-E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]   	#E_ID - 對照ID與員工index時使用
-E_SENIOR_t = EMPLOYEE_t['Senior']
-E_POSI_t = EMPLOYEE_t['Position']
-SKILL_NAME = list(filter(lambda x: re.match('skill-',x), EMPLOYEE_t.columns)) #自動讀取技能名稱
-E_SKILL_t = EMPLOYEE_t[ SKILL_NAME ]            #員工技能表
-
-
-P_t = pd.read_csv(dir_name + 'parameters/軟限制權重.csv', header = None, index_col = 0, engine='python') 
-
-#const
-Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
-SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0) #class set for skills
-# 下面的try/except都是為了因應條件全空時
-M_t = tl.readFile(dir_name + 'assign.csv')#"特定班別、休假.csv")
-L_t = tl.readFile(dir_name + "parameters/下限.csv")
-U_t = tl.readFile(dir_name + "parameters/上限.csv")
-Ratio_t = tl.readFile(dir_name + "parameters/CSR年資占比.csv")
-try:
+#=============================================================================#
+#半固定參數
+#=============================================================================#
+P_t = pd.read_csv(dir_name + 'parameters/weight_p1-4.csv', header = None, index_col = 0, engine='python') #權重
+SKset_t = tl.readFile(dir_name + 'parameters/skills_classes.csv')   #class set for skills
+L_t = tl.readFile(dir_name + "parameters/lower_limit.csv")          #指定日期、班別、職位，人數下限
+U_t = tl.readFile(dir_name + "parameters/upper_limit.csv")          #指定星期幾、班別，人數上限
+Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")     #指定年資、星期幾、班別，要占多少比例以上
+try:    # 下面的try/except都是為了因應條件全空時
 	SENIOR_bp = Ratio_t[3]
 except:
 	SENIOR_bp = []
 try:
-	timelimit = pd.read_csv(dir_name + "parameters/時間限制.csv", header = 0, engine='python')
+	timelimit = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0, engine='python')
 except:
 	timelimit = 300	#預設跑五分鐘
 nightdaylimit = EMPLOYEE_t['night_perWeek']
 
-#============================================================================#
+
+#=============================================================================#
+#固定參數：班別總數與時間
+#=============================================================================#
+Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
+A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
+
+
+
+
+#=======================================================================================================#
+#====================================================================================================#
+#=================================================================================================#
 # Create a new model
+#=================================================================================================#
+#====================================================================================================#
+#=======================================================================================================#
+#============================================================================#
+
 m = Model("first")
+
 #============================================================================#
 #Indexs 都從0開始
 
@@ -232,8 +252,15 @@ m.setObjective(P0 * quicksum(lack[j,t] for t in TIME for j in DAY) +  P1 * surpl
                P4 *complement , GRB.MINIMIZE)
 
 #============================================================================#
-#Constraints
 
+
+#=======================================================================================================#
+#====================================================================================================#
+#=================================================================================================#
+# Constraints
+#=================================================================================================#
+#====================================================================================================#
+#=======================================================================================================#
 #2 每人每天只能排一種班別
 for i in EMPLOYEE:
     for j in DAY:
@@ -312,7 +339,9 @@ for ix,item in enumerate(PERCENT):
         for k in SHIFTset[item[1]]:
             m.addConstr(quicksum(work[i,j,k] for i in E_SENIOR[ix]) >= item[2]*quicksum(work[i,j,k] for i in EMPLOYEE),"c17")
 
-#12,18,19 已在variable限制    
+#12,18,19 已在variable限制   
+
+
 #============================================================================#
 #process
 try:
@@ -323,11 +352,22 @@ except:
     else:
         m.params.TimeLimit = 300    #預設跑五分鐘
 m.optimize()
+#============================================================================#
 
 
-#============================================================================#
-#print out
-#============================================================================#
+#=======================================================================================================#
+#====================================================================================================#
+#=================================================================================================#
+# print out
+#=================================================================================================#
+#====================================================================================================#
+#=======================================================================================================#
+
+#輸出檔名
+result_x = './Schedule_'+str(year)+'_'+str(month)+'.csv'
+result_y = './lack&over_'+str(year)+'_'+str(month)+'.csv'
+result = './schedule_data_'+str(year)+'_'+str(month)+'.xlsx'
+
 
 #Dataframe_x
 K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
@@ -514,7 +554,7 @@ for i in range(0,mDAY):
     if (i+1) not in DATES:
         new_2[date_name[i]]=NO_PEOPLE
     else:
-        new_2[date_name[i]]=output_people[j]
+        new_2[date_name[i]]= [ int(x) for x in output_people[j] ]
         j = j + 1
 new_2['name']=T_type
 new_2.set_index("name",inplace=True)
