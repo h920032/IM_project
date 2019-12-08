@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 For caculate weekdays
 @author: Ting
 """
-import math
+import math, re
 import pandas as pd
 from datetime import datetime, date
 
@@ -84,29 +84,40 @@ def SetDAY(day, total_day):   #第一天上班是星期幾/幾天
         set[ w[(i+day)%5] ].append(i)
     return set
 
+# 下面的try/except是為了因應條件全空時
+def readFile(dir, header_=None, skiprows_=[0]):
+    try:
+        t = pd.read_csv(dir, header = header_, skiprows=skiprows_, engine='python')
+    except:
+        t = pd.DataFrame()
+    return t
 
 """===========================================
 	Set Const Functions
 ==========================================="""
 #SKILL 每個技能的員工組合
 def SetSKILL(matrix):
-	skills = ['phone','CD','chat','outbound']
-	ans = {}
-	for s in skills:
-		alist = matrix['skill-'+s]
-		ans[s] = []
-		for i in range(len(alist)):
-			if alist[i]==1:
-				ans[s].append(i)
-	return ans
+    ans = {}
+    for s in matrix.columns:
+        alist = matrix[s]
+        ss = re.sub('skill-', '', s)
+        ans[ss] = []
+        for i in range(len(alist)):
+            if alist[i]==1:
+                ans[ss].append(i)
+    return ans
 
 #POSI 每個職位的員工組合
 def SetPOSI(alist):
-	n = len(alist)
-	s = {'任意':list(range(n)),'專員':[],'襄理':[],'副理':[],'主任':[]}
-	for i in range(n):
-		s[ alist[i] ].append(i)
-	return s
+    n = len(alist)
+    s = {'任意':list(range(n))}  #預設職位：任意(包含所有人)
+    #登錄所有職位
+    for p in set(alist):
+        s[p] = []
+    #一個個把人加入他/她的職位所屬的群組
+    for i in range(n):
+        s[ alist[i] ].append(i)
+    return s
 
 #SENIOR 超過特定年資的員工組合
 def SetSENIOR(alist, bp):
@@ -215,5 +226,5 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
                        for k in range (nEMPLOYEE) :
                            if (temp_name == str(EMPLOYEE_t.loc[k,'id'])) : 
                                EMPLOYEE_t.at[k,'NM'] = int(EMPLOYEE_t.iloc[k,9]) + 1
-    
-#    print (EMPLOYEE_t["NM"])
+
+

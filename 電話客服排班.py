@@ -1,33 +1,36 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from gurobipy import *
 import numpy as np
 import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar, sys
-#=============================================================================#
-# 11/25 更新：
-#   ＊修正utf-8的csv檔打開會亂碼的問題
-#   ＊休假班別代號：由0改成O
-#   ＊上班日：從進線預測資料自動抓上班日期（有預測就表示要上班。允許周末上班）
-#   ＊每周晚班次數限制：改成每人可以有不同上限（從data裡的EMPLOYEE讀取）
-# 11/26 更新：
-#   ＊更動第七限制式
-#   ＊D_MONFRI變數刪除
-# 11/26 更新：
-#   ＊路徑檔
-# ======
-# 12/1 更新：
-#	＊資料存放路徑
-# 12/3 更新：
-#	＊年月改成csv資料輸入
-# 12/4 更新:
-#   ＊所有中文名稱輸入檔的read_csv函數都加上engine='python'
-#=============================================================================#
+"""=============================================================================#
+11/25 更新：
+    修正utf-8的csv檔打開會亂碼的問題
+    休假班別代號：由0改成O
+    上班日：從進線預測資料自動抓上班日期（有預測就表示要上班。允許周末上班）
+    每周晚班次數限制：改成每人可以有不同上限（從data裡的EMPLOYEE讀取）
+11/26 更新：
+    更動第七限制式
+    D_MONFRI變數刪除
+11/26 更新：
+    路徑檔
+======
+12/1 更新：
+    資料存放路徑
+12/3 更新：
+    年月改成csv資料輸入
+12/4 更新:
+    所有中文名稱輸入檔的read_csv函數都加上engine='python'
+12/8 更新：
+    更動第16限制式（使支援技能增減）
+#============================================================================="""
 
 
 
 #=============================================================================#
 #import data
-
 f = open('path.txt', "r")
 dir_name = f.read().replace('\n', '')
 
@@ -63,22 +66,22 @@ lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
 nEMPLOYEE = EMPLOYEE_t.shape[0]
 
 #上個月的最後一天是週五，且有排晚班者，有則是1，沒有則是0
-
 tl.calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
 
 #上個月為斷頭週，並計算該週總共排了幾次晚班
-
 tl.calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
 NM_t = EMPLOYEE_t['NM']
 NW_t = EMPLOYEE_t['NW']
 #####
 
+#員工相關資料
 E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
 E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]   	#E_ID - 對照ID與員工index時使用
 E_SENIOR_t = EMPLOYEE_t['Senior']
 E_POSI_t = EMPLOYEE_t['Position']
-E_SKILL_t = EMPLOYEE_t[['skill-phone','skill-CD','skill-chat','skill-outbound']]
-SKILL_NAME = list(E_SKILL_t.columns)        #SKILL_NAME - 找員工組合、班別組合時使用
+SKILL_NAME = list(filter(lambda x: re.match('skill-',x), EMPLOYEE_t.columns)) #自動讀取技能名稱
+E_SKILL_t = EMPLOYEE_t[ SKILL_NAME ]            #員工技能表
+
 
 P_t = pd.read_csv(dir_name + 'parameters/軟限制權重.csv', header = None, index_col = 0, engine='python') 
 
@@ -86,23 +89,13 @@ P_t = pd.read_csv(dir_name + 'parameters/軟限制權重.csv', header = None, in
 Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
 SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0) #class set for skills
 # 下面的try/except都是為了因應條件全空時
+M_t = tl.readFile(dir_name + 'assign.csv')#"特定班別、休假.csv")
+L_t = tl.readFile(dir_name + "parameters/下限.csv")
+U_t = tl.readFile(dir_name + "parameters/上限.csv")
+Ratio_t = tl.readFile(dir_name + "parameters/CSR年資占比.csv")
 try:
-	M_t = pd.read_csv(dir_name + "特定班別、休假.csv", header = None, skiprows=[0], engine='python')
-except:
-	M_t = pd.DataFrame()
-try:
-	L_t = pd.read_csv(dir_name + "parameters/下限.csv", header = None, skiprows=[0], engine='python')
-except:
-	L_t = pd.DataFrame()
-try:
-	U_t = pd.read_csv(dir_name + "parameters/上限.csv", header = None, skiprows=[0], engine='python')
-except:
-	U_t = pd.DataFrame()
-try:
-	Ratio_t = pd.read_csv(dir_name + "parameters/CSR年資占比.csv",header = None, skiprows=[0], engine='python')
 	SENIOR_bp = Ratio_t[3]
 except:
-	Ratio_t = pd.DataFrame()
 	SENIOR_bp = []
 try:
 	timelimit = pd.read_csv(dir_name + "parameters/時間限制.csv", header = 0, engine='python')
@@ -305,11 +298,15 @@ for i in EMPLOYEE:
         for r in BREAK:
              m.addConstr(5*breakCount[i,w,r] >= quicksum(work[i,j,k]  for k in S_BREAK[r] for j in D_WEEK[w]), "c15") 
 
-#16 chat技能的員工優先排類型為「其他」的班別
-m.addConstr(complement >= quicksum(work[i,j,k] for k in K_skill_not[2] for j in DAY for i in E_SKILL['chat']),"c16")
-
+#16 技能優先班別 - 有技能者優先排技能所指定的班別
+for ii in E_SKILL:      #type(E_SKILL)=dict，要兩步驟取出裡面每項的list
+    i_set = E_SKILL[ii]
+    if len(i_set) <= 0: continue        #沒有人持有此技能時，略過
+    for k_set in K_skill_not:
+        if len(k_set) >= nK: continue   #技能沒有設定優先班別時，略過
+        m.addConstr(complement >= quicksum(work[i,j,k] for k in k_set for j in DAY for i in i_set),"c16")
              
-#17晚班年資2年以上人數需佔 50% 以上
+#17 晚班年資2年以上人數需佔 50% 以上
 for ix,item in enumerate(PERCENT):
     for j in DAYset[item[0]]:
         for k in SHIFTset[item[1]]:
