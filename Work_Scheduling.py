@@ -91,10 +91,10 @@ NW_t = EMPLOYEE_t['NW']
 #半固定參數
 #=============================================================================#
 P_t = pd.read_csv(dir_name + 'parameters/weight_p1-4.csv', header = None, index_col = 0, engine='python') #權重
-SKset_t = tl.readFile(dir_name + 'parameters/skills_classes.csv')   #class set for skills
-L_t = tl.readFile(dir_name + "parameters/lower_limit.csv")          #指定日期、班別、職位，人數下限
-U_t = tl.readFile(dir_name + "parameters/upper_limit.csv")          #指定星期幾、班別，人數上限
-Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")     #指定年資、星期幾、班別，要占多少比例以上
+SKset_t = tl.readFile(dir_name + 'parameters/skills_classes.csv', index_col_=[0])   #class set for skills
+L_t = tl.readFile(dir_name + "parameters/lower_limit.csv")                          #指定日期、班別、職位，人數下限
+U_t = tl.readFile(dir_name + "parameters/upper_limit.csv")                          #指定星期幾、班別，人數上限
+Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")                     #指定年資、星期幾、班別，要占多少比例以上
 try:    # 下面的try/except都是為了因應條件全空時
 	SENIOR_bp = Ratio_t[3]
 except:
@@ -162,8 +162,8 @@ DEMAND = DEMAND_t.values.tolist()  #DEMAND_jt - 日子j於時段t的需求人數
 ASSIGN = []                        #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
 
 for c in range(M_t.shape[0]):
-    e = tl.Tran_t2n(M_t.iloc[c,0], E_ID)
-    d = tl.Tran_t2n(M_t.iloc[c,1], DATES)
+    e = tl.TranName_t2n(M_t.iloc[c,0], E_ID)
+    d = tl.TranName_t2n(M_t.iloc[c,1], DATES)
     k = tl.Tran_t2n( str(M_t.iloc[c,2]) )
     ASSIGN.append( (e, d, k) )
 
@@ -179,7 +179,7 @@ P4 = P_t[1]['P4']    	 		#目標式中的調整權重(complement)
 #-----排班特殊限制-----#
 LOWER = L_t.values.tolist()       	#LOWER - 日期j，班別集合ks，職位p，上班人數下限
 for i in range(len(LOWER)):
-    d = tl.Tran_t2n( LOWER[i][0], DATES)
+    d = tl.TranName_t2n( LOWER[i][0], DATES)
     LOWER[i][0] = d
 UPPER = U_t.values.tolist()		   	#UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
 PERCENT = Ratio_t.values.tolist()	#PERCENT - 日子集合，班別集合，要求占比，年資分界線
