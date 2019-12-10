@@ -54,6 +54,7 @@ month = int(date.iloc[1,0])
 
 #指定排班
 M_t = tl.readFile(dir_name + 'per_month/Assign.csv')
+M_t[''] = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
 #進線需求預估
 DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0, engine='python').T
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
