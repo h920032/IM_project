@@ -162,9 +162,9 @@ DEMAND = DEMAND_t.values.tolist()  #DEMAND_jt - 日子j於時段t的需求人數
 ASSIGN = []                        #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
 
 for c in range(M_t.shape[0]):
-    e = tl.TranName_t2n(M_t.iloc[c,0], E_ID)
-    d = tl.TranName_t2n(M_t.iloc[c,1], DATES)
-    k = tl.TranK_t2n( str(M_t.iloc[c,2]) )
+    e = tl.Tran_t2n(M_t.iloc[c,0], E_ID)
+    d = tl.Tran_t2n(M_t.iloc[c,1], DATES)
+    k = tl.Tran_t2n( str(M_t.iloc[c,2]) )
     ASSIGN.append( (e, d, k) )
 
 LMNIGHT = NM_t.values            #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
@@ -179,7 +179,7 @@ P4 = P_t[1]['P4']    	 		#目標式中的調整權重(complement)
 #-----排班特殊限制-----#
 LOWER = L_t.values.tolist()       	#LOWER - 日期j，班別集合ks，職位p，上班人數下限
 for i in range(len(LOWER)):
-    d = tl.TranName_t2n( LOWER[i][0], DATES)
+    d = tl.Tran_t2n( LOWER[i][0], DATES)
     LOWER[i][0] = d
 UPPER = U_t.values.tolist()		   	#UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
 PERCENT = Ratio_t.values.tolist()	#PERCENT - 日子集合，班別集合，要求占比，年資分界線
@@ -208,10 +208,10 @@ S_NIGHT = [11, 12, 13]                                          #S_NIGHT - 所�
 S_BREAK = [[11,12],[1,7,14,15],[2,8,16,18],[3,9,17],[4,10]]     #Kr - 午休方式為 r 的班別 
 SHIFTset= {}                                                    #SHIFTset - 通用的班別集合，S=1,…,nS
 for ki in range(len(Kset_t)):
-    SHIFTset[Kset_t.index[ki]] = [ tl.TranK_t2n(x) for x in Kset_t.iloc[ki].dropna().values ]
+    SHIFTset[Kset_t.index[ki]] = [ tl.Tran_t2n(x) for x in Kset_t.iloc[ki].dropna().values ]
 K_skill_not = []                                                #K_skill_not - 各技能的優先班別的補集
 for ki in range(len(SKset_t)):
-    sk = [ tl.TranK_t2n(x) for x in SKset_t.iloc[ki].dropna().values ]  #各個技能的優先班別
+    sk = [ tl.Tran_t2n(x) for x in SKset_t.iloc[ki].dropna().values ]  #各個技能的優先班別
     K_skill_not.append( list( set(range(0,nK)).difference(set(sk)) ) )      #非優先的班別
 
 

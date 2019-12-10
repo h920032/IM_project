@@ -128,22 +128,32 @@ def SetSENIOR(alist, bp):
 """===========================================
 	Text-numberID translate function
 ==========================================="""
-def TranK_t2n(text):
-	K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
-	try:
-		c = K_type.index(text)
-	except:
-		print('class indexr to class name code:',text,"-> ?")
-		c = None
-	return  c
+def Tran_t2n(text, names=K_type):
+    try:
+        c = names.index(text)
+    except:
+        print('Tran_t2n():',text,"not in ",end='')
+        print(names[0:3],end='')
+        print('...')
+        c = None
+    return c
 
-def TranName_t2n(text, names):
-	try:
-		c = names.index(text)
-	except:
-		print('index to name:',text,"-> ?")
-		c = None
-	return c
+# def TranK_t2n(text):
+# 	K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
+# 	try:
+# 		c = K_type.index(text)
+# 	except:
+# 		print('class indexr to class name code:',text,"-> ?")
+# 		c = None
+# 	return  c
+
+# def TranName_t2n(text, names):
+# 	try:
+# 		c = names.index(text)
+# 	except:
+# 		print('index to name:',text,"-> ?")
+# 		c = None
+# 	return c
 
 """
 Calculation of NW & NM from last month 
