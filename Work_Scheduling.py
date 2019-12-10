@@ -162,8 +162,8 @@ DEMAND = DEMAND_t.values.tolist()  #DEMAND_jt - 日子j於時段t的需求人數
 ASSIGN = []                        #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
 
 for c in range(M_t.shape[0]):
-    e = tl.TranName_t2n(M_t.iloc[c,0], E_ID)
-    d = tl.TranName_t2n(M_t.iloc[c,1], DATES)
+    e = tl.Tran_t2n(M_t.iloc[c,0], E_ID)
+    d = tl.Tran_t2n(M_t.iloc[c,1], DATES)
     k = tl.Tran_t2n( str(M_t.iloc[c,2]) )
     ASSIGN.append( (e, d, k) )
 
@@ -179,7 +179,7 @@ P4 = P_t[1]['P4']    	 		#目標式中的調整權重(complement)
 #-----排班特殊限制-----#
 LOWER = L_t.values.tolist()       	#LOWER - 日期j，班別集合ks，職位p，上班人數下限
 for i in range(len(LOWER)):
-    d = tl.TranName_t2n( LOWER[i][0], DATES)
+    d = tl.Tran_t2n( LOWER[i][0], DATES)
     LOWER[i][0] = d
 UPPER = U_t.values.tolist()		   	#UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
 PERCENT = Ratio_t.values.tolist()	#PERCENT - 日子集合，班別集合，要求占比，年資分界線
