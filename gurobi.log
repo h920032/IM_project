@@ -371,3 +371,76 @@ Solution count 10: 708650 708700 708750 ... 709100
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 7.086500000000e+05, best bound 7.086500000000e+05, gap 0.0000%
+
+Gurobi 8.1.1 (win64, Python) logging started 12/10/19 17:52:40
+
+Academic license - for non-commercial use only
+Changed value of parameter TimeLimit to 180.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 1694 rows, 4533 columns and 126224 nonzeros
+Variable types: 483 continuous, 4050 integer (4050 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 5e+00]
+  Objective range  [5e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+01]
+Found heuristic solution: objective 768150.00000
+Presolve removed 1072 rows and 1749 columns
+Presolve time: 0.13s
+Presolved: 622 rows, 2784 columns, 22892 nonzeros
+Variable types: 177 continuous, 2607 integer (2475 binary)
+
+Root relaxation: objective 7.083475e+05, 2012 iterations, 0.04 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 708347.500    0  105 768150.000 708347.500  7.79%     -    0s
+H    0     0                    712650.00000 708347.500  0.60%     -    0s
+H    0     0                    712550.00000 708347.500  0.59%     -    0s
+H    0     0                    712350.00000 708347.500  0.56%     -    0s
+H    0     0                    712200.00000 708347.500  0.54%     -    0s
+H    0     0                    712150.00000 708347.500  0.53%     -    0s
+H    0     0                    711700.00000 708347.500  0.47%     -    0s
+     0     0 708347.500    0  352 711700.000 708347.500  0.47%     -    0s
+H    0     0                    711000.00000 708347.500  0.37%     -    0s
+H    0     0                    710800.00000 708347.500  0.35%     -    0s
+H    0     0                    710400.00000 708347.500  0.29%     -    0s
+     0     0 708347.500    0  368 710400.000 708347.500  0.29%     -    0s
+H    0     0                    710200.00000 708347.500  0.26%     -    0s
+H    0     0                    709700.00000 708347.500  0.19%     -    0s
+H    0     0                    709650.00000 708347.500  0.18%     -    0s
+H    0     0                    709600.00000 708347.500  0.18%     -    0s
+H    0     0                    709500.00000 708347.500  0.16%     -    0s
+H    0     0                    709450.00000 708347.500  0.16%     -    0s
+H    0     0                    709400.00000 708347.500  0.15%     -    0s
+H    0     0                    709300.00000 708347.500  0.13%     -    0s
+H    0     0                    709250.00000 708347.500  0.13%     -    0s
+H    0     0                    709200.00000 708347.500  0.12%     -    0s
+H    0     0                    709150.00000 708347.500  0.11%     -    0s
+H    0     0                    709100.00000 708347.500  0.11%     -    0s
+H    0     0                    709050.00000 708347.500  0.10%     -    0s
+H    0     0                    709000.00000 708347.500  0.09%     -    0s
+H    0     0                    708950.00000 708347.500  0.08%     -    0s
+H    0     0                    708900.00000 708347.500  0.08%     -    0s
+H    0     0                    708850.00000 708347.500  0.07%     -    0s
+H    0     0                    708800.00000 708347.500  0.06%     -    0s
+H    0     0                    708750.00000 708347.500  0.06%     -    0s
+H    0     0                    708700.00000 708347.500  0.05%     -    0s
+H    0     0                    708650.00000 708347.500  0.04%     -    0s
+     0     0 708347.500    0  213 708650.000 708347.500  0.04%     -    0s
+     0     0 708347.500    0   46 708650.000 708347.500  0.04%     -    0s
+     0     0 708347.500    0  326 708650.000 708347.500  0.04%     -    0s
+     0     0 708347.500    0  266 708650.000 708347.500  0.04%     -    0s
+     0     0 708347.500    0  168 708650.000 708347.500  0.04%     -    1s
+     0     0 708347.500    0  136 708650.000 708347.500  0.04%     -    1s
+     0     2 708347.500    0  133 708650.000 708347.500  0.04%     -    1s
+ 17526 13617 708585.000   41   14 708650.000 708427.500  0.03%   9.9    5s
+
+Explored 30327 nodes (307295 simplex iterations) in 9.24 seconds
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 708650 708700 708750 ... 709100
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 7.086500000000e+05, best bound 7.086500000000e+05, gap 0.0000%
