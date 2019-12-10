@@ -152,9 +152,8 @@ nK = 19                             #班別種類數
 nT = 24                             #總時段數
 nR = 5                              #午休種類數
 nW = tl.get_nW(year,month)          #總週數
-
-nPOSI = 4                       	    #職稱數量 (=擁有特定職稱的總員工集合數
-nSKILL = 4                          	#nVA技能數量 (=擁有特定技能的總員工集合數
+# nPOSI =  len(set(E_POSI_t))     #職稱數量 (=擁有特定職稱的總員工集合數
+# nSKILL = len(SKILL_NAME)     #nVA技能數量 (=擁有特定技能的總員工集合數
 
 #-------Basic-------#
 CONTAIN = A_t.values.tolist()      #CONTAIN_kt - 1表示班別k包含時段t，0則否
@@ -166,6 +165,13 @@ for c in range(M_t.shape[0]):
     e = tl.Tran_t2n(M_t.iloc[c,0], E_ID)
     d = tl.Tran_t2n(M_t.iloc[c,1], DATES)
     k = tl.Tran_t2n( str(M_t.iloc[c,2]) )
+    #回報錯誤
+    if e!=e:
+        print('指定排班表中發現不明ID：',M_t.iloc[c,0],'不在員工資料的ID列表中，請再次確認ID正確性（包含大小寫、空格、換行）')
+    if d!=d:
+        print('指定排班的日期錯誤：',M_t.iloc[c,1],'不是上班日（上班日指有進線預測資料的日子）')
+    if k!=k:
+        print('指定排班中發現不明班別：',M_t.iloc[c,2],'不在登錄的班別中，請指定班別列表中的一個班別（注意大小寫）')
     ASSIGN.append( (e, d, k) )
 
 LMNIGHT = NM_t.values            #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
