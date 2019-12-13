@@ -92,7 +92,7 @@ NW_t = EMPLOYEE_t['NW']
 #半固定參數
 #=============================================================================#
 P_t = pd.read_csv(dir_name + 'parameters/weight_p1-4.csv', header = None, index_col = 0, engine='python') #權重
-SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0, engine='python')  #class set for skills
+SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0)  #class set for skills
 L_t = tl.readFile(dir_name + "parameters/lower_limit.csv")                          #指定日期、班別、職位，人數下限
 U_t = tl.readFile(dir_name + "parameters/upper_limit.csv")                          #指定星期幾、班別，人數上限
 Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")                     #指定年資、星期幾、班別，要占多少比例以上
