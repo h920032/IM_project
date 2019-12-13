@@ -193,7 +193,7 @@ PERCENT = Ratio_t.values.tolist()	#PERCENT - 日子集合，班別集合，要�
 
 #============================================================================#
 #Sets
-EMPLOYEE = [tmp for tmp in range(nEMPLOYEE)]    #EMPLOYEE - 員工集合，I=1,…,nI 
+EMPLOYEE = [tmp for tmp in range(nEMPLOYEE)]    #EMPLOYEE - 員工集合，I=0,…,nI 
 DAY = [tmp for tmp in range(nDAY)]              #DAY - 日子集合，J=0,…,nJ-1
 TIME = [tmp for tmp in range(nT)]               #TIME - 工作時段集合，T=1,…,nT
 BREAK = [tmp for tmp in range(nR)]              #BREAK - 午休方式，R=1,…,nR
