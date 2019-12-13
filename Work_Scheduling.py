@@ -216,10 +216,9 @@ S_BREAK = [[11,12],[1,7,14,15],[2,8,16,18],[3,9,17],[4,10]]     #Kr - 午休方�
 SHIFTset= {}                                                    #SHIFTset - 通用的班別集合，S=1,…,nS
 for ki in range(len(Kset_t)):
     SHIFTset[Kset_t.index[ki]] = [ tl.Tran_t2n(x) for x in Kset_t.iloc[ki].dropna().values ]
-K_skill_not = []                                                #K_skill_not - 各技能的優先班別的補集
+K_skill_not = {}                                                #K_skill_not - 各技能的優先班別的補集
 for ki in range(len(SKset_t)):
-    sk = [ tl.Tran_t2n(x) for x in SKset_t.iloc[ki].dropna().values ]  #各個技能的優先班別
-    K_skill_not.append( list( set(range(0,nK)).difference(set(sk)) ) )      #非優先的班別
+    K_skill_not[SKset_t.index[ki]] = list(set(range(0,nK)).difference(set(tl.Tran_t2n(x) for x in SKset_t.iloc[ki].dropna().values)))     #非優先的班別
 
 
 #============================================================================#
@@ -336,9 +335,9 @@ for i in EMPLOYEE:
 for ii in E_SKILL:      #type(E_SKILL)=dict，要兩步驟取出裡面每項的list
     i_set = E_SKILL[ii]
     if len(i_set) <= 0: continue        #沒有人持有此技能時，略過
-    for k_set in K_skill_not:
-        if len(k_set) >= nK: continue   #技能沒有設定優先班別時，略過
-        m.addConstr(complement >= quicksum(work[i,j,k] for k in k_set for j in DAY for i in i_set),"c16")
+    k_set = K_skill_not[ii]
+    if len(k_set) >= nK: continue       #技能沒有設定優先班別時，略過
+    m.addConstr(complement >= quicksum(work[i,j,k] for k in k_set for j in DAY for i in i_set),"c16")
              
 #17 晚班年資2年以上人數需佔 50% 以上
 for ix,item in enumerate(PERCENT):
