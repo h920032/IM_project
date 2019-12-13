@@ -73,7 +73,7 @@ E_SKILL_t = EMPLOYEE_t[ SKILL_NAME ]            #員工技能表
 if month>1:
 	lastmonth = pd.read_csv(dir_name + 'per_month/Schedule_'+str(year)+'_'+str(month-1)+'.csv', engine='python')
 else:
-	lastmonth = pd.read_csv(dir_name + 'per_month/Schedule_'+str(year-1)+'_1.csv', engine='python')
+	lastmonth = pd.read_csv(dir_name + 'per_month/Schedule_'+str(year-1)+'_12.csv', engine='python')
 lastday_column = len(lastmonth.columns) 
 lastday_row = lastmonth.shape[0]
 lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
