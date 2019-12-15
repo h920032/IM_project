@@ -152,6 +152,7 @@ nK = 19                             #班別種類數
 nT = 24                             #總時段數
 nR = 5                              #午休種類數
 nW = tl.get_nW(year,month)          #總週數
+mDAY = int(calendar.monthrange(year,month)[1])
 # nPOSI =  len(set(E_POSI_t))     #職稱數量 (=擁有特定職稱的總員工集合數
 # nSKILL = len(SKILL_NAME)     #nVA技能數量 (=擁有特定技能的總員工集合數
 
@@ -207,8 +208,8 @@ E_SENIOR = [tl.SetSENIOR(E_SENIOR_t,tmp) for tmp in SENIOR_bp]   #E_SENIOR - 達
 
 #-------日子集合-------#
 month_start = tl.get_startD(year,month)         #本月第一天是禮拜幾 (Mon=0, Tue=1..)
-D_WEEK = tl.SetDAYW(month_start+1,nDAY,nW)  	#D_WEEK - 第 w 週中所包含的日子集合
-DAYset = tl.SetDAY(month_start, nDAY)     		#DAYset - 通用日子集合 [all,Mon,Tue...]
+D_WEEK = tl.SetDAYW(month_start+1,mDAY,nW, DAY, DATES)  	#D_WEEK - 第 w 週中所包含的日子集合
+DAYset = tl.SetDAY(month_start, nDAY, DATES)     		#DAYset - 通用日子集合 [all,Mon,Tue...]
 
 #-------班別集合-------#
 S_NIGHT = [11, 12, 13]                                          #S_NIGHT - 所有的晚班

@@ -46,21 +46,26 @@ def get_startD(year,month):
 ==========================================="""
 #JW 第w周包含的日子集合
 #JW 無國定假日的話
-def SetDAYW(day, total_day, total_week):   #第一天上班是星期幾/幾天/幾週
+def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期幾/幾天/幾週
     ans = []
-    count  = 0
+    count  = 1
     for i in range(total_week):
         tmp = []
         if(i == 0):
-            for j in range(6-day):
-                tmp.append(count)
+            for j in range(8-day):
+                for k in DAY:
+                    if count == DATE[k]:   #該天有上班
+                        tmp.append(k)
+                        break
                 count+=1
         else:
-            for j in range(5):
-                tmp.append(count)
+            for j in range(7):
+                for k in DAY:
+                    if count == DATE[k]:   #該天有上班
+                        tmp.append(k)
+                        break
                 count+=1
-                if count == total_day:
-                    ans.append(tmp)
+                if count == total_day + 1:
                     break
         ans.append(tmp)
     return ans
@@ -77,14 +82,14 @@ def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
     return ans
 
 #Jset 通用日子集合
-def SetDAY(day, total_day):   #第一天上班是星期幾/幾天
+def SetDAY(day, total_day, DATE):   #第一天上班是星期幾/幾天
     set = {'all':list(range(total_day))}
     set['Mon']=[]; set['Tue']=[]; set['Wed']=[]
     set['Tru']=[]; set['Fri']=[]
     # 所有周一，所有週二，所有週三...
     w = ['Mon','Tue','Wed','Tru','Fri']
     for i in range(total_day):
-        set[ w[(i+day)%5] ].append(i)
+        set[ w[(DATE[i]-1)%7] ].append(i)
     return set
 
 
