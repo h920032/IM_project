@@ -29,6 +29,12 @@ import datetime, calendar, sys
 #============================================================================="""
 
 
+#測試檔案檔名 - 沒有要測試時請將TestPath留空白
+TestPath = ""
+# TestPath = "D:/Ting/桌面/test/1216_testing/"
+EmployeeTest = "_30人"
+AssignTest = "_30人各休一"
+NeedTest = "_標準"
 
 #=======================================================================================================#
 #====================================================================================================#
@@ -42,7 +48,18 @@ try:
     f = open('path.txt', "r")
     dir_name = f.read().replace('\n', '')
 except:
-    f = './data/'   #預設資料路徑：./data/
+    dir_name = './data/'   #預設資料路徑：./data/
+
+# 測試用
+if TestPath != "":
+    dir_name = TestPath
+    parameters_dir = TestPath
+else:
+    dir_name = './data/'
+    EmployeeTest = ""
+    AssignTest = ""
+    NeedTest = ""
+
 
 #=============================================================================#
 #每月更改的資料
@@ -53,14 +70,14 @@ year = int(date.iloc[0,0])
 month = int(date.iloc[1,0])
 
 #指定排班
-M_t = tl.readFile(dir_name + 'per_month/Assign.csv')
+M_t = tl.readFile(dir_name + 'per_month/Assign'+AssignTest+'.csv')
 M_t[0] = [ str(x) for x in M_t[0] ]           #強制將ID設為string
 #進線需求預估
-DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0, engine='python').T
+DEMAND_t = pd.read_csv(dir_name+"per_month/Need"+NeedTest+".csv", header = 0, index_col = 0, engine='python').T
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
 
 #employees data
-EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0) 
+EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee"+EmployeeTest+".csv", header = 0) 
 E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
 E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
 E_SENIOR_t = EMPLOYEE_t['Senior']
