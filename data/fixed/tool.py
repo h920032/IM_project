@@ -85,9 +85,9 @@ def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
 def SetDAY(day, total_day, DATE):   #第一天上班是星期幾/幾天
     set = {'all':list(range(total_day))}
     set['Mon']=[]; set['Tue']=[]; set['Wed']=[]
-    set['Tru']=[]; set['Fri']=[]
+    set['Thr']=[]; set['Fri']=[]
     # 所有周一，所有週二，所有週三...
-    w = ['Mon','Tue','Wed','Tru','Fri']
+    w = ['Mon','Tue','Wed','Thr','Fri']     #星期幾的代號列表(有記不起來的疑慮)
     for i in range(total_day):
         set[ w[(DATE[i]-1)%7] ].append(i)
     return set
