@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-﻿Dates,Classes,Ratio,Senior
-Mon,morning,0.5,2
-Thr,night,0.5,2
-Fri,night,0.5,2
-=======
-﻿Dates,Classes,Ratio,Senior
-Mon,morning,0.5,2
-Thu,night,0.5,2
-Fri,night,0.5,2
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
+?Dates	Classes	Ratio	Senior
+Mon	morning	0.5	2
+Thu	night	0.5	2
+Fri	night	0.5	2

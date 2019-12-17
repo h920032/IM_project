@@ -8,15 +8,7 @@ import math, re
 import pandas as pd
 from datetime import datetime, date
 
-<<<<<<< HEAD
-"""=============================================================================#
-    參數：
-        TestPath
-    ======
-    外部用函式：
-=======
 #K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
 
     ======
     內部工具函式：
@@ -229,15 +221,9 @@ def SetDAY_afterVacation(DATES):
 def SetDAY(day, total_day, DATE):   #第一天上班是星期幾/幾天
     set = {'all':list(range(total_day))}
     set['Mon']=[]; set['Tue']=[]; set['Wed']=[]
-<<<<<<< HEAD
-    set['Thr']=[]; set['Fri']=[]
-    # 所有周一，所有週二，所有週三...
-    w = ['Mon','Tue','Wed','Thr','Fri']     #星期幾的代號列表(有記不起來的疑慮)
-=======
     set['Thu']=[]; set['Fri']=[]
     # 所有周一，所有週二，所有週三...
     w = ['Mon','Tue','Wed','Thu','Fri']
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
     for i in range(total_day):
         set[ w[(DATE[i]-1)%7] ].append(i)
     return set
@@ -308,9 +294,6 @@ def SetSENIOR(alist, bp):
 	return s
 
 
-<<<<<<< HEAD
-
-=======
 """===========================================
 	Text-numberID translate function
 ==========================================="""
@@ -340,7 +323,6 @@ def Tran_t2n(text, names):
 # 		print('index to name:',text,"-> ?")
 # 		c = None
 # 	return c
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
 
 """
 Calculation of NW & NM from last month 

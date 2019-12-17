@@ -6,32 +6,7 @@ import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar, sys
 """=============================================================================#
-<<<<<<< HEAD
-    11/25 更新：
-        修正utf-8的csv檔打開會亂碼的問題
-        休假班別代號：由0改成O
-        上班日：從進線預測資料自動抓上班日期（有預測就表示要上班。允許周末上班）
-        每周晚班次數限制：改成每人可以有不同上限（從data裡的EMPLOYEE讀取）
-    11/26 更新：
-        更動第七限制式
-        D_MONFRI變數刪除
-    11/26 更新：
-        路徑檔
-    ======
-    12/1 更新：
-        資料存放路徑
-    12/3 更新：
-        年月改成csv資料輸入
-    12/4 更新:
-        所有中文名稱輸入檔的read_csv函數都加上engine='python'
-    12/8 更新：
-        更動第16限制式（使程式能支援技能增減、修改）
-        將檔名改為英文
-    12/17 更新：
-        更動人數上限限制式
-=======
 12/18 更新很多 參考文件
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
 #============================================================================="""
 
 #測試檔案檔名 - 沒有要測試時請將TestPath留空白
@@ -55,8 +30,6 @@ try:
 except:
     dir_name = './data/'   #預設資料路徑：./data/
 
-<<<<<<< HEAD
-=======
 # 測試用
 # if TestPath != "":
 #     dir_name = TestPath
@@ -66,7 +39,6 @@ except:
 #     EmployeeTest = ""
 #     AssignTest = ""
 #     NeedTest = ""
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
 #=============================================================================#
 #每月更改的資料
 #=============================================================================#
@@ -145,22 +117,19 @@ nightdaylimit = EMPLOYEE_t['night_perWeek']
 #=============================================================================#
 Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
 A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
-<<<<<<< HEAD
-B_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0).T
+
 
 
 
 #=======================================================================================================#
 #====================================================================================================#
 #=================================================================================================#
-=======
 Posi = pd.read_csv(dir_name + 'fixed/position.csv', header = None).iloc[0].tolist()
 Shift_name = Kset_t.iloc[0].tolist()
 
 #=============================================================================#
 #=============================================================================#
 #=============================================================================#
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
 # Create a new model
 #=============================================================================#
 #=============================================================================#
@@ -190,13 +159,8 @@ m = Model("first")
 #-------number-------#
 nEMPLOYEE = EMPLOYEE_t.shape[0]     #總員工人數
 nDAY = len(DEMAND_t.index)          #總日數
-<<<<<<< HEAD
-nK = len(A_t.index)                 #班別種類數
-nT = len(B_t.index)                 #總時段數
-=======
 nK = A_t.shape[0]                   #班別種類數
 nT = 24                             #總時段數
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
 nR = 5                              #午休種類數
 nW = tl.get_nW(year,month)          #總週數
 mDAY = int(calendar.monthrange(year,month)[1])
@@ -278,24 +242,11 @@ DAYset = tl.SetDAY(month_start, nDAY, DATES)     		#DAYset - 通用日子集合 
 VACnextdayset, NOT_VACnextdayset = tl.SetVACnext(month_start, nDAY, DATES) #VACnextdayset - 假期後或週一的日子集合
 
 #-------班別集合-------#
-<<<<<<< HEAD
-SHIFTset= {}                                                    #SHIFTset - 通用的班別集合，S=1,…,nS
-for ki in range(len(Kset_t)):
-    SHIFTset[Kset_t.index[ki]] = [ tl.Tran_t2n(x) for x in Kset_t.iloc[ki].dropna().values ]
-
-S_NIGHT = SHIFTset['night']                                     #S_NIGHT - 所有的晚班
-nS_NIGHT = len(S_NIGHT)
-S_BREAK = [[11,12],[1,7,14,15],[2,8,16,18],[3,9,17],[4,10]]     #Kr - 午休方式為 r 的班別
-K_skill_not = {}                                                #K_skill_not - 各技能的優先班別的補集
-for ki in range(len(SKset_t)):
-    K_skill_not[SKset_t.index[ki]] = list(set(range(0,nK)).difference(set(tl.Tran_t2n(x) for x in SKset_t.iloc[ki].dropna().values)))     #非優先的班別
-=======
 S_BREAK = [[11,12],[1,7,14,15],[2,8,16,18],[3,9,17],[4,10]]     #Kr - 午休方式為 r 的班別 
 SHIFTset= {}                                                    #SHIFTset - 通用的班別集合，S=1,…,nS
 for ki in range(len(Kset_t)):
     SHIFTset[Kset_t.index[ki]] = [ tl.Tran_t2n(x, Shift_name) for x in Kset_t.iloc[ki].dropna().values ]
 S_NIGHT = SHIFTset['night']                                     #S_NIGHT - 所有的晚班
->>>>>>> 49f1690c9cbc4122f75136fa9b39ef6705f74c68
 
 
 #============================================================================#
