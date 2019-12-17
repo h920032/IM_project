@@ -116,6 +116,13 @@ nightdaylimit = EMPLOYEE_t['night_perWeek']
 #=============================================================================#
 Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
 A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
+
+
+
+
+#=======================================================================================================#
+#====================================================================================================#
+#=================================================================================================#
 Posi = pd.read_csv(dir_name + 'fixed/position.csv', header = None).iloc[0].tolist()
 Shift_name = Kset_t.iloc[0].tolist()
 
@@ -381,13 +388,14 @@ for item in Upper＿shift:
 
 #============================================================================#
 #process
+m.params.LogFile = './data/fixed/gurobi.log'    #設定gurobi記錄檔的存放位置與檔名
 try:
-    m.params.TimeLimit = timelimit.loc[0][0]
+    m.params.TimeLimit = timelimit.loc[0][0]    #設定最多跑多久
 except:
     if type(timelimit)=='int':
         m.params.TimeLimit = timelimit
     else:
-        m.params.TimeLimit = 300    #預設跑五分鐘
+        m.params.TimeLimit = 300                #預設跑五分鐘
 m.optimize()
 #============================================================================#
 
