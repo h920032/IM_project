@@ -70,6 +70,13 @@ def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期�
         ans.append(tmp)
     return ans
 
+def SetWEEKD(D_WEEK, total_week):  
+    ans = []
+    for i in range(total_week):
+        for j in D_WEEK[i]:
+            ans.append(i)
+    return ans
+
 #JW_fri 第w周的星期五與下周一的集合
 #JW_fri 無國定假日的話
 def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
@@ -171,22 +178,6 @@ def Tran_t2n(text, names):
         c = None
     return c
 
-# def TranK_t2n(text):
-# 	K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
-# 	try:
-# 		c = K_type.index(text)
-# 	except:
-# 		print('class indexr to class name code:',text,"-> ?")
-# 		c = None
-# 	return  c
-
-# def TranName_t2n(text, names):
-# 	try:
-# 		c = names.index(text)
-# 	except:
-# 		print('index to name:',text,"-> ?")
-# 		c = None
-# 	return c
 
 """
 Calculation of NW & NM from last month 
