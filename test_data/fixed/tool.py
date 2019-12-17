@@ -1,4 +1,4 @@
-# !/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 For caculate weekdays
@@ -8,13 +8,13 @@ import math, re
 import pandas as pd
 from datetime import datetime, date
 
-#K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
+K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
 
 
 # 下面的try/except是為了因應條件全空時
 def readFile(dir, header_=None, skiprows_=[0], index_col_=None):
     try:
-        t = pd.read_csv(dir, header = header_, skiprows=skiprows_, index_col=index_col_, engine='python')
+        t = pd.read_csv(dir, header = header_, skiprows=skiprows_, index_col=index_col_, encoding='utf8', engine='python')
     except:
         t = pd.DataFrame()
     return t
@@ -46,7 +46,7 @@ def get_startD(year,month):
 ==========================================="""
 #JW 第w周包含的日子集合
 #JW 無國定假日的話
-def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期幾/幾天/幾週
+def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期幾/幾天/幾週/工作天集合/日期集合
     ans = []
     count  = 1
     for i in range(total_week):
@@ -70,6 +70,13 @@ def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期�
         ans.append(tmp)
     return ans
 
+def SetWEEKD(D_WEEK, total_week):  
+    ans = []
+    for i in range(total_week):
+        for j in D_WEEK[i]:
+            ans.append(i)
+    return ans
+
 #JW_fri 第w周的星期五與下周一的集合
 #JW_fri 無國定假日的話
 def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
@@ -85,38 +92,12 @@ def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
 def SetDAY(day, total_day, DATE):   #第一天上班是星期幾/幾天
     set = {'all':list(range(total_day))}
     set['Mon']=[]; set['Tue']=[]; set['Wed']=[]
-    set['Thu']=[]; set['Fri']=[]
+    set['Tru']=[]; set['Fri']=[]
     # 所有周一，所有週二，所有週三...
-    w = ['Mon','Tue','Wed','Thu','Fri']
+    w = ['Mon','Tue','Wed','Tru','Fri']
     for i in range(total_day):
         set[ w[(DATE[i]-1)%7] ].append(i)
     return set
-
-#VACnextdayset 假日後或週一的集合
-def SetVACnext(month_start, nDAY, DATES):
-    ans = []
-    ans2 = []
-    #第一天不是1 / 第一天是1
-    if DATES[0]!=1:
-        ans.append(0)
-    elif (month_start == 0 and DATES[0]==1):
-        ans.append(0)
-    else:
-        ans2.append(0)
-    
-    
-    for i,day in enumerate(DATES):
-        if i==0:
-            continue
-        else:
-            #我的前一天不是我的數字-1(代表前一天放假)
-            if(day-1!=DATES[i-1]):
-                ans.append(i)
-            else:
-                ans2.append(i)
-    return ans, ans2
-        
-
 
 
 """===========================================
@@ -135,33 +116,30 @@ def SetSKILL(matrix):
     return ans
 
 #POSI 每個職位的員工組合
-def SetPOSI(alist, order):
+def SetPOSI(alist):
     n = len(alist)
     s = {'任意':list(range(n))}  #預設職位：任意(包含所有人)
     #登錄所有職位
-    for i,p in enumerate(order):
+    for p in set(alist):
         s[p] = []
-        poslist = []
-        for j in range(i, len(order)):
-            poslist.append(order[j])
-        for i in range(n):
-            if alist[i] in poslist:
-                s[p].append(i)
+    #一個個把人加入他/她的職位所屬的群組
+    for i in range(n):
+        s[ alist[i] ].append(i)
     return s
 
 #SENIOR 超過特定年資的員工組合
 def SetSENIOR(alist, bp):
-	s = []
-	for i in range(len(alist)):
-		if alist[i] >= bp:
-			s.append(i)
-	return s
+    s = []
+    for i in range(len(alist)):
+        if alist[i] >= bp:
+            s.append(i)
+    return s
 
 
 """===========================================
 	Text-numberID translate function
 ==========================================="""
-def Tran_t2n(text, names):
+def Tran_t2n(text, names=K_type):
     try:
         c = names.index(text)
     except:
@@ -171,22 +149,6 @@ def Tran_t2n(text, names):
         c = None
     return c
 
-# def TranK_t2n(text):
-# 	K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
-# 	try:
-# 		c = K_type.index(text)
-# 	except:
-# 		print('class indexr to class name code:',text,"-> ?")
-# 		c = None
-# 	return  c
-
-# def TranName_t2n(text, names):
-# 	try:
-# 		c = names.index(text)
-# 	except:
-# 		print('index to name:',text,"-> ?")
-# 		c = None
-# 	return c
 
 """
 Calculation of NW & NM from last month 
@@ -266,5 +228,5 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
                        for k in range (nEMPLOYEE) :
                            if (temp_name == str(EMPLOYEE_t.loc[k,'id'])) : 
                                EMPLOYEE_t.at[k,'NM'] = int(EMPLOYEE_t.iloc[k,9]) + 1
-
-
+    
+#    print (EMPLOYEE_t["NM"])

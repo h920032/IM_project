@@ -1,0 +1,149 @@
+D:/Ting/桌面/test/1216_testing/per_month/Assign_60人各休一.csv
+D:/Ting/桌面/test/1216_testing/per_month/Need_標準.csv
+D:/Ting/桌面/test/1216_testing/per_month/Employee_60人.csv
+len(employee) = 60
+
+LIMIT_ORDER(): return 25 kinds of order
+
+
+生成INITIAL POOL： parent = 0 , result = 97750.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 1 , result = 97450.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 2 , result = 102650.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 3 , result = 94500.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 4 , result = 99300.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 5 , result = 99450.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 6 , result = 94200.0
+There is a lack of employee who has been in the career more than 1 years on Mon
+Some constraints fails.
+
+生成INITIAL POOL： parent = 7 , result = 94500.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 8 , result = 98350.0
+All constraints are met.
+
+生成INITIAL POOL： parent = 9 , result = 96950.0
+All constraints are met.
+
+INITIAL POOL completed
+
+產生 10 個結果於 initail pool ( 9 個合理解) ，共花費 12.343471050262451 秒
+
+
+
+基因演算法開始
+
+
+   alg() #### i = 0 #### range = 10
+1 2 3 4 5 6 7 8 9 
+
+   alg() #### i = 1 #### range = 10
+0 2 3 4 5 6 7 8 9 
+
+   alg() #### i = 2 #### range = 10
+0 1 3 4 5 6 7 8 9 
+
+   alg() #### i = 3 #### range = 10
+0 1 2 4 5 6 7 8 9 
+
+   alg() #### i = 4 #### range = 10
+0 1 2 3 5 6 7 8 9 
+
+   alg() #### i = 5 #### range = 10
+0 1 2 3 4 6 7 8 9 
+
+   alg() #### i = 6 #### range = 10
+0 1 2 3 4 5 7 8 9 
+
+   alg() #### i = 7 #### range = 10
+0 1 2 3 4 5 6 8 9 
+
+   alg() #### i = 8 #### range = 10
+0 1 2 3 4 5 6 7 9 
+
+   alg() #### i = 9 #### range = 10
+0 1 2 3 4 5 6 7 8 
+
+基因演算法最佳解： 104650.0
+基因演算法共耗時 388.3984429836273 秒
+
+    0   1   2   3   4   5   6   7   8   ...  11  12  13  14  15  16  17  18  19
+0    O  AS  N1  CD  C2  N1  P3  A5  P2  ...  OB  P4  P5  P2  N1  A4  P3  P3  N1
+1   CD   O  CD  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+2   CD  CD   O  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+3   AS  P3  N1   O   O  N1  AS  A2  CD  ...  A4  A4  AS  A2  N1  A3  C2  P2  N1
+4   C2  N1  CD  A4   O  OB  M1   O  A5  ...  P3  P4  A3  N1  A5  C4  P4  C3  N1
+5   A5  N1   O  A5  N1   O  P4  C2  AS  ...  P4  CD  C4  N1  MS  AS  C3  A5  N1
+6   CD  CD  CD  CD  CD  CD   O  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+7   CD  N1  A4  C4  N1  A4  A2   O  A4  ...  C2  A2  P4  N1  P2  OB  C2  AS  N1
+8   A3  N1  P2  P5  N1  AS  A2  A5   O  ...  P2  P3  MS  N1  MS  P4  A2  C2  N1
+9   C3  N1  A2  C3  N1   O  A2  OB  MS  ...  A3  AS  C3  N1  C3  CD  C3  P3  N1
+10  P5  P2  N1  A2  MS  N1  A5  CD  CD  ...  A2  P4  MS  CD  N1  C2  A5  C2  N1
+11  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...   O  CD  CD  CD  CD  CD  CD  CD  CD
+12  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...  CD   O  CD  CD  CD  CD  CD  CD  CD
+13  A4  A4  N1   O  A2  N1  A3  A5  A3  ...  A5  MS   O  A5  N1  C3  C4  A5  N1
+14  CD  N1  P3  AS  N1  P2  CD  CD  C2  ...  AS  A4  A3   O   O  P4  MS  A2  N1
+15  P4  N1   O  A5  N1  P3  A4  C4  A5  ...  C2  P2  OB  N1   O  AS  P5  A3  N1
+16  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD   O  CD  CD  CD
+17  CD  N1  P5  A2  N1  A5  P5  C2  A4  ...  C3   O  OB  N1   O  P4   O  C2  N1
+18  CD  N1  CD  OB  N1  CD  A5  M1  CD  ...  C2  OB  A3  N1   O  M1  OB   O  N1
+19  MS  N1  P4  A3  N1  OB  C4  P3  A4  ...  A4  C2  C3  N1  MS  P2  MS  C3   O
+20   O  P2  N1  P3  A2  N1  P2  P4  AS  ...  A4  P4  A4  OB  N1  C3  P5  A2  N1
+21  CD   O  CD  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+22  CD  CD   O  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+23  A3  C3  N1   O  P2  N1   O  P4  CD  ...  P2  C3  A2  P4  N1  A2  A4  C2  N1
+24  A5  N1  P4  C4   O  P2  MS  P3  OB  ...  CD  P2  P5  N1  A5  N1  P2  AS  N1
+25  A4  N1  C3  OB  N1   O  A3  A5  A2  ...  N1  CD   O  N1  P5  A3  A3  A3  N1
+26  CD  CD  CD  CD  CD  CD   O  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+27  A2  N1  P3   O  N1  P4  M1   O  P5  ...  MS  M1  P2  N1  P3  MS  N1  P5  N1
+28  C3  N1  OB  CD  N1  C4  C2  W6   O  ...  N1  MS  A5  N1  P3  W6  P5  C2  N1
+29   O  N1  A3  OB  N1  A5  P5  OB  A3  ...  AS  CD  MS  N1  A2  OB  CD  C2  N1
+30  P2  P5  N1  C2  A5  N1  CD  OB  P3  ...  C2  C2  A4  CD  N1  C4  A2  P2  N1
+31  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...   O  CD  CD  CD  CD  CD  CD  CD  CD
+32  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...  CD   O  CD  CD  CD  CD  CD  CD  CD
+33  P2  A3  N1   O  C2  N1  A2  OB  C3  ...  AS  OB   O  CD  N1  MS   O   O  N1
+34  C2  N1  AS  P4  N1  A3  N1  P2   O  ...  C2  A5  C2   O  OB  C2  A4   O  N1
+35  A2  N1  AS  A2  N1  P5  P2  A4  A2  ...  P2  OB  A2  N1   O  OB  M1  A2  N1
+36  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD   O  CD  CD  CD
+37  OB  N1  P5  A2  N1  A3  CD  A3  MS  ...  CD   O  OB  N1  P5  P3   O  P4  N1
+38  OB  N1  A5  A5  N1  A2  MS  W6  P2  ...  M1  P5  CD  N1  A4  MS  P3   O  N1
+39  CD  N1  C4   O  N1  P2  C2  N1  MS  ...  OB   O  CD  N1   O  C3  C4  OB   O
+40   O  OB  N1  A4  OB  N1   O  P5  C3  ...  P3  C3  OB  A5  N1  A3  MS   O  N1
+41  CD   O  CD  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+42  CD  CD   O  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+43  P4  MS  N1   O  P4  N1  C3  P3  C3  ...  A2  A5  A5  C2  N1  P3  A2   O  N1
+44  C3  N1  C4  A4   O  P5  P3  P3  C2  ...  A4  MS  P5  N1  A5  AS  OB  P2  N1
+45  MS  N1  C2  A2  N1   O  C3  P2  P3  ...  P4  P2  OB  N1  A5  P5  AS  P2  N1
+46  CD  CD  CD  CD  CD  CD   O  CD  CD  ...  CD  CD  CD  CD  CD  CD  CD  CD  CD
+47  P3  N1  CD  CD  N1  P3  A4   O   O  ...  A2  P4  A3  N1  A3  CD  A5  P3  N1
+48   O  N1  P5  P2  N1   O  P2  P2   O  ...  N1  P3  A4  N1  A5  A5  P2  C3  N1
+49  A4  N1  A5  A2  N1  CD  C2  W6  A2  ...  C4  A2  P5  N1  A3  P3  A3  OB  N1
+50  P2  N1  A2  C4  N1   O  A4  A2  P5  ...  MS  C2  A3  N1  C4  A2  P3  C3  N1
+51  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...   O  CD  CD  CD  CD  CD  CD  CD  CD
+52  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...  CD   O  CD  CD  CD  CD  CD  CD  CD
+53  A3  N1  C4  A4  N1  CD  C2  C4  AS  ...  C2  CD   O  N1  P2  MS  C3  A4  N1
+54  A4  N1  OB   O  N1  C4  A2  P2  A2  ...  W6  A2  A4   O  A3  A4  P4  C4  N1
+55  CD  N1  A3  A2  N1  AS  MS  N1   O  ...  P3  N1  A5  N1   O  P4  N1  A4  N1
+56  CD  CD  CD  CD  CD  CD  CD  CD  CD  ...  CD  CD  CD  CD  CD   O  CD  CD  CD
+57  A5  N1  P4  P2  N1  C3  A5  P3  C2  ...  A3  P5  P3  N1  P3  OB   O  A5  N1
+58   O  N1  AS  P4  N1  CD  P2  C4   O  ...  A3  A2  A2  N1  P5  P4   O   O  N1
+59  A3  N1  C2  A4  N1  MS  M1  A3  AS  ...  CD  MS  OB  N1  P3  C2  N1  P5   O
+
+[60 rows x 20 columns]
+
+
+*** Done in 400.8457741737366 sec. ***
+
+***Repl Closed***
