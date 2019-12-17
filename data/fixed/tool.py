@@ -44,15 +44,14 @@ def get_startD(year,month):
 """===========================================
 	Set DAY Functions
 ==========================================="""
-#JW 第w周包含的日子集合
-#JW 無國定假日的話
-def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期幾/幾天/幾週
+#JW 第w周包含的日子集合，參數：第一天上班是星期幾,共幾天,共幾週,日子集合,日期集合
+def SetDAYW(day, total_day, total_week, DAY, DATE):  
     ans = []
     count  = 1
-    for i in range(total_week):
+    for i in range(total_week): #對每一周
         tmp = []
-        if(i == 0):
-            for j in range(8-day):
+        if(i == 0): #第一周(很可能不完整)
+            for j in range(8-day):  #對星期日~一
                 for k in DAY:
                     if count == DATE[k]:   #該天有上班
                         tmp.append(k)
@@ -62,7 +61,7 @@ def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期�
             for j in range(7):
                 for k in DAY:
                     if count == DATE[k]:   #該天有上班
-                        tmp.append(k)
+                        tmp.append(k)       #加入
                         break
                 count+=1
                 if count == total_day + 1:
@@ -70,9 +69,9 @@ def SetDAYW(day, total_day, total_week, DAY, DATE):   #第一天上班是星期�
         ans.append(tmp)
     return ans
 
+#!!!!!!當前沒有用到，需要將此函數改成「假期後的第一天的集合」
 #JW_fri 第w周的星期五與下周一的集合
-#JW_fri 無國定假日的話
-def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
+def SetDAY_afterVacation(JWset, total_week):   #JW日子集合/幾週
     ans = []
     for i in range(total_week-1):
         tmp = []
