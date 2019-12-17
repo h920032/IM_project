@@ -246,9 +246,11 @@ S_BREAK = [[11,12],[1,7,14,15],[2,8,16,18],[3,9,17],[4,10]]     #Kr - 午休方�
 SHIFTset= {}                                                    #SHIFTset - 通用的班別集合，S=1,…,nS
 for ki in range(len(Kset_t)):
     SHIFTset[Kset_t.index[ki]] = [ tl.Tran_t2n(x, Shift_name) for x in Kset_t.iloc[ki].dropna().values ]
+for ki in range(len(Shift_name)):
+    SHIFTset[Shift_name[ki]] =ki
 S_NIGHT = SHIFTset['night']                                     #S_NIGHT - 所有的晚班
 
-
+"""
 #============================================================================#
 #Variables
 #GRB.BINARY/GRB.INTEGER/GRB.CONTINUOUS
@@ -611,3 +613,4 @@ new_2.to_csv(result_y, encoding="utf-8_sig")
 # print(new_2.T)
 
 #============================================================================#
+"""
