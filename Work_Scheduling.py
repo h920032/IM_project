@@ -247,7 +247,7 @@ SHIFTset= {}                                                    #SHIFTset - 通�
 for ki in range(len(Kset_t)):
     SHIFTset[Kset_t.index[ki]] = [ tl.Tran_t2n(x, Shift_name) for x in Kset_t.iloc[ki].dropna().values ]
 for ki in range(len(Shift_name)):
-    SHIFTset[Shift_name[ki]] =ki
+    SHIFTset[Shift_name[ki]] = [ki]
 S_NIGHT = SHIFTset['night']                                     #S_NIGHT - 所有的晚班
 
 """
