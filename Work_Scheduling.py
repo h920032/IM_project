@@ -52,6 +52,17 @@ try:
 except:
     dir_name = './data/'   #預設資料路徑：./data/
 
+# 測試用
+# if TestPath != "":
+#     dir_name = TestPath
+#     parameters_dir = TestPath
+# else:
+#     dir_name = './data/'
+#     EmployeeTest = ""
+#     AssignTest = ""
+#     NeedTest = ""
+
+
 #=============================================================================#
 #每月更改的資料
 #=============================================================================#
