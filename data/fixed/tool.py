@@ -8,11 +8,7 @@ import math, re
 import pandas as pd
 from datetime import datetime, date
 
-"""=============================================================================#
-    參數：
-        TestPath
-    ======
-    外部用函式：
+#K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
 
     ======
     內部工具函式：
@@ -41,8 +37,8 @@ K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','
 # 測試檔案檔名 - 沒有要測試時請將TestPath留空白
 # TestPath = ""
 TestPath = "../../test_data/"
-EmployeeTest = "_30人"
-AssignTest = "_30人各休一"
+EmployeeTest = "_40人"
+AssignTest = "_40人各休一"
 NeedTest = "_標準"
 
 
@@ -64,7 +60,7 @@ NeedTest = "_標準"
 #讀檔：try/except是為了因應條件全空時
 def readFile(dir, header_=None, skiprows_=[0], index_col_=None):
     try:
-        t = pd.read_csv(dir, header = header_, skiprows=skiprows_, index_col=index_col_, engine='python')
+        t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,encoding='utf8',engine='python')
     except:
         t = pd.DataFrame()
     return t
@@ -208,29 +204,59 @@ def SetDAYW(day, total_day, total_week, DAY, DATE):
         ans.append(tmp)
     return ans
 
-#!!!!!!當前沒有用到，需要將此函數改成「假期後的第一天的集合」
-#JW_fri 第w周的星期五與下周一的集合，參數：所有上班日期
-def SetDAY_afterVacation(DATES):
-    return []
-# def SetDAY_afterVacation(JWset, total_week):
-#     ans = []
-#     for i in range(total_week-1):
-#         tmp = []
-#         tmp.append(JWset[i][-1])
-#         tmp.append(JWset[i+1][0])
-#         ans.append(tmp)
-#     return ans
+def SetWEEKD(D_WEEK, total_week):  
+    ans = []
+    for i in range(total_week):
+        for j in D_WEEK[i]:
+            ans.append(i)
+    return ans
+
+#JW_fri 第w周的星期五與下周一的集合
+#JW_fri 無國定假日的話
+def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
+    ans = []
+    for i in range(total_week-1):
+        tmp = []
+        tmp.append(JWset[i][-1])
+        tmp.append(JWset[i+1][0])
+        ans.append(tmp)
+    return ans
 
 #Jset 通用日子集合
 def SetDAY(day, total_day, DATE):   #第一天上班是星期幾/幾天
     set = {'all':list(range(total_day))}
     set['Mon']=[]; set['Tue']=[]; set['Wed']=[]
-    set['Thr']=[]; set['Fri']=[]
+    set['Thu']=[]; set['Fri']=[]
     # 所有周一，所有週二，所有週三...
-    w = ['Mon','Tue','Wed','Thr','Fri']     #星期幾的代號列表(有記不起來的疑慮)
+    w = ['Mon','Tue','Wed','Thu','Fri']
     for i in range(total_day):
         set[ w[(DATE[i]-1)%7] ].append(i)
     return set
+
+#VACnextdayset 假日後或週一的集合
+def SetVACnext(month_start, nDAY, DATES):
+    ans = []
+    ans2 = []
+    #第一天不是1 / 第一天是1
+    if DATES[0]!=1:
+        ans.append(0)
+    elif (month_start == 0 and DATES[0]==1):
+        ans.append(0)
+    else:
+        ans2.append(0)
+    
+    
+    for i,day in enumerate(DATES):
+        if i==0:
+            continue
+        else:
+            #我的前一天不是我的數字-1(代表前一天放假)
+            if(day-1!=DATES[i-1]):
+                ans.append(i)
+            else:
+                ans2.append(i)
+    return ans, ans2
+        
 
 
 
@@ -250,15 +276,18 @@ def SetSKILL(matrix):
     return ans
 
 #POSI 每個職位的員工組合
-def SetPOSI(alist):
+def SetPOSI(alist, order):
     n = len(alist)
     s = {'任意':list(range(n))}  #預設職位：任意(包含所有人)
     #登錄所有職位
-    for p in set(alist):
+    for i,p in enumerate(order):
         s[p] = []
-    #一個個把人加入他/她的職位所屬的群組
-    for i in range(n):
-        s[ alist[i] ].append(i)
+        poslist = []
+        for j in range(i, len(order)):
+            poslist.append(order[j])
+        for i in range(n):
+            if alist[i] in poslist:
+                s[p].append(i)
     return s
 
 #SENIOR 超過特定年資的員工組合
@@ -270,6 +299,18 @@ def SetSENIOR(alist, bp):
 	return s
 
 
+"""===========================================
+	Text-numberID translate function
+==========================================="""
+def Tran_t2n(text, names):
+    try:
+        c = names.index(text)
+    except:
+        print('Tran_t2n():',text,"not in ",end='')
+        print(names[0:3],end='')
+        print('...')
+        c = None
+    return c
 
 
 """
