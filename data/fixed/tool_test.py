@@ -40,9 +40,8 @@ NeedTest = "_標準"
 """================================================================================================================
     工具函式
 ==============================================================================================================="""
-
 """===========================================
-    Text-numberID translate function
+    index與實際數值轉換
 ==========================================="""
 def Tran_t2n(text, names=K_type):
     try:
@@ -53,6 +52,16 @@ def Tran_t2n(text, names=K_type):
     return c
 
 
+"""===========================================
+    讀檔相關
+==========================================="""
+#讀檔：try/except是為了因應條件全空時
+def readFile(dir, header_=None, skiprows_=[0], index_col_=None):
+    try:
+        t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,encoding='utf-8',engine='python')
+    except:
+        t = pd.DataFrame()
+    return t
 
 
 
@@ -60,18 +69,17 @@ def Tran_t2n(text, names=K_type):
 
 """================================================================================================================
     import data
+        要讀的檔案：
+            per_month/  Date, Need, Employee, 上月排班(Scheduling_年_月), Assign
+                              | 儲存日期list
+                                    | 儲存員工名字、ID list
+                                    | 用ijk的len()開大表格
+                                               | 計算 上月末日、上月斷尾周 的晚班數
+                                                                         | Assign一邊讀一邊填入
+                                                                         | 防呆：指定排班與晚班數量衝突
 ================================================================================================================"""
 
-#=============================================================================#
-#def function
-#=============================================================================#
-#讀檔：try/except是為了因應條件全空時
-def readFile(dir, header_=None, skiprows_=[0], index_col_=None):
-    try:
-        t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,encoding='utf8',engine='python')
-    except:
-        t = pd.DataFrame()
-    return t
+
 
 #=============================================================================#
 #file path
