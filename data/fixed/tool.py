@@ -31,7 +31,7 @@ K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','
 #讀檔：try/except是為了因應條件全空時
 def readFile(dir, header_=None, skiprows_=[0], index_col_=None):
     try:
-        t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,encoding='utf8',engine='python')
+        t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,encoding='utf-8-sig',engine='python')
     except:
         t = pd.DataFrame()
     return t

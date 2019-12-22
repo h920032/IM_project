@@ -104,9 +104,10 @@ try:    # 下面的try/except都是為了因應條件全空時
 except:
 	SENIOR_bp = []
 try:
-	timelimit = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0, engine='python')
+    timelimit = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0, engine='python')
 except:
-	timelimit = 300	#預設跑五分鐘
+    print('\n無法讀取time_limit.csv，改用預設時間限制\n')
+    timelimit = 300	#預設跑五分鐘
 
 nightdaylimit = EMPLOYEE_t['night_perWeek']
 
