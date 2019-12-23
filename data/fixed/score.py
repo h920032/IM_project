@@ -113,7 +113,7 @@ def score(year,month,A_t,DEMAND_t,EMPLOYEE_t,NM_t,NW_t,E_NAME, E_SENIOR_t, E_POS
 
     #complement = int(max(max(df_c.reshape(1,nEMPLOYEE*nK))))
     
-    print(lack, surplus, nightcount, breakCount)
+    #print(lack, surplus, nightcount, breakCount)
     result = P0 * lack + P1 * surplus + P2 * nightcount + P3 * breakCount
 
     #print(result)
