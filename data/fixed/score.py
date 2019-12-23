@@ -3,8 +3,12 @@ import numpy as np
 import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar
+"""
+
 year = 2020
 month = 1
+
+
 
 dir_name = './data/'
 A_t = pd.read_csv(dir_name + 'fixed/' + 'fix_class_time.csv', header = 0, index_col = 0)
@@ -47,62 +51,70 @@ S_BREAK = [[11,12],[1,7,14,15],[2,8,16,18],[3,9,17],[4,10]]
 df_x = []
 for i in pd.read_csv("Schedule_2019_4.csv", header = 0, index_col = 0).drop('name', axis = 1).values.tolist():
     df_x.append(list(filter(lambda x: x!='X', i)))
-K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
-K_type_dict = {1:'O',2:'A2',3:'A3',4:'A4',5:'A5',6:'MS',7:'AS',8:'P2',9:'P3',10:'P4',11:'P5',12:'N1',13:'M1',14:'W6',15:'CD',16:'C2',17:'C3',18:'C4',19:'OB'}
-i_nb = np.vectorize({v: k for k, v in K_type_dict.items()}.get)(np.array(df_x))
 
-#計算人力情形
-people = np.zeros((nDAY,24))
-for i in range(0,nEMPLOYEE):
-    for j in range(0,nDAY):
-        for k in range(0,24):
-            people[j][k] = people[j][k] + A_t.values[i_nb[i][j]-1][k]
-output_people = (people - DEMAND).tolist()
-lack = 0
-for i in output_people:
-    for j in i:
-        if j < 0:
-            lack = -j + lack
+"""
 
-surplus = 0
-for i in output_people:
-    for j in i:
-        if j > 0:
-            surplus = j + surplus
+def score(year,month,A_t,DEMAND_t,EMPLOYEE_t,NM_t,NW_t,E_NAME, E_SENIOR_t, E_POSI_t, E_SKILL_t, P_t, Kset_t, SKset_t, M_t, L_t, U_t, Ratio_t, SENIOR_bp, timelimit, nightdaylimit, nEMPLOYEE, nDAY, nW, nK, DEMAND, P0, P1, P2, P3, S_NIGHT, S_BREAK, df_x):
 
-nightcount = []
-for i in i_nb:
-    count = 0
-    for j in i:
-        if j == 12 or j == 13 or j == 14:
-            count = count + 1
-    nightcount.append(count)
-nightcount = max(nightcount)
 
-date = datetime.datetime.strptime(str(year)+'-'+str(month)+'-'+str(1), "%Y-%m-%d")
-weekday = date.weekday()
-if weekday == 5 or weekday == 6:
-    weekday = 0
+    K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
+    K_type_dict = {1:'O',2:'A2',3:'A3',4:'A4',5:'A5',6:'MS',7:'AS',8:'P2',9:'P3',10:'P4',11:'P5',12:'N1',13:'M1',14:'W6',15:'CD',16:'C2',17:'C3',18:'C4',19:'OB'}
+    i_nb = np.vectorize({v: k for k, v in K_type_dict.items()}.get)(np.array(df_x))
 
-breakCount = np.ones((nEMPLOYEE,nW,5))
-for i in range(nEMPLOYEE):
-    for j in range(nDAY):
-        w_d = int((j+weekday)/5)
-        if i_nb[i][j]!=1:
-            for k in range(5):
-                if A_t.values[i_nb[i][j]-1][k+5]==1:
-                    breakCount[i][w_d][k]=0
-breakCount = int(sum(sum(sum(breakCount))))
+    #計算人力情形
+    people = np.zeros((nDAY,24))
+    for i in range(0,nEMPLOYEE):
+        for j in range(0,nDAY):
+            for k in range(0,24):
+                people[j][k] = people[j][k] + A_t.values[i_nb[i][j]-1][k]
+    output_people = (people - DEMAND).tolist()
+    lack = 0
+    for i in output_people:
+        for j in i:
+            if j < 0:
+                lack = -j + lack
 
-df_a = EMPLOYEE_t.drop(['name_English', 'name_Chinese', 'id', 'Senior', 'Position', 'NM','NW'],axis = 1).values
-df_c = np.zeros((nEMPLOYEE,nK))
-for i in range(nEMPLOYEE):
-    if sum(df_a[i]) > 0:
+    surplus = 0
+    for i in output_people:
+        for j in i:
+            if j > 0:
+                surplus = j + surplus
+
+    nightcount = []
+    for i in i_nb:
+        count = 0
+        for j in i:
+            if j == 12 or j == 13 or j == 14:
+                count = count + 1
+        nightcount.append(count)
+    nightcount = max(nightcount)
+
+    date = datetime.datetime.strptime(str(year)+'-'+str(month)+'-'+str(1), "%Y-%m-%d")
+    weekday = date.weekday()
+    if weekday == 5 or weekday == 6:
+        weekday = 0
+
+    breakCount = np.ones((nEMPLOYEE,nW,5))
+    for i in range(nEMPLOYEE):
         for j in range(nDAY):
-            df_c[i][i_nb[i][j]-1]=df_c[i][i_nb[i][j]-1]+1
+            w_d = int((j+weekday)/5)
+            if i_nb[i][j]!=1:
+                for k in range(5):
+                    if A_t.values[i_nb[i][j]-1][k+5]==1:
+                        breakCount[i][w_d][k]=0
+    breakCount = int(sum(sum(sum(breakCount))))
 
-complement = int(max(max(df_c.reshape(1,nEMPLOYEE*nK))))
+    df_a = EMPLOYEE_t.drop(['Name_English', 'Name_Chinese', 'ID', 'Senior', 'Position', 'NM','NW'],axis = 1).values
+    df_c = np.zeros((nEMPLOYEE,nK))
+    for i in range(nEMPLOYEE):
+        if sum(df_a[i]) > 0:
+            for j in range(nDAY):
+                df_c[i][i_nb[i][j]-1]=df_c[i][i_nb[i][j]-1]+1
 
-result = P0 * lack + P1 * surplus + P2 * nightcount + P3 * breakCount + P4 * complement
+    #complement = int(max(max(df_c.reshape(1,nEMPLOYEE*nK))))
+    
+    print(lack, surplus, nightcount, breakCount)
+    result = P0 * lack + P1 * surplus + P2 * nightcount + P3 * breakCount
 
-print(result)
+    #print(result)
+    return result

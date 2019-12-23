@@ -1,10 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3OA
 # -*- coding: utf-8 -*-
 from gurobipy import *
 import numpy as np
 import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar, sys
+from data.fixed.score import score
 """=============================================================================#
 12/18 更新很多 參考文件
 #============================================================================="""
@@ -614,3 +615,7 @@ new_2.to_csv(result_y, encoding="utf-8_sig")
 # print(new_2.T)
 
 #============================================================================#
+
+score = score(year,month,A_t,DEMAND_t,EMPLOYEE_t,NM_t,NW_t,E_NAME, E_SENIOR_t, E_POSI_t, E_SKILL_t, P_t, Kset_t, SKset_t, M_t, L_t, U_t, Ratio_t, SENIOR_bp, timelimit, nightdaylimit, nEMPLOYEE, nDAY, nW, nK, DEMAND, P0, P1, P2, P3, S_NIGHT, S_BREAK, df_x.values.tolist())
+
+print('score:',score)
