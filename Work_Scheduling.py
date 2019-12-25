@@ -44,7 +44,7 @@ except:
 #每月更改的資料
 #=============================================================================#
 #year/month
-date = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0, engine='python')
+date = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0)
 year = int(date.iloc[0,0])
 month = int(date.iloc[1,0])
 
@@ -53,7 +53,7 @@ M_t = tl.readFile(dir_name + 'per_month/Assign.csv')
 # M_t = tl.readFile(dir_name + 'per_month/Assign'+AssignTest+'.csv')
 M_t[0] = [ str(x) for x in M_t[0] ]           #強制將ID設為string
 #進線需求預估
-DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0, engine='python').T
+DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0).T
 # DEMAND_t = pd.read_csv(dir_name+"per_month/Need"+NeedTest+".csv", header = 0, index_col = 0, engine='python').T
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
 
@@ -105,7 +105,7 @@ try:    # 下面的try/except都是為了因應條件全空時
 except:
 	SENIOR_bp = []
 try:
-    timelimit = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0, engine='python')
+    timelimit = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0)
 except:
     print('\n無法讀取time_limit.csv，改用預設時間限制\n')
     timelimit = 300	#預設跑五分鐘
@@ -116,8 +116,8 @@ nightdaylimit = EMPLOYEE_t['night_perWeek']
 #=============================================================================#
 #固定參數：班別總數與時間
 #=============================================================================#
-Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0, engine='python') #class set
-A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0, engine='python')
+Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
+A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
 
 
 
@@ -375,7 +375,7 @@ for item in NOTPHONE_CLASS_special:
 
              
 #17 晚班年資2年以上人數需佔 50% 以上
-for ix,item in list(enumerate(PERCENT)):
+for ix,item in enumerate(PERCENT):
     for j in DAYset[item[0]]:
         for k in SHIFTset[item[1]]:
             m.addConstr(quicksum(work[i,j,k] for i in E_SENIOR[ix]) >= item[2]*quicksum(work[i,j,k] for i in EMPLOYEE),"c17")

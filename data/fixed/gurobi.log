@@ -3687,3 +3687,187 @@ Solution count 0
 
 Model is infeasible
 Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:19:53
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3829 rows, 14252 columns and 312303 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [4e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:20:36
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3829 rows, 14252 columns and 312303 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [4e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:21:01
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3829 rows, 14252 columns and 312303 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [4e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:21:38
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3829 rows, 14252 columns and 312303 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [4e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:22:45
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3829 rows, 14252 columns and 312303 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [4e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:23:18
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3829 rows, 14252 columns and 312303 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [4e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.03 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:27:42
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:27:58
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
