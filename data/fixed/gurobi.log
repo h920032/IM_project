@@ -2715,6 +2715,7 @@ Solution count 10: 137660 137690 137720 ... 138260
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 1.376600000000e+05, best bound 1.376500000000e+05, gap 0.0073%
+<<<<<<< HEAD
 
 Gurobi 8.1.1 (win64) logging started 12/23/19 17:02:47
 
@@ -3896,6 +3897,31 @@ Model is infeasible
 Best objective -, best bound -, gap -
 
 Gurobi 8.1.1 (win64) logging started 12/25/19 18:52:49
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+=======
+>>>>>>> parent of 6baaf7e... test
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 18:57:16
 
 Changed value of parameter LogFile to ./data/fixed/gurobi.log
    Prev: gurobi.log  Default: 
