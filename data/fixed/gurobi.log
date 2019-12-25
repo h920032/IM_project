@@ -3365,3 +3365,256 @@ Solution count 10: 14540 14570 14630 ... 15020
 
 Time limit reached
 Best objective 1.454000000000e+04, best bound 1.379000000000e+04, gap 5.1582%
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 16:27:23
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.06s
+
+Explored 0 nodes (0 simplex iterations) in 0.10 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 16:36:56
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 16:40:17
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.03 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 16:45:54
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 16:52:03
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.03 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 16:56:23
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:00:00
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:00:57
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:04:17
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:06:09
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 12/25/19 17:06:52
+
+Changed value of parameter LogFile to ./data/fixed/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 300.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 3824 rows, 14252 columns and 312298 nonzeros
+Variable types: 482 continuous, 13770 integer (13770 binary)
+Coefficient statistics:
+  Matrix range     [3e-01, 5e+00]
+  Objective range  [3e+01, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.02 seconds
+Thread count was 1 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -

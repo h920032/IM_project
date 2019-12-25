@@ -44,7 +44,7 @@ except:
 #每月更改的資料
 #=============================================================================#
 #year/month
-date = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0)
+date = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0, engine='python')
 year = int(date.iloc[0,0])
 month = int(date.iloc[1,0])
 
@@ -58,7 +58,7 @@ DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0,
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
 
 #employees data
-EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0) 
+EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0, engine='python') 
 # EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee"+EmployeeTest+".csv", header = 0) 
 E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
 E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
@@ -91,13 +91,13 @@ NW_t = EMPLOYEE_t['NW']
 #半固定參數
 #=============================================================================#
 P_t = pd.read_csv(dir_name + 'parameters/weight_p1-3.csv', header = None, index_col = 0, engine='python') #權重
-L_t = pd.read_csv(dir_name + "parameters/lower_limit.csv")                          #指定日期、班別、職位，人數下限
+L_t = pd.read_csv(dir_name + "parameters/lower_limit.csv", engine='python')                          #指定日期、班別、職位，人數下限
 U_t = tl.readFile(dir_name + "parameters/upper_limit.csv")                          #指定星期幾、班別，人數上限
 Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")                     #指定年資、星期幾、班別，要占多少比例以上
 
 
-SKset_t = pd.read_csv(dir_name + 'parameters/skill_class_limit.csv')  #class set for skills
-U_Kset = pd.read_csv(dir_name + 'parameters/class_upperlimit.csv')  #upper bound for class per month
+SKset_t = pd.read_csv(dir_name + 'parameters/skill_class_limit.csv', engine='python')  #class set for skills
+U_Kset = pd.read_csv(dir_name + 'parameters/class_upperlimit.csv', engine='python')  #upper bound for class per month
 
 
 try:    # 下面的try/except都是為了因應條件全空時
@@ -116,8 +116,8 @@ nightdaylimit = EMPLOYEE_t['night_perWeek']
 #=============================================================================#
 #固定參數：班別總數與時間
 #=============================================================================#
-Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
-A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
+Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0, engine='python') #class set
+A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0, engine='python')
 
 
 
@@ -125,7 +125,7 @@ A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col =
 #=======================================================================================================#
 #====================================================================================================#
 #=================================================================================================#
-Posi = pd.read_csv(dir_name + 'fixed/position.csv', header = None).iloc[0].tolist()
+Posi = pd.read_csv(dir_name + 'fixed/position.csv', header = None, engine='python').iloc[0].tolist()
 Shift_name = Kset_t.iloc[0].tolist()
 
 #=============================================================================#
@@ -261,7 +261,8 @@ work = {}  #work_ijk - 1表示員工i於日子j值班別為k的工作，0 則否
 for i in range(nEMPLOYEE):
     for j in range(nDAY):
         for k in range(nK):
-            work[i, j, k] = m.addVar(vtype=GRB.BINARY)  
+            work[i, j, k] = m.addVar(vtype=GRB.BINARY)
+              
             
 lack = {}  #y_jt - 代表第j天中時段t的缺工人數
 for j in range(nDAY):
@@ -374,7 +375,7 @@ for item in NOTPHONE_CLASS_special:
 
              
 #17 晚班年資2年以上人數需佔 50% 以上
-for ix,item in enumerate(PERCENT):
+for ix,item in list(enumerate(PERCENT)):
     for j in DAYset[item[0]]:
         for k in SHIFTset[item[1]]:
             m.addConstr(quicksum(work[i,j,k] for i in E_SENIOR[ix]) >= item[2]*quicksum(work[i,j,k] for i in EMPLOYEE),"c17")
