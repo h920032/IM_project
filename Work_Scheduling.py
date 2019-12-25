@@ -329,7 +329,7 @@ for i in EMPLOYEE:
 
 #9 限制職等的人數下限：每一個特定日子，特定班別、特定一個職等的合計人數 >= 下限
 for item in LOWER:
-    m.addConstr(quicksum(work[i,item[0],k] for i in E_POSITION[item[2]] for k in SHIFTset[item[1]]) >= item[3],"c9")
+    m.addConstr(quicksum(work[i,j,k] for i in E_POSITION[item[2]] for j in [item[0]] for k in SHIFTset[item[1]]) >= item[3],"c9")
 
 #10 排班次數上限：員工在特定日子、特定班別，排班不能超過多少次
 for item in UPPER:
