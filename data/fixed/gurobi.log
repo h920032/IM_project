@@ -3872,6 +3872,7 @@ Solution count 0
 
 Model is infeasible
 Best objective -, best bound -, gap -
+<<<<<<< HEAD
 
 Gurobi 8.1.1 (win64) logging started 12/25/19 18:52:01
 
@@ -3943,3 +3944,5 @@ Solution count 0
 
 Model is infeasible
 Best objective -, best bound -, gap -
+=======
+>>>>>>> parent of 1f3b6e0... test failed
