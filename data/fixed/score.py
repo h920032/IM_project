@@ -119,7 +119,7 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3,
                         breakCount[i][w_d][k] = 1
     breakCount = int(sum(sum(sum(breakCount))))
 
-    print('lack = ',lack, 'surplus = ',surplus, 'nightCount = ',nightcount, 'breakCount = ',breakCount)
+    print('lack = ',lack, ', surplus = ',surplus, ', nightCount = ',nightcount, ', breakCount = ',breakCount)
     result = P0 * lack + P1 * surplus + P2 * nightcount + P3 * breakCount
 
     #print(result)
