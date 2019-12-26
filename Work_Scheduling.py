@@ -591,7 +591,8 @@ except:
         sys.exit(0)     #出錯的情況下，讓程式退出
     except:
         print('\n程式已結束。')
-S_DEMAND = SHIFTset['phone']
+S_DEMAND = []
+S_DEMAND.extend(SHIFTset['phone'])
 for i in range(len(S_DEMAND)):
     S_DEMAND[i] += 1
 
@@ -602,7 +603,7 @@ for i in range(nEMPLOYEE):
             if x_nb[i][j] in S_DEMAND:
                 people[j][k] = people[j][k] + A_t.values[x_nb[i][j]-1][k]
 output_people = (people - DEMAND).tolist()
-print(people)
+
 NO_PEOPLE=[]
 new_2=pd.DataFrame()
 for i in range(0,24):
@@ -620,7 +621,7 @@ new_2.to_csv(result_y, encoding="utf-8_sig")
 # print(new_2.T)
 
 #============================================================================#
-print(surplus.x, nightCount.x)
-score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, S_NIGHT, S_BREAK, SHIFTset, Shift_name, WEEK_of_DAY, df_x.values.tolist())
+
+score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, SHIFTset, Shift_name, WEEK_of_DAY, df_x.values.tolist())
 
 print('score:',score)
