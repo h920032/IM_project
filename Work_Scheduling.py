@@ -43,8 +43,8 @@ except:
 #每月更改的資料
 #=============================================================================#
 #year/month
-date = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0)
-year = int(date.iloc[0,0])
+date  = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0)
+year  = int(date.iloc[0,0])
 month = int(date.iloc[1,0])
 
 #指定排班
@@ -57,13 +57,13 @@ DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0)
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
 
 #employees data
-EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0, engine='python') 
+EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0, engine='python')
 # EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee"+EmployeeTest+".csv", header = 0) 
-E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
-E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
+E_NAME     = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
+E_ID       = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
 E_SENIOR_t = EMPLOYEE_t['Senior']
-E_POSI_t = EMPLOYEE_t['Position']
-E_SKILL_t = EMPLOYEE_t[ list(filter(lambda x: re.match('skill-',x), EMPLOYEE_t.columns)) ]   #抓出員工技能表
+E_POSI_t   = EMPLOYEE_t['Position']
+E_SKILL_t  = EMPLOYEE_t[ list(filter(lambda x: re.match('skill-',x), EMPLOYEE_t.columns)) ]   #抓出員工技能表
 
 #=============================================================================#
 ####NM 及 NW 從人壽提供之上個月的班表裡面計算
@@ -72,10 +72,10 @@ if month>1:
 else:
 	lastmonth = pd.read_csv(dir_name + 'per_month/Schedule_'+str(year-1)+'_12.csv', engine='python')
 
-lastday_column = len(lastmonth.columns) 
-lastday_row = lastmonth.shape[0]
+lastday_column  = len(lastmonth.columns)
+lastday_row     = lastmonth.shape[0]
 lastday_ofmonth = lastmonth.iloc[0,(lastday_column-1)]
-nEMPLOYEE = EMPLOYEE_t.shape[0]
+nEMPLOYEE       = EMPLOYEE_t.shape[0]
 
 #上個月的最後一天是週五，且有排晚班者，有則是1，沒有則是0
 tl.calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE)
@@ -89,9 +89,9 @@ NW_t = EMPLOYEE_t['NW']
 #=============================================================================#
 #半固定參數
 #=============================================================================#
-P_t = pd.read_csv(dir_name + 'parameters/weight_p1-3.csv', header = None, index_col = 0, engine='python') #權重
-L_t = pd.read_csv(dir_name + "parameters/lower_limit.csv", engine='python')                          #指定日期、班別、職位，人數下限
-U_t = tl.readFile(dir_name + "parameters/upper_limit.csv")                          #指定星期幾、班別，人數上限
+P_t     = pd.read_csv(dir_name + 'parameters/weight_p1-3.csv', header = None, index_col = 0, engine = 'python') #權重
+L_t     = pd.read_csv(dir_name + "parameters/lower_limit.csv", engine = 'python')                          #指定日期、班別、職位，人數下限
+U_t     = tl.readFile(dir_name + "parameters/upper_limit.csv")                          #指定星期幾、班別，人數上限
 Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")                     #指定年資、星期幾、班別，要占多少比例以上
 
 
@@ -99,15 +99,15 @@ SKset_t = pd.read_csv(dir_name + 'parameters/skill_class_limit.csv', engine='pyt
 U_Kset = pd.read_csv(dir_name + 'parameters/class_upperlimit.csv', engine='python')  #upper bound for class per month
 
 
-try:    # 下面的try/except都是為了因應條件全空時
+try:              # 下面的try/except都是為了因應條件全空時
 	SENIOR_bp = Ratio_t[3]
 except:
 	SENIOR_bp = []
 try:
-    timelimit = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0)
+    timelimit     = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0)
 except:
     print('\n無法讀取time_limit.csv，改用預設時間限制\n')
-    timelimit = 300	#預設跑五分鐘
+    timelimit     = 300	#預設跑五分鐘
 
 nightdaylimit = EMPLOYEE_t['night_perWeek']
 
@@ -116,7 +116,7 @@ nightdaylimit = EMPLOYEE_t['night_perWeek']
 #固定參數：班別總數與時間
 #=============================================================================#
 Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
-A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
+A_t    = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
 
 
 
@@ -124,7 +124,7 @@ A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col =
 #=======================================================================================================#
 #====================================================================================================#
 #=================================================================================================#
-Posi = pd.read_csv(dir_name + 'fixed/position.csv', header = None, engine='python').iloc[0].tolist()
+Posi       = pd.read_csv(dir_name + 'fixed/position.csv', header = None, engine='python').iloc[0].tolist()
 Shift_name = Kset_t.iloc[0].tolist()
 
 # =============================================================================#
@@ -158,12 +158,12 @@ m = Model("first")
 # Parameters
 # -------number-------#
 nEMPLOYEE = EMPLOYEE_t.shape[0]     #總員工人數
-nDAY = len(DEMAND_t.index)          #總日數
-nK = A_t.shape[0]                   #班別種類數
-nT = 24                             #總時段數
-nR = 5                              #午休種類數
-nW = tl.get_nW(year,month)          #總週數
-mDAY = int(calendar.monthrange(year,month)[1])
+nDAY      = len(DEMAND_t.index)          #總日數
+nK        = A_t.shape[0]                   #班別種類數
+nT        = 24                             #總時段數
+nR        = 5                              #午休種類數
+nW        = tl.get_nW(year,month)          #總週數
+mDAY      = int(calendar.monthrange(year,month)[1])
 
 # -------Basic-------#
 CONTAIN = A_t.values.tolist()      #CONTAIN_kt - 1表示班別k包含時段t，0則否
@@ -183,13 +183,13 @@ for c in range(M_t.shape[0]):
         print('指定排班中發現不明班別：',M_t.iloc[c,2],'不在登錄的班別中，請指定班別列表中的一個班別（注意大小寫）')
     ASSIGN.append( (e, d, k) )
 
-LMNIGHT = NM_t.values            #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
+LMNIGHT  = NM_t.values            #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
 FRINIGHT = NW_t.values           #FRINIGHT_i - 1表示員工i在上月最後一日且為週五的日子排晚班，0則否
 # -------調整權重-------#
-P0 = 100                    #目標式中的調整權重(lack)
-P1 = P_t[1]['P1']           #目標式中的調整權重(surplus)
-P2 = P_t[1]['P2']           #目標式中的調整權重(nightCount)
-P3 = P_t[1]['P3']           #目標式中的調整權重(breakCount)
+P0       = 100                    #目標式中的調整權重(lack)
+P1       = P_t[1]['P1']           #目標式中的調整權重(surplus)
+P2       = P_t[1]['P2']           #目標式中的調整權重(nightCount)
+P3       = P_t[1]['P3']           #目標式中的調整權重(breakCount)
 
 # -----排班特殊限制-----#
 LOWER = L_t.values.tolist()       	#LOWER - 日期j，班別集合ks，職位p，上班人數下限
