@@ -1,11 +1,11 @@
-#!/usr/bin/env python3OA
+# !/usr/bin/env python3OA
 # -*- coding: utf-8 -*-
-from gurobipy import *
+from   gurobipy import *
 import numpy as np
 import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar, sys
-from data.fixed.score import score
+from   data.fixed.score import score
 """=============================================================================#
 12/18 更新很多 參考文件
 #============================================================================="""
@@ -510,9 +510,9 @@ print("Final MIP gap value: %f" % m.MIPGap)
 print("\n目標值 = "+str(m.objVal) + "\n")
 
 
-#============================================================================#
-#輸出其他資訊
-#============================================================================#
+# ============================================================================ #
+# 輸出其他資訊
+# ============================================================================ #
 with pd.ExcelWriter(result) as writer:
     df_x.to_excel(writer, sheet_name="員工排班表")
     df_nightcount.to_excel(writer, sheet_name="員工本月晚班次數")
