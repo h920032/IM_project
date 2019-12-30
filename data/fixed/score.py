@@ -54,7 +54,7 @@ for i in pd.read_csv("Schedule_2019_4.csv", header = 0, index_col = 0).drop('nam
 
 """
 
-def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, SHIFTset, Shift_name, WEEK_of_DAY, df_x):
+def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, df_x):
 
     S_DEMAND = []
     S_DEMAND.extend(SHIFTset['phone'])
@@ -66,6 +66,11 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3,
     for i in range(len(S_NIGHT)):
         S_NIGHT[i] += 1
     
+    S_NOON = []
+    S_NOON.extend(SHIFTset['noon'])                                       #S_NOON - 所有的午班
+    for i in range(len(S_NOON)):
+        S_NOON[i] += 1
+
     K_type_dict= {}
     for ki in range(len(Shift_name)+1):
         if ki == 0:
@@ -108,6 +113,15 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3,
                 count = count + 1
         nightcount.append(count)
     nightcount = max(nightcount)
+
+    nooncount = []
+    for i in i_nb:
+        count = 0
+        for j in i:
+            if j in S_NOON:
+                count = count + 1
+        nooncount.append(count)
+    nooncount = max(nooncount)
     
     breakCount = np.zeros((nEMPLOYEE,nW,5))
     for i in range(nEMPLOYEE):
@@ -119,8 +133,8 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3,
                         breakCount[i][w_d][k] = 1
     breakCount = int(sum(sum(sum(breakCount))))
 
-    print('lack = ',lack, ', surplus = ',surplus, ', nightCount = ',nightcount, ', breakCount = ',breakCount)
-    result = P0 * lack + P1 * surplus + P2 * nightcount + P3 * breakCount
+    print('lack = ',lack, ', surplus = ',surplus, ', nightCount = ',nightcount, ', breakCount = ',breakCount, ', noonCount = ',nooncount)
+    result = P0 * lack + P1 * surplus + P2 * nightcount + P3 * breakCount + P4 * nooncount
 
     #print(result)
     return result

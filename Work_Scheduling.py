@@ -89,7 +89,7 @@ NW_t = EMPLOYEE_t['NW']
 #=============================================================================#
 #半固定參數
 #=============================================================================#
-P_t     = pd.read_csv(dir_name + 'parameters/weight_p1-3.csv', header = None, index_col = 0, engine = 'python') #權重
+P_t     = pd.read_csv(dir_name + 'parameters/weight_p.csv', header = None, index_col = 0, engine = 'python') #權重
 L_t     = pd.read_csv(dir_name + "parameters/lower_limit.csv", engine = 'python')                          #指定日期、班別、職位，人數下限
 U_t     = tl.readFile(dir_name + "parameters/upper_limit.csv")                          #指定星期幾、班別，人數上限
 Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")                     #指定年資、星期幾、班別，要占多少比例以上
@@ -190,6 +190,7 @@ P0       = 100                    #目標式中的調整權重(lack)
 P1       = P_t[1]['P1']           #目標式中的調整權重(surplus)
 P2       = P_t[1]['P2']           #目標式中的調整權重(nightCount)
 P3       = P_t[1]['P3']           #目標式中的調整權重(breakCount)
+P4       = P_t[1]['P4']           #目標式中的調整權重(noonCount)
 
 # -----排班特殊限制-----#
 LOWER = L_t.values.tolist()       	#LOWER - 日期j，班別集合ks，職位p，上班人數下限
@@ -250,6 +251,7 @@ for ki in range(len(Kset_t)):
 for ki in range(len(Shift_name)):
     SHIFTset[Shift_name[ki]] = [ki]
 S_NIGHT = SHIFTset['night']                                     #S_NIGHT - 所有的晚班
+S_NOON = SHIFTset['noon']                                       #S_NOON - 所有的午班
 
 
 #============================================================================#
@@ -277,12 +279,15 @@ for i in range(nEMPLOYEE):
         for r in range(nR):
             breakCount[i, w, r] = m.addVar(vtype=GRB.BINARY)
 
+noonCount = m.addVar(lb=0,vtype=GRB.CONTINUOUS, name="noonCount") #員工中每人排午班總次數的最大值
+
 m.update()
 # ============================================================================#
 # Objective
 
 m.setObjective(P0 * quicksum(lack[j,t] for t in TIME for j in DAY) +  P1 * surplus + P2 * nightCount + \
-    P3 * quicksum(breakCount[i,w,r] for i in EMPLOYEE for w in WEEK for r in BREAK) , GRB.MINIMIZE)
+    P3 * quicksum(breakCount[i,w,r] for i in EMPLOYEE for w in WEEK for r in BREAK) + \
+    P4 * noonCount , GRB.MINIMIZE)
 
 # ============================================================================#
 
@@ -386,6 +391,9 @@ for item in Upper＿shift:
     for i in EMPLOYEE:	
         m.addConstr(quicksum(work[i,j,Shift_name.index(item[0])] for j in DAYset['all']) <= item[1], "c20")     
 
+#21 平均每人的午班數
+for i in EMPLOYEE:
+    m.addConstr(noonCount >= quicksum(work[i,j,k]  for k in S_NOON for j in DAY), "c21")
 
 
 #============================================================================#
@@ -482,10 +490,23 @@ for i in EMPLOYEE:
     night_work_total.append(count)
 
 
-df_nightcount = pd.DataFrame(night_work_total, index = employee_name, columns = ['NW_count'])
+df_nightcount = pd.DataFrame(night_work_total, index = employee_name, columns = ['NightWork_count'])
 print("\n員工中每人排晚班總次數的最大值 = "+str(int(nightCount.x))+"\n")
 
 
+#午班次數dataframe
+noon_work_total = []
+for i in EMPLOYEE:
+    count = 0
+    for j in DAY:
+        for k in SHIFTset['noon']:
+            if(int(work[i,j,k].x)==1):
+                count+=1
+    noon_work_total.append(count)
+
+
+df_nooncount = pd.DataFrame(noon_work_total, index = employee_name, columns = ['NoonWork_count'])
+print("\n員工中每人排午班總次數的最大值 = "+str(int(noonCount.x))+"\n")
 
       
 #休息時間 Dataframe_z
@@ -519,6 +540,7 @@ with pd.ExcelWriter(result) as writer:
     df_percent_time.to_excel(writer, sheet_name="每個時段缺工百分比表")
     df_percent_day.to_excel(writer, sheet_name="每天缺工百分比表")
     df_nightcount.to_excel(writer, sheet_name="員工本月晚班次數")
+    df_nooncount.to_excel(writer, sheet_name="員工本月午班次數")
     df_y.to_excel(writer, sheet_name="缺工人數表")
     df_resttime.to_excel(writer, sheet_name="員工每週有哪幾種休息時間")
 
@@ -621,6 +643,6 @@ new_2.to_csv(result_y, encoding="utf-8_sig")
 
 #============================================================================#
 
-score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, SHIFTset, Shift_name, WEEK_of_DAY, df_x.values.tolist())
+score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, df_x.values.tolist())
 
 print('score:',score)
