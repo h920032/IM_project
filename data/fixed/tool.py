@@ -319,6 +319,6 @@ def Tran_t2n(text, names=K_type):
     try:
         c = names.index(text)
     except:
-        print('無法匹配Tran_t2n():',text,"not in ",names[0:3],'...')
+        print('Tran_t2n():',text,"not in ",names[0:3],'...')
         c = None
     return c
