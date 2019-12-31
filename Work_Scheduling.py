@@ -577,11 +577,9 @@ print(new)
 #輸出冗員與缺工人數表
 #============================================================================#
 K_type_dict= {}
-for ki in range(len(Shift_name)+1):
-    if ki == 0:
-        K_type_dict[ki] ='None'
-    else:
-        K_type_dict[ki] =Shift_name[ki-1]
+K_type_dict= {0:None}
+for ki in range(1,len(Shift_name)+1):
+    K_type_dict[ki] =Shift_name[ki-1]
 #K_type_dict = {0:'None',1:'O',2:'A2',3:'A3',4:'A4',5:'A5',6:'MS',7:'AS',8:'P2',9:'P3',10:'P4',11:'P5',12:'N1',13:'M1',14:'W6',15:'CD',16:'C2',17:'C3',18:'C4',19:'OB'}
 try:
     x_nb = np.vectorize({v: k for k, v in K_type_dict.items()}.get)(np.array(which_worktime))
