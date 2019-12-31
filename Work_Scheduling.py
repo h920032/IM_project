@@ -438,8 +438,9 @@ for i in EMPLOYEE:
                 tmp.append(K_type[k])
                 break
         else:
-            print('CSR ',E_NAME[i],' 在',DATES[j],'號的排班發生錯誤。')
-            print('請嘗試讓程式運行更多時間，或是減少限制條件。\n')
+            tmp.append(K_type[1])
+            #print('CSR ',E_NAME[i],' 在',DATES[j],'號的排班發生錯誤。')
+            #print('請嘗試讓程式運行更多時間，或是減少限制條件。\n')
     which_worktime.append(tmp)
         
 
@@ -600,10 +601,10 @@ print(new)
 K_type_dict= {}
 for ki in range(len(Shift_name)+1):
     if ki == 0:
-        K_type_dict[ki] =''
+        K_type_dict[ki] ='None'
     else:
         K_type_dict[ki] =Shift_name[ki-1]
-#K_type_dict = {0:'',1:'O',2:'A2',3:'A3',4:'A4',5:'A5',6:'MS',7:'AS',8:'P2',9:'P3',10:'P4',11:'P5',12:'N1',13:'M1',14:'W6',15:'CD',16:'C2',17:'C3',18:'C4',19:'OB'}
+#K_type_dict = {0:'None',1:'O',2:'A2',3:'A3',4:'A4',5:'A5',6:'MS',7:'AS',8:'P2',9:'P3',10:'P4',11:'P5',12:'N1',13:'M1',14:'W6',15:'CD',16:'C2',17:'C3',18:'C4',19:'OB'}
 try:
     x_nb = np.vectorize({v: k for k, v in K_type_dict.items()}.get)(np.array(which_worktime))
 except:
