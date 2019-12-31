@@ -426,7 +426,7 @@ result = './schedule_data_'+str(year)+'_'+str(month)+'.xlsx'
 
 #Dataframe_x
 K_type = Shift_name
-
+cutoff = False
 
 employee_name = E_NAME
 which_worktime = []
@@ -439,6 +439,7 @@ for i in EMPLOYEE:
                 break
         else:
             tmp.append(K_type[1])
+            cutoff = True
             #print('CSR ',E_NAME[i],' 在',DATES[j],'號的排班發生錯誤。')
             #print('請嘗試讓程式運行更多時間，或是減少限制條件。\n')
     which_worktime.append(tmp)
@@ -645,3 +646,6 @@ new_2.to_csv(result_y, encoding="utf-8_sig")
 score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, df_x.values.tolist())
 
 print('score:',score)
+
+if cutoff == True:
+    print('\ngurobi運行被強迫中斷，因此以A2班填入空班別，目標式值可能較高。')
