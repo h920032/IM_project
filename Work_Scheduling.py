@@ -186,11 +186,11 @@ for c in range(M_t.shape[0]):
 LMNIGHT  = NM_t.values            #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
 FRINIGHT = NW_t.values           #FRINIGHT_i - 1表示員工i在上月最後一日且為週五的日子排晚班，0則否
 # -------調整權重-------#
-P0       = 100                    #目標式中的調整權重(lack)
-P1       = P_t[1]['P1']           #目標式中的調整權重(surplus)
-P2       = P_t[1]['P2']           #目標式中的調整權重(nightCount)
-P3       = P_t[1]['P3']           #目標式中的調整權重(breakCount)
-P4       = P_t[1]['P4']           #目標式中的調整權重(noonCount)
+P0       = 100                      #目標式中的調整權重(lack)
+P1       = P_t[1]['P1']             #目標式中的調整權重(surplus)
+P2       = P_t[1]['P2']             #目標式中的調整權重(nightCount)
+P3       = P_t[1]['P3']             #目標式中的調整權重(breakCount)
+P4       = P_t[1]['P4']             #目標式中的調整權重(noonCount)
 
 # -----排班特殊限制-----#
 LOWER = L_t.values.tolist()       	#LOWER - 日期j，班別集合ks，職位p，上班人數下限
