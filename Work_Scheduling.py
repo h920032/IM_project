@@ -596,7 +596,7 @@ people = np.zeros((nDAY,24))
 for i in range(0,nEMPLOYEE):
     for j in range(0,nDAY):
         for k in range(0,24):
-            people[j][k] = people[j][k] + A_t.values[x_nb[i][j]-1][k]
+            people[j][k] = people[j][k] + A_t.values[x_nb[i][j]-1][k] #A_t是class_time
 output_people = (people - DEMAND).tolist()
 NO_PEOPLE=[]
 new_2=pd.DataFrame()
