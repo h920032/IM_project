@@ -7,11 +7,6 @@ import math, re
 import pandas as pd
 from datetime import datetime, date
 
-#K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
-
-
-# 班別
-K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB'] #這個得改掉
 
 
 
@@ -315,7 +310,7 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
 """===========================================
     Text-numberID translate function
 ==========================================="""
-def Tran_t2n(text, names=K_type):
+def Tran_t2n(text, names):
     try:
         c = names.index(text)
     except:
