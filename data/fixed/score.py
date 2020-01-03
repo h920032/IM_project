@@ -54,7 +54,7 @@ for i in pd.read_csv("Schedule_2019_4.csv", header = 0, index_col = 0).drop('nam
 
 """
 
-def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, df_x):
+def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, nightdaylimit, BREAK, df_x):
 
     S_DEMAND = []
     S_DEMAND.extend(SHIFTset['phone'])
@@ -70,6 +70,13 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3,
     S_NOON.extend(SHIFTset['noon'])                                       #S_NOON - 所有的午班
     for i in range(len(S_NOON)):
         S_NOON[i] += 1
+
+    S_BREAK = []
+    S_BREAK.extend(BREAK)
+    print(S_BREAK[0][0])
+    for i in S_BREAK:
+        for j in i:
+            S_BREAK[i][j] = S_BREAK[i][j] + 1
 
     K_type_dict= {}
     for ki in range(len(Shift_name)+1):
@@ -107,11 +114,14 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3,
 
     nightcount = []
     for i in i_nb:
-        count = 0
-        for j in i:
-            if j in S_NIGHT:
-                count = count + 1
-        nightcount.append(count)
+        night_t = 0
+        if (nightdaylimit[i]>0):
+            count = 0
+            for j in i:
+                if j in S_NIGHT:
+                    count = count + 1
+            night_t = count / nightdaylimit[i]
+        nightcount.append(night_t)
     nightcount = max(nightcount)
 
     nooncount = []
@@ -127,10 +137,10 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3,
     for i in range(nEMPLOYEE):
         for j in range(nDAY):
             w_d = WEEK_of_DAY[j]
-            if i_nb[i][j]!=1 and i_nb[i][j]!=6 and i_nb[i][j]!=7 and i_nb[i][j]!=14:
-                for k in range(5):
-                    if A_t.values[i_nb[i][j]-1][k+5] == 0 and A_t.values[i_nb[i][j]-1][k+6] == 0:
-                        breakCount[i][w_d][k] = 1
+            for r in S_BREAK:
+                if i_nb[i][j] in S_BREAK[r]:
+                    breakCount[i][w_d][r] = 1
+                    break
     breakCount = int(sum(sum(sum(breakCount))))
 
     print('lack = ',lack, ', surplus = ',surplus, ', nightCount = ',nightcount, ', breakCount = ',breakCount, ', noonCount = ',nooncount)

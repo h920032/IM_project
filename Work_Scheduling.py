@@ -655,7 +655,7 @@ new_2.to_csv(result_y, encoding="utf-8_sig")
 
 #============================================================================#
 
-score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, df_x.values.tolist())
+score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, nightdaylimit, S_BREAK, df_x.values.tolist())
 
 print('score:',score)
 
