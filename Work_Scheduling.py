@@ -205,7 +205,7 @@ UPPER = []                          #UPPER - 員工i，日子集合js，班別�
 for c in range(U_t.shape[0]):
     e = tl.Tran_t2n(U_t.iloc[c,0], E_ID)
     #回報錯誤
-    if e!=e:
+    if e==None:
         print('指定排班表中發現不明ID：',U_t.iloc[c,0],'不在員工資料的ID列表中，請再次確認ID正確性（包含大小寫、空格、換行）')
     UPPER.append( (e, U_t.iloc[c,1], U_t.iloc[c,2], U_t.iloc[c,3]) )
 PERCENT = Ratio_t.values.tolist()	#PERCENT - 日子集合，班別集合，要求占比，年資分界線
@@ -505,7 +505,7 @@ for i in EMPLOYEE:
 
 
 df_nightcount = pd.DataFrame(night_work_total, index = employee_name, columns = ['NightWork_count'])
-print("\n員工中每人排晚班總次數的最大值 = "+str(int(nightCount.x))+"\n")
+print("\n員工中每人排晚班次數加權平均的最大值 = "+str(int(nightCount.x))+"\n")
 
 
 #午班次數dataframe
