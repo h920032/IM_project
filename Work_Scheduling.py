@@ -6,6 +6,7 @@ import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar, sys
 from   data.fixed.score import score
+import fixed.tool_test as tl2
 """
 0101更新
 上限改為可以指定某CSR（限制式10)
@@ -14,13 +15,151 @@ S_break及午休種類改為可以彈性調整
 tool.py Ktype直接刪除，皆改為直接由主程式碼代入function
 nightCount取晚班最大值時有考慮到係數（限制式14)
 """
-
 #測試檔案檔名 - 沒有要測試時請將TestPath留空白
 # TestPath = ""
 EmployeeTest = "_20191230"
 AssignTest = "_20191230"
 NeedTest = ""
 U_ttest = "_20191230"
+
+
+
+
+
+
+
+#=============================================================================#
+#每月更改的資料
+#=============================================================================#
+#year/month
+year  = int(date.iloc[0,0])
+month = int(date.iloc[1,0])
+
+#指定排班
+DATES = tl2.DATE_list    #所有的日期 - 對照用
+
+#employees data
+EMPLOYEE_t = tl2.Employee_t
+nightdaylimit = EMPLOYEE_t['night_perWeek']
+E_NAME     = tl2.NAME_list
+E_ID       = tl2.ID_list
+
+#=============================================================================#
+#半固定參數
+#=============================================================================#
+timelimit     = tl2.TIME_LIMIT
+
+Posi       = tl2.POSI_list
+Shift_name = tl2.CLASS_list
+
+# =============================================================================#
+# =============================================================================#
+# =============================================================================#
+# Create a new model
+# =============================================================================#
+# =============================================================================#
+# =============================================================================#
+# =============================================================================#
+
+m = Model("first")
+
+# ============================================================================#
+# Indexs 都從0開始
+
+# i 員工 i
+# j 日子 j，代表一個月中的需要排班的第 j 個日子
+# k 班別 k，代表每天可選擇的不同上班別態
+# t 工作時段 t，表示某日的第 t 個上班的小時
+# w 週次 w，代表一個月中的第 w 週
+# r 午休方式r，每個班別有不同的午休方式
+
+# 休假:0
+# 早班-A2/A3/A4/A5/MS/AS:1~6
+# 午班-P2/P3/P4/P5:7~10
+# 晚班-N1/M1/W6:11~13
+# 其他-CD/C2/C3/C4/OB:14~18
+
+# =============================================================================#
+# Parameters
+# -------number-------#
+nEMPLOYEE = tl2.nE                  #總員工人數
+nDAY      = tl2.nD                  #總日數
+nK        = tl2.nK                  #班別種類數
+nT        = tl2.nT                  #總時段數
+nR        = tls.nR                  #午休種類數
+nW        = tl2.nW                  #總週數
+mDAY      = tl2.mDAY
+
+# -------Basic-------#
+CONTAIN = tl2.CONTAIN               #CONTAIN_kt - 1表示班別k包含時段t，0則否
+DEMAND = tl2.DEMAND                 #DEMAND_jt - 日子j於時段t的需求人數
+ASSIGN = tl2.ASSIGN                 #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
+
+LMNIGHT  = tl2.LastWEEK_night       #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
+FRINIGHT = tl2.LastDAY_night        #FRINIGHT_i - 1表示員工i在上月最後一日且為週五的日子排晚班，0則否
+
+# -------調整權重-------#
+P0       = 100                      #目標式中的調整權重(lack)
+P1       = P_t[1]['P1']             #目標式中的調整權重(surplus)
+P2       = P_t[1]['P2']             #目標式中的調整權重(nightCount)
+P3       = P_t[1]['P3']             #目標式中的調整權重(breakCount)
+P4       = P_t[1]['P4']             #目標式中的調整權重(noonCount)
+
+# -----排班特殊限制-----#
+LOWER = tl2.LOWER                   #LOWER - 日期j，班別集合ks，職位p，上班人數下限
+UPPER = tl2.UPPER                   #UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
+PERCENT = tl2.PERCENT               #PERCENT - 日子集合，班別集合，要求占比，年資分界線
+
+
+# ----------------新-----------------#
+# 特殊班別一定人數
+# 特殊班別每天人數相同
+NOTPHONE_CLASS = tl2.NOTPHONE_CLASS
+# 特殊班別假日後一天人數不同
+NOTPHONE_CLASS_special = tl2.NOTPHONE_CLASS_special
+
+# 特殊班別每人排班上限
+Upper_shift = tl2.Upper_shift
+
+# =============================================================================#
+# Sets
+EMPLOYEE = [tmp for tmp in range(nEMPLOYEE)]    #EMPLOYEE - 員工集合，I=0,…,nI 
+DAY = [tmp for tmp in range(nDAY)]              #DAY - 日子集合，J=0,…,nJ-1
+TIME = [tmp for tmp in range(nT)]               #TIME - 工作時段集合，T=1,…,nT
+BREAK = [tmp for tmp in range(nR)]              #BREAK - 午休方式，R=1,…,nR
+WEEK = [tmp for tmp in range(nW)]               #WEEK - 週次集合，W=1,…,nW
+SHIFT = [tmp for tmp in range(nK)]              #SHIFT - 班別種類集合，K=1,…,nK ;0代表休假
+ 
+# -------員工集合-------#
+E_POSITION = tl2.POSI_set                       #E_POSITION - 擁有特定職稱的員工集合，POSI=1,…,nPOSI
+E_SKILL = tl2.SKILL_set                         #E_SKILL - 擁有特定技能的員工集合，SKILL=1,…,nSKILL
+E_SENIOR = tl2.SENIOR_set                       #E_SENIOR - 達到特定年資的員工集合    
+
+# -------日子集合-------#
+DAYset = tl2.D_WDAY_set                         #DAYset - 通用日子集合 [all,Mon,Tue...]
+WEEK_of_DAY = tl2.D_WEEK_set                    #WEEK_of_DAY - 日子j所屬的那一週
+VACnextdayset = tl2.AH_list                     #VACnextdayset - 假期後或週一的日子集合
+NOT_VACnextdayset = tl2.NAH_list 
+
+# -------班別集合-------#
+SHIFTset= tl2.K_CLASS_set                       #SHIFTset - 通用的班別集合，S=1,…,nS
+S_NIGHT = SHIFTset['night']                         #S_NIGHT - 所有的晚班
+S_NOON = SHIFTset['noon']                           #S_NOON - 所有的午班
+S_BREAK =tl2.K_BREAK_set
+
+
+#============================================================================#
+#Variables
+#GRB.BINARY/GRB.INTEGER/GRB.CONTINUOUS
+
+
+
+
+
+
+
+
+"""
 #=============================================================================#
 #=============================================================================#
 #=============================================================================#
@@ -189,6 +328,7 @@ for c in range(M_t.shape[0]):
 
 LMNIGHT  = NM_t.values            #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
 FRINIGHT = NW_t.values           #FRINIGHT_i - 1表示員工i在上月最後一日且為週五的日子排晚班，0則否
+
 # -------調整權重-------#
 P0       = 100                      #目標式中的調整權重(lack)
 P1       = P_t[1]['P1']             #目標式中的調整權重(surplus)
@@ -269,7 +409,7 @@ for ki in range(len(Rset_t)):
 #============================================================================#
 #Variables
 #GRB.BINARY/GRB.INTEGER/GRB.CONTINUOUS
-
+"""
 work = {}  #work_ijk - 1表示員工i於日子j值班別為k的工作，0 則否 ;workij0=1 代表員工i在日子j休假
 for i in range(nEMPLOYEE):
     for j in range(nDAY):

@@ -1,5 +1,6 @@
-﻿Read file from .././data/per_month/ & .././data/parameters/
-Read ../data/parameters/weight_p.csv
-Read ../data/parameters/fixed/fix_class_time.csv
-Read ../data/parameters/fixed/fix_classes.csv
-Read ../data/parameters/fixed/fix_resttime.csv
+﻿找不到path.txt檔案，使用預設路徑
+Read file from ../data/per_month/ & ../data/parameters/
+讀取 2019 年 4 月 當月份資料
+
+tool_test.py import successfully
+
