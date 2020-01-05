@@ -1,0 +1,5 @@
+﻿Read file from .././data/per_month/ & .././data/parameters/
+Read ../data/parameters/weight_p.csv
+Read ../data/parameters/fixed/fix_class_time.csv
+Read ../data/parameters/fixed/fix_classes.csv
+Read ../data/parameters/fixed/fix_resttime.csv

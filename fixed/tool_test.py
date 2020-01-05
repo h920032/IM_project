@@ -13,18 +13,18 @@ from datetime import datetime, date
 
 """================================================================================================================
     globle參數
-
-    讀檔：
-        per_month / Date, Schedule, Need, Employee, Assign
-            =>      參數
-        para /  class_time, class_kind, class_skill    
-    表格：
 ================================================================================================================"""
-
 # 基本資料
-RECORD_FILE = open('record.log', 'w')   #運行紀錄檔案
-YEAR = 0
-MONTH = 0
+DIR = '../data'                         #預設總資料夾檔案路徑
+DIR_PER_MONTH = '../data/per_month/'    #每月改變的資料(per_month)的檔案路徑
+DIR_PARA = '../data/parameters/'        #parameters的檔案路徑
+RECORD_FILE = open('record.log', 'w', encoding='utf-8-sig')   #運行紀錄檔案
+YEAR = 2019
+MONTH = 4
+TIME_LIMIT = 300
+
+# 權重
+P = [100,0,0,0,0]  #P0是缺工人數
 
 # 各項目總數
 nE = 0      #總員工人數
@@ -34,7 +34,7 @@ nT = 24     #總時段數
 nR = 0      #午休種類數
 nW = 0      #總週數
 mDAY = 0    #本月總日數
-# nE = EMPLOYEE_t.shape[0]     #總員工人數
+# nE = Employee_t.shape[0]     #總員工人數
 # nD = len(DEMAND_t.index)     #總日數
 # nK = A_t.shape[0]            #班別種類數
 # nT = 24                      #總時段數
@@ -42,18 +42,56 @@ mDAY = 0    #本月總日數
 # nW = tl.get_nW(year,month)   #總週數
 # mDAY = int(calendar.monthrange(YEAR,MONTH)[1]) #本月總日數
 
-# 對照用的list
-NAME_list   = []
-ID_list     = []
-DATE_list   = []
-CLASS_list  = []
-# K_type = Kset_t.iloc[0].tolist()
+# List
+# -------對照用的-------#
+NAME_list   = []    #員工英文名字
+ID_list     = []    #員工ID
+DATE_list   = []    #日期
+CLASS_list  = []    #班別名稱
+# -------其他-------#
+AH_list     = []    #days after holiday
+POSI_list   = []    #職位高低(低到高)
 
-# 輸出檔名
-Schedule_FileName = 'Schedule_'+str(YEAR)+'_'+str(MONTH)+'.csv'
-LackOver_FileName = 'lack_'+str(YEAR)+'_'+str(MONTH)+'.csv'
+# Set
+# -------員工集合-------#
+POSI_set    = {}    #某職位以上的員工集合，預設值= '任意':range(nE)
+SENIOR_set  = {}    #某年資以上的員工集合，無預設值
+SKILL_set   = {}    #擁有特定技能的員工集合，無預設值
+# -------日子集合-------#
+WEEK_set    = {}                                                                #每周有哪些天(Tran後)
+WDAY_set    = {'Mon':[],'Tue':[],'Wed':[],'Thu':[],'Fri':[],'Sat':[],'Sun':[]}  #周幾有哪些天
+# -------班別集合-------#
+CLASS_set   = {'all':[], 'night':['N1','W6','M1'], 'phone':[]}    #班別分類(只有phone內的班別能減少缺工)
+BREAK_set   = {}                                    #有哪些午休時段(時段:此時段的班別index)
+"""
+# -------員工集合-------#
+E_POSITION = tl.SetPOSI(E_POSI_t, Posi)                          #E_POSITION - 擁有特定職稱的員工集合，POSI=1,…,nPOSI
+E_SKILL = tl.SetSKILL(E_SKILL_t)                                 #E_SKILL - 擁有特定技能的員工集合，SKILL=1,…,nSKILL
+E_SENIOR = [tl.SetSENIOR(E_SENIOR_t,tmp) for tmp in SENIOR_bp]   #E_SENIOR - 達到特定年資的員工集合    
 
-# 資料
+# -------日子集合-------#
+month_start = tl.get_startD(year,month)         #本月第一天是禮拜幾 (Mon=0, Tue=1..)
+D_WEEK = tl.SetDAYW(month_start+1,mDAY,nW, DAY, DATES)      #D_WEEK - 第 w 週中所包含的日子集合
+DAYset = tl.SetDAY(month_start, nDAY, DATES)            #DAYset - 通用日子集合 [all,Mon,Tue...]
+WEEK_of_DAY = tl.SetWEEKD(D_WEEK, nW) #WEEK_of_DAY - 日子j所屬的那一週
+VACnextdayset, NOT_VACnextdayset = tl.SetVACnext(month_start, nDAY, DATES) #VACnextdayset - 假期後或週一的日子集合
+
+# -------班別集合-------#
+SHIFTset= {}                                                    #SHIFTset - 通用的班別集合，S=1,…,nS
+for ki in range(len(Kset_t)):
+    SHIFTset[Kset_t.index[ki]] = [ tl.Tran_t2n(x, Shift_name) for x in Kset_t.iloc[ki].dropna().values ]
+for ki in range(len(Shift_name)):
+    SHIFTset[Shift_name[ki]] = [ki]
+S_NIGHT = SHIFTset['night']                                     #S_NIGHT - 所有的晚班
+S_NOON = SHIFTset['noon']                                       #S_NOON - 所有的午班
+S_BREAK =[]
+for ki in range(len(Rset_t)):
+    S_BREAK.append([ tl.Tran_t2n(x, Shift_name) for x in Rset_t.iloc[ki].dropna().values ])
+"""
+
+
+
+# 表格資料
 
 
 
@@ -70,7 +108,7 @@ LackOver_FileName = 'lack_'+str(YEAR)+'_'+str(MONTH)+'.csv'
 # print到記錄檔
 def PRINT(text):
     print(text)
-    RECORD_FILE.write(text)
+    RECORD_FILE.write(text+'\n')
 
 # 回報錯誤、儲存錯誤檔案並結束程式
 def ERROR(error_text):
@@ -81,7 +119,7 @@ def ERROR(error_text):
     index與實際數值轉換
 ==========================================="""
 # text to index
-def Tran_t2n(text, aList):
+def Tran_t2n(text, aList) -> int:
     try:
         ans = aList.index(text)     #找出 text 在 aList 中的 index，並回傳
     except:
@@ -90,7 +128,7 @@ def Tran_t2n(text, aList):
     return ans
 
 # index to text
-def Tran_n2t(index, aList):
+def Tran_n2t(index:int, aList):
     try:
         ans = aList[index]     #回傳 aList[index] 的值
     except:
@@ -99,114 +137,26 @@ def Tran_n2t(index, aList):
         ans = None
     return ans
 
-
 """===========================================
-    讀檔相關
+    讀檔工具
 ==========================================="""
 # 讀檔：try/except是為了因應條件全空時
-def readFile(dir, header_=None, skiprows_=[0], index_col_=None):
+def readFile(dir, header_=None, skiprows_=None, index_col_=None):
+    PRINT('Read '+dir)
     try:
         t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
             encoding='utf-8-sig',engine='python')
+    except FileNotFoundError:
+        ERROR('找不到檔案：'+dir)
     except:
         t = pd.DataFrame()
     return t
 
 
 
-
-
-"""================================================================================================================
-    import data
-        要讀的檔案：
-            per_month/  Date, Need, Employee, 上月排班(Scheduling_年_月), Assign
-                              | 儲存日期list
-                                    | 儲存員工名字、ID list
-                                    | 用ijk的len()開大表格
-                                               | 計算 上月末日、上月斷尾周 的晚班數
-                                                                         | Assign一邊讀一邊填入
-                                                                         | 防呆：指定排班與晚班數量衝突
-================================================================================================================"""
-
-
-
-#=============================================================================#
-#file path
-#=============================================================================#
-#讀檔路徑import data
-try:
-    f = open('../../path.txt', "r")
-    dir_name = '../../'+f.read().replace('\n', '')
-except:
-    dir_name = './data/'   #預設資料路徑：./data/
-
-print('Read file from',dir_name)
-
-
-#=============================================================================#
-#每月更改的資料
-#=============================================================================#
-# year/month
-date = pd.read_csv(dir_name + 'per_month/Date.csv', header = None, index_col = 0)
-year = int(date.iloc[0,0])
-month = int(date.iloc[1,0])
-
-#指定排班
-# M_t = readFile(dir_name + 'per_month/Assign.csv')
-M_t = readFile(dir_name + 'per_month/Assign'+AssignTest+'.csv')
-M_t[0] = [ str(x) for x in M_t[0] ]           #強制將ID設為string
-#進線需求預估
-# DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0, engine='python').T
-DEMAND_t = pd.read_csv(dir_name+"per_month/Need"+NeedTest+".csv", header = 0, index_col = 0, engine='python').T
-DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
-
-#employees data
-# EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0) 
-EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee"+EmployeeTest+".csv", header = 0) 
-E_NAME = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
-E_ID = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
-E_SENIOR_t = EMPLOYEE_t['Senior']
-E_POSI_t = EMPLOYEE_t['Position']
-SKILL_NAME = list(filter(lambda x: re.match('skill-',x), EMPLOYEE_t.columns)) #自動讀取技能名稱
-E_SKILL_t = EMPLOYEE_t[ SKILL_NAME ]            #員工技能表
-
-"""
-#=============================================================================#
-#半固定參數
-#=============================================================================#
-P_t = pd.read_csv(dir_name + 'parameters/weight_p1-4.csv', header = None, index_col = 0, engine='python') #權重
-SKset_t = pd.read_csv(dir_name + 'parameters/skills_classes.csv', header = None, index_col = 0)  #class set for skills
-L_t = readFile(dir_name + "parameters/lower_limit.csv")                          #指定日期、班別、職位，人數下限
-U_t = readFile(dir_name + "parameters/upper_limit.csv")                          #指定星期幾、班別，人數上限
-Ratio_t = readFile(dir_name + "parameters/senior_limit.csv")                     #指定年資、星期幾、班別，要占多少比例以上
-try:    # 下面的try/except都是為了因應條件全空時
-    SENIOR_bp = Ratio_t[3]
-except:
-    SENIOR_bp = []
-try:
-    timelimit = pd.read_csv(dir_name + "parameters/time_limit.csv", header = 0, engine='python')
-except:
-    timelimit = 300 #預設跑五分鐘
-nightdaylimit = EMPLOYEE_t['night_perWeek']
-
-
-#=============================================================================#
-#固定參數：班別總數與時間
-#=============================================================================#
-Kset_t = pd.read_csv(dir_name + 'fixed/fix_classes.csv', header = None, index_col = 0) #class set
-A_t = pd.read_csv(dir_name + 'fixed/fix_class_time.csv', header = 0, index_col = 0)
-
-"""
-
-
-
-
-
 """================================================================================================================
     資料前處理
 ================================================================================================================"""
-
-
 """===========================================
 	nJ, nW
 ==========================================="""
@@ -310,9 +260,6 @@ def SetVACnext(month_start, nDAY, DATES):
                 ans2.append(i)
     return ans, ans2
         
-
-
-
 """===========================================
 	Set Const Functions
 ==========================================="""
@@ -351,22 +298,23 @@ def SetSENIOR(alist, bp):
 			s.append(i)
 	return s
 
-
-
 """
 Calculation of NW & NM from last month 
 """
-def calculate_NW (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE):	
-        for i in range (lastday_row):	
-            if(lastmonth.iloc[i,(lastday_column-1)] == "N1" or lastmonth.iloc[i,(lastday_column-1)] == "M1" or lastmonth.iloc[i,(lastday_column-1)] == "W6") :
-                temp_name = str(lastmonth.iloc[i,0])
+def calculate_NW (Employee_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEmployee):	
+    for i in range (lastday_row):
+        c = lastmonth.iloc[i, lastday_column]
+        if c in CLASS_set['night']:     #偵測到上月末日的晚班
+        # if( c == "N1" or c == "M1" or c == "W6") :  #偵測到上月末日的晚班
+        # if(lastmonth.iloc[i,(lastday_column-1)] == "N1" or lastmonth.iloc[i,(lastday_column-1)] == "M1" or lastmonth.iloc[i,(lastday_column-1)] == "W6") :
+            temp_name = str(lastmonth.iloc[i,0])    #取出值晚班之人的名字
 
-                for i in range (nEMPLOYEE):			
-                        if (temp_name == str(EMPLOYEE_t.loc[i,'id'])) :
-                                EMPLOYEE_t.at[i,'NW'] = 1
-#    print (EMPLOYEE_t["NW"]) 
+            for i in range (nEmployee):			
+                if (temp_name == str(Employee_t.loc[i,'ID'])) :     #到員工表找出此人名字
+                    Employee_t.at[i,'NW'] = 1
+    return Employee_t
     
-def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEMPLOYEE):  
+def calculate_NM (Employee_t,lastday_ofmonth,lastday_row,lastday_column,lastmonth,nEmployee):  
     if (lastday_ofmonth != "Fri") :
         if (lastday_ofmonth == "Thu") :
                    
@@ -380,9 +328,9 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
                    
                         temp_name = str(temp_dataframe.iloc[i,0])
 
-                        for k in range (nEMPLOYEE) :
-                            if (temp_name == str(EMPLOYEE_t.loc[k,'id'])) : 
-                                EMPLOYEE_t.at[k,'NM'] = int(EMPLOYEE_t.iloc[k,9]) + 1    
+                        for k in range (nEmployee) :
+                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
+                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1    
         
         elif (lastday_ofmonth == "Wed") :
 
@@ -396,9 +344,9 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
                    
                         temp_name = str(temp_dataframe.iloc[i,0])
                    
-                        for k in range (nEMPLOYEE) :
-                            if (temp_name == str(EMPLOYEE_t.loc[k,'id'])) : 
-                                EMPLOYEE_t.at[k,'NM'] = int(EMPLOYEE_t.iloc[k,9]) + 1
+                        for k in range (nEmployee) :
+                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
+                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
 
         elif (lastday_ofmonth == "Tue") :
          
@@ -412,9 +360,9 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
                   
                         temp_name = str(temp_dataframe.iloc[i,0])
                    
-                        for k in range (nEMPLOYEE) :
-                            if (temp_name == str(EMPLOYEE_t.loc[k,'id'])) : 
-                                EMPLOYEE_t.at[k,'NM'] = int(EMPLOYEE_t.iloc[k,9]) + 1
+                        for k in range (nEmployee) :
+                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
+                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
         
         elif (lastday_ofmonth == "Mon") : 
         
@@ -428,9 +376,170 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
                     
                        temp_name = str(temp_dataframe.iloc[i,0])
                     
-                       for k in range (nEMPLOYEE) :
-                           if (temp_name == str(EMPLOYEE_t.loc[k,'id'])) : 
-                               EMPLOYEE_t.at[k,'NM'] = int(EMPLOYEE_t.iloc[k,9]) + 1
+                       for k in range (nEmployee) :
+                           if (temp_name == str(Employee_t.loc[k,'id'])) : 
+                               Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
+    return Employee_t
+
+
+
+
+"""================================================================================================================
+    import data
+        要讀的檔案：
+            per_month/  Date, Need, Employee, 上月排班(Scheduling_年_月), Assign
+                              | 儲存日期list
+                                    | 儲存員工名字、ID list
+                                    | 用ijk的len()開大表格
+                                               | 計算 上月末日、上月斷尾周 的晚班數
+                                                                         | Assign一邊讀一邊填入
+                                                                         | 防呆：指定排班與晚班數量衝突
+================================================================================================================"""
+# 讀檔路徑 path.txt
+def READ_path():
+    try:
+        with open('../path.txt','r') as f:  #用with一次性完成open、close檔案
+            DIR = '../' + f.read().replace('\n', '')
+    except FileNotFoundError:
+        ERROR('找不到檔案path.txt檔案')
+    except:
+        PRINT('打不開path.txt，使用預設路徑')
+        DIR = '../data/'   #預設資料路徑：./data/
+    DIR_PER_MONTH = DIR+'per_month/'
+    DIR_PARA = DIR+'parameters/'
+    PRINT('Read file from '+DIR_PER_MONTH+' & '+DIR_PARA)
+    return None
+READ_path()
+
+
+#=============================================================================#
+# 讀取半固定參數
+#=============================================================================#
+def READ_parameters(path=DIR_PARA):
+    # weight p1~4
+    Weight_t    = readFile(path+'weight_p.csv', index_col_=0)        #權重
+    P[1]        = Weight_t[1]['P1']             #目標式中的調整權重(surplus)
+    P[2]        = Weight_t[1]['P2']             #目標式中的調整權重(nightCount)
+    P[3]        = Weight_t[1]['P3']             #目標式中的調整權重(breakCount)
+    P[4]        = Weight_t[1]['P4']             #目標式中的調整權重(noonCount)
+
+    # class time
+    ClassTime_t = readFile(path+'fixed/fix_class_time.csv', header_=0, index_col_=[0])  #class-time table
+    CLASS_list  = list(ClassTime_t.index)
+
+    # class set
+    KSet_t      = readFile(path+'fixed/fix_classes.csv', index_col_=[0])                    #class set
+    for ki in range(len(KSet_t)):           #將檔案中的班別集合登錄成dict
+        CLASS_set[KSet_t.index[ki]] = [ Tran_t2n(x, CLASS_list) for x in KSet_t.iloc[ki].dropna().values ]
+    for ki in range(len(CLASS_list)):
+        CLASS_set[CLASS_list[ki]] = [ki]    #每個班別自身也都是獨立的(單一元素)集合
+
+    # rest set
+    Rset_t      = readFile(path+'fixed/fix_resttime.csv', index_col_=[0])               #rest set
+    for ki in range(len(Rset_t)):
+        BREAK_set[RSet_t.index[ki]] = [ Tran_t2n(x, CLASS_list) for x in Rset_t.iloc[ki].dropna().values ]
+
+    # position
+    POSI_list   = readFile(path+'fixed/position.csv').iloc[0].tolist()  #職位高低(低到高)
+
+    # time limit
+    try:
+        TIME_LIMIT = readFile(path+'time_limit.csv', header_=0)
+    except:
+        print('\n無法讀取time_limit.csv，改用預設時間限制\n')
+READ_parameters()
+
+
+
+#=============================================================================#
+# 讀取 per_month
+#=============================================================================#
+def READ_per_month(path=DIR_PER_MONTH):
+    # Date
+    Date_t = readFile(path+'Date.csv', index_col_ = 0)
+    try:
+        YEAR = int(Date_t.iloc[0,0])
+        MONTH = int(Date_t.iloc[1,0])
+        PRINT('讀檔 年/月：'+str(YEAR)+'/'+str(MONTH))
+    except:
+        ERROR('日期不能為空值，請確認 Date.csv 檔案')
+
+    # Employee
+    Employee_t  = readFile(path+"Employee.csv", header_ = 0)
+    Employee_t['ID'] = [ str(x) for x in Employee_t['ID'] ]           #強制將ID設為string
+    nE          = Employee_t.shape[0]
+    NAME_list   = list(Employee_t['Name_English'])                                  #對照名字與員工index用
+    ID_list     = [ str(x) for x in Employee_t['ID'] ]                              #對照ID與員工index用
+    SKILL_NAME  = list(filter(lambda x: re.match('skill-',x), Employee_t.columns))  #自動讀取技能名稱
+    E_SENIOR_t = Employee_t['Senior']               #年資的行
+    E_POSI_t = Employee_t['Position']               #職位的行
+    E_NperW_t = Employee_t['night_perWeek']         #每周晚班上限的行
+    E_SKILL_t = Employee_t[ SKILL_NAME ]            #員工技能表
+
+    # Schedule (NM 及 NW 從人壽提供之上個月的班表裡面計算)
+    if MONTH>1:
+        Schedule_t = readFile(path+'Schedule_'+str(YEAR)+'_'+str(MONTH-1)+'.csv', skiprows_=[0])
+    else:
+        Schedule_t = readFile(path+'Schedule_'+str(YEAR-1)+'_12.csv', skiprows_=[0])
+    Schedule_t[0] = [ str(x) for x in Schedule_t[0] ]   #強制將ID設為string
+    #計算上月底晚班狀況
+    lastday_column = len(Schedule_t.columns)            #最後一行(上月末日)
+    lastday_column = -1
+    for c in range(len(Schedule_t.columns)-1,2,-1):     #從最後一天開始數(2是為了去掉開頭index、ID、名字三行)
+        if Schedule_t[c][1] != 'X':         #如果這一天不是假日的全'X'行，就取之為上月末日
+            lastday_column = c
+            break
+    if lastday_column == -1:
+        ERROR('上個月的班表有錯誤，找不到上個月最後一個上班日')
+    lastday_ofmonth = Schedule_t.iloc[0,lastday_column]
+    lastday_row     = Schedule_t.shape[0]
+    print('last day of last month:',lastday_ofmonth)
+    #預設值：全無晚班
+    Employee_t['NM'] = [0] * Employee_t.shape[0]
+    Employee_t['NW'] = [0] * Employee_t.shape[0]
+    #上個月的最後一天有排晚班者是1，沒有則是0
+    Employee_t = calculate_NW(Employee_t,lastday_ofmonth,lastday_row,lastday_column,Schedule_t,nE)
+    #上月底的斷頭週，計算該斷頭週總共排了幾次晚班
+    calculate_NM(Employee_t,lastday_ofmonth,lastday_row,lastday_column,Schedule_t,nE)
+    NM_t = Employee_t['NM']     #上月底斷頭周
+    NW_t = Employee_t['NW']     #上月末日
+    print(Employee_t)
+
+    # Assign
+    Assign_t = readFile(path+'Assign.csv', skiprows_=[0])
+    Assign_t[0] = [ str(x) for x in Assign_t[0] ]           #強制將ID設為string
+
+    # Need
+    Need_t = readFile(path+"Need.csv", header_=0, index_col_=0).T
+    DATE_list = [ int(x) for x in Need_t.index ]    #所有的日期 - 對照用
+READ_per_month()
+
+
+#=============================================================================#
+# 讀取限制式
+#=============================================================================#
+def READ_limits(path=DIR_PARA):
+    # -------讀取限制式-------#
+    # lower
+    Lower_t     = readFile(path+'lower_limit.csv')                  #指定日期、班別、職位，人數下限
+
+    # upper
+    Upper_t     = readFile(path+'upper_limit.csv', skiprows_=[0])   #指定星期幾、班別，人數上限
+    Upper_t[0]  = [ str(x) for x in Upper_t[0] ]                    #強制將ID設為string
+
+    # senior
+    Senior_t    = readFile(path+'senior_limit.csv', skiprows_=[0])  #指定年資、星期幾、班別，要占多少比例以上
+    try:              # 下面的try/except都是為了因應條件全空時
+        SENIOR_bp = Ratio_t[3]
+    except:
+        SENIOR_bp = []
+
+    # class
+    SKset_t     = readFile(path+'skill_class_limit.csv')            #class set for skills
+    U_Kset      = readFile(path+'class_upperlimit.csv')             #upper bound for class per month
+READ_limits()
+
+
 
 
 
@@ -439,17 +548,19 @@ def calculate_NM (EMPLOYEE_t,lastday_ofmonth,lastday_row,lastday_column,lastmont
         csv:班表、缺工冗員表
         其他資訊：xlsx檔
 ================================================================================================================"""
+# 輸出檔名
+Schedule_FileName = 'Schedule_'+str(YEAR)+'_'+str(MONTH)+'.csv'
+LackOver_FileName = 'lack_'+str(YEAR)+'_'+str(MONTH)+'.csv'
 
-
+# 輸出函式
+def OUTPUT(matrix_ijk):     #參數：三層的list，分別為 員工、日子、班別，內容為bool (某員工某日是否值此班別)
+    return True
 
 
 
 # ================================================================================================================
- 
-# 寫入 This is a testing! 到檔案
-print >>fp, "This is a testing!"
- 
 # 關閉檔案
+PRINT('\ntool_test.py import successfully\n')
 RECORD_FILE.close()
-print('tool_test.py import successfully\n')
+# 結束程式
 sys.exit()
