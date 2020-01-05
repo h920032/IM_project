@@ -13,7 +13,7 @@ from datetime import datetime, date
 目前發現的問題：
     上月末日為假日時，晚班計算錯誤
     D_WEEK_set 格式為 list
-
+?
 ======================================================"""
 
 """================================================================================================================
@@ -62,6 +62,7 @@ E_SENIOR_set  = {}      #某年資以上的員工集合，無預設值
 E_SKILL_set   = {}      #擁有特定技能的員工集合，無預設值
 # -------日子集合-------#
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! D_WEEK_set 實際上是週號的list !!!!
+D_WEEK        = {}      #D_WEEK - 第 w 週中所包含的日期集合
 D_WEEK_set    = {}                                                                #每周有哪些天(Tran後)
 D_WDAY_set    = {'Mon':[],'Tue':[],'Wed':[],'Thu':[],'Fri':[],'Sat':[],'Sun':[]}  #周幾有哪些天
 # -------班別集合-------#
@@ -453,7 +454,7 @@ def READ_per_month(path=DIR_PER_MONTH):
     #要改的
     global YEAR, MONTH,   nW, mDAY, nE
     global NAME_list, ID_list,   LastWEEK_night, LastDAY_night,   AH_list, NAH_list
-    global D_WDAY_set, D_WEEK_set,   E_SKILL_set, E_POSI_set
+    global D_WEEK, D_WDAY_set, D_WEEK_set,   E_SKILL_set, E_POSI_set
     global ASSIGN, DEMAND, Employee_t
     #要用的
     global nD, DATE_list, CLASS_list
@@ -521,9 +522,9 @@ def READ_per_month(path=DIR_PER_MONTH):
 
     month_start = get_startD(YEAR,MONTH)                        #本月第一天是禮拜幾 (Mon=0, Tue=1..)
     AH_list, NAH_list = SetVACnext(month_start, nD, DATE_list)  #VACnextdayset - 假期後或週一的日子集合
-    DW          = SetDAYW(month_start+1,mDAY,nW, list(range(nD)), DATE_list)    #第 w 週包含的日期集合
+    D_WEEK      = SetDAYW(month_start+1,mDAY,nW, list(range(nD)), DATE_list)    #第 w 週包含的日期集合
     D_WDAY_set  = SetDAY(month_start, nD, DATE_list)            #DAYset - 通用日子集合 [all,Mon,Tue...]
-    D_WEEK_set  = SetWEEKD(DW, nW)                              #WEEK_of_DAY - 日子j所屬的那一週 
+    D_WEEK_set  = SetWEEKD(D_WEEK, nW)                          #WEEK_of_DAY - 日子j所屬的那一週 
 
 
     # Assign
@@ -590,7 +591,7 @@ def READ_limits(path=DIR_PARA):
 
 
     # skill lower limit
-    SKset_t     = readFile(path+'skill_class_limit.csv')            #class set for skills
+    SKset_t     = readFile(path+'skill_class_limit.csv',header_=0)            #class set for skills
     # 特殊班別每天人數相同
     NOTPHONE_CLASS = []
     # 特殊班別假日後一天人數不同
@@ -643,7 +644,11 @@ print('E_SKILL_set=',E_SKILL_set,'\n')
 print('D_WEEK_set=',D_WEEK_set)
 print('D_WDAY_set=',D_WDAY_set,'\n')
 print('K_CLASS_set=',K_CLASS_set)
-print('K_BREAK_set=',K_BREAK_set)
+print('K_BREAK_set=',K_BREAK_set,'\n\n')
+
+# print('CONTAIN=',CONTAIN,'\n')
+print('DEMAND=',DEMAND,'\n')
+
 
 
 # 關閉紀錄檔
