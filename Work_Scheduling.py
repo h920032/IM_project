@@ -342,7 +342,7 @@ for i in EMPLOYEE:
 for i in EMPLOYEE:
     m.addConstr(quicksum(work[i,0,k] for k in S_NIGHT) <= 1 - FRINIGHT[i], "c8")        
 
-#9 限制職等的人數下限：每一個特定日子，特定班別、特定一個職等的合計人數 >= 下限
+#9 限制職等的人數下限：每一個特定日子，特定班別、特定職等以上的合計人數 >= 下限
 for item in LOWER:
     m.addConstr(quicksum(work[i,j,k] for i in E_POSITION[item[2]] for j in [item[0]] for k in SHIFTset[item[1]]) >= item[3],"c9")
 
