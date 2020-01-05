@@ -17,10 +17,10 @@ nightCount取晚班最大值時有考慮到係數（限制式14)
 
 #測試檔案檔名 - 沒有要測試時請將TestPath留空白
 # TestPath = ""
-# # TestPath = "D:/Ting/桌面/test/1216_testing/"
-# EmployeeTest = "_30人"
-# AssignTest = "_30人各休一"
-# NeedTest = "_標準"
+EmployeeTest = "_20191230"
+AssignTest = "_20191230"
+NeedTest = ""
+U_ttest = "_20191230"
 #=============================================================================#
 #=============================================================================#
 #=============================================================================#
@@ -53,17 +53,17 @@ year  = int(date.iloc[0,0])
 month = int(date.iloc[1,0])
 
 #指定排班
-M_t = tl.readFile(dir_name + 'per_month/Assign.csv')
-# M_t = tl.readFile(dir_name + 'per_month/Assign'+AssignTest+'.csv')
+#M_t = tl.readFile(dir_name + 'per_month/Assign.csv')
+M_t = tl.readFile(dir_name + 'per_month/Assign'+AssignTest+'.csv')
 M_t[0] = [ str(x) for x in M_t[0] ]           #強制將ID設為string
 #進線需求預估
-DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0).T
-# DEMAND_t = pd.read_csv(dir_name+"per_month/Need"+NeedTest+".csv", header = 0, index_col = 0, engine='python').T
+#DEMAND_t = pd.read_csv(dir_name+"per_month/Need.csv", header = 0, index_col = 0).T
+DEMAND_t = pd.read_csv(dir_name+"per_month/Need"+NeedTest+".csv", header = 0, index_col = 0, engine='python').T
 DATES = [ int(x) for x in DEMAND_t.index ]    #所有的日期 - 對照用
 
 #employees data
-EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0, engine='python')
-# EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee"+EmployeeTest+".csv", header = 0) 
+#EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee.csv", header = 0, engine='python')
+EMPLOYEE_t = pd.read_csv(dir_name+"per_month/Employee"+EmployeeTest+".csv", header = 0, engine='python') 
 E_NAME     = list(EMPLOYEE_t['Name_English'])       #E_NAME - 對照名字與員工index時使用
 E_ID       = [ str(x) for x in EMPLOYEE_t['ID'] ]     #E_ID - 對照ID與員工index時使用
 E_SENIOR_t = EMPLOYEE_t['Senior']
@@ -96,7 +96,7 @@ NW_t = EMPLOYEE_t['NW']
 #=============================================================================#
 P_t     = pd.read_csv(dir_name + 'parameters/weight_p.csv', header = None, index_col = 0, engine = 'python') #權重
 L_t     = pd.read_csv(dir_name + "parameters/lower_limit.csv", engine = 'python')                          #指定日期、班別、職位，人數下限
-U_t     = tl.readFile(dir_name + "parameters/upper_limit.csv")                      #指定星期幾、班別，人數上限
+U_t     = tl.readFile(dir_name + "parameters/upper_limit"+U_ttest+".csv")                      #指定星期幾、班別，人數上限
 U_t[0] = [ str(x) for x in U_t[0] ]           #強制將ID設為string
 Ratio_t = tl.readFile(dir_name + "parameters/senior_limit.csv")                     #指定年資、星期幾、班別，要占多少比例以上
 
