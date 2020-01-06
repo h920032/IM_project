@@ -6,7 +6,7 @@ import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar, sys
 from   data.fixed.score import score
-import fixed.tool_test as tl2
+#import fixed.tool_test as tl2
 """
 0101更新
 上限改為可以指定某CSR（限制式10)

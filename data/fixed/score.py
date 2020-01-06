@@ -142,7 +142,7 @@ def score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2,
                     break
     breakCount = int(sum(sum(sum(breakCount))))
 
-    print('\nlack = ',lack, ', surplus = ',surplus, ', nightCount = ',nightcount, ', breakCount = ',breakCount, ', noonCount = ',nooncount)
+    print('\n\nlack = ',lack, ', surplus = ',surplus, ', nightCount = ',nightcount, ', breakCount = ',breakCount, ', noonCount = ',nooncount)
     result = P0 * lack + P1 * surplus + P2 * nightcount + P3 * breakCount + P4 * nooncount
 
     #print(result)
