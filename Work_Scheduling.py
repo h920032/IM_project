@@ -6,7 +6,7 @@ import pandas as pd
 
 from   data.fixed.score import score
 # import data.fixed.tool as tl
-import fixed.tool_test as tl2
+import fixed.tool as tl
 
 """
 0101更新
@@ -40,40 +40,40 @@ U_ttest = "_20191230"
 # Parameters
 # =============================================================================#
 # -------number-------#
-nEMPLOYEE = tl2.nE                  #總員工人數
-nDAY      = tl2.nD                  #總日數
-nK        = tl2.nK                  #班別種類數
-nT        = tl2.nT                  #總時段數
-nR        = tl2.nR                  #午休種類數
-nW        = tl2.nW                  #總週數
-mDAY      = tl2.mDAY
+nEMPLOYEE = tl.nE                  #總員工人數
+nDAY      = tl.nD                  #總日數
+nK        = tl.nK                  #班別種類數
+nT        = tl.nT                  #總時段數
+nR        = tl.nR                  #午休種類數
+nW        = tl.nW                  #總週數
+mDAY      = tl.mDAY
 
 # -----基礎項目---------#
-P0, P1, P2, P3, P4 = tl2.P          #目標式中的調整權重(lack, surplus, nightCount, breakCount, noonCount)
-timelimit     = tl2.TIME_LIMIT
-Posi       = tl2.POSI_list
+P0, P1, P2, P3, P4 = tl.P          #目標式中的調整權重(lack, surplus, nightCount, breakCount, noonCount)
+timelimit     = tl.TIME_LIMIT
+Posi       = tl.POSI_list
 
 # -------表格---------#
-CONTAIN = tl2.CONTAIN               #CONTAIN_kt - 1表示班別k包含時段t，0則否
-DEMAND = tl2.DEMAND                 #DEMAND_jt - 日子j於時段t的需求人數
-ASSIGN = tl2.ASSIGN                 #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
-EMPLOYEE_t = tl2.Employee_t
+CONTAIN = tl.CONTAIN               #CONTAIN_kt - 1表示班別k包含時段t，0則否
+DEMAND = tl.DEMAND                 #DEMAND_jt - 日子j於時段t的需求人數
+ASSIGN = tl.ASSIGN                 #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
+EMPLOYEE_t = tl.Employee_t
 
 # -------list---------#
-LMNIGHT  = tl2.LastWEEK_night       #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
-FRINIGHT = tl2.LastDAY_night        #FRINIGHT_i - 1表示員工i在上月最後一工作日排晚班，0則否
+LMNIGHT  = tl.LastWEEK_night       #LMNIGHT_i - 表示員工i在上月終未滿一週的日子中曾排幾次晚班
+FRINIGHT = tl.LastDAY_night        #FRINIGHT_i - 1表示員工i在上月最後一工作日排晚班，0則否
 nightdaylimit = EMPLOYEE_t['night_perWeek']
-Shift_name = tl2.CLASS_list
+Shift_name = tl.CLASS_list
 
 # -----排班特殊限制-----#
-LOWER = tl2.LOWER                   #LOWER - 日期j，班別集合ks，職位p，上班人數下限
-UPPER = tl2.UPPER                   #UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
-PERCENT = tl2.PERCENT               #PERCENT - 日子集合，班別集合，要求占比，年資分界線
+LOWER = tl.LOWER                   #LOWER - 日期j，班別集合ks，職位p，上班人數下限
+UPPER = tl.UPPER                   #UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
+PERCENT = tl.PERCENT               #PERCENT - 日子集合，班別集合，要求占比，年資分界線
 
 # -----新  特殊班別一定人數--------------#
-NOTPHONE_CLASS = tl2.NOTPHONE_CLASS                     # 特殊班別每天人數相同
-NOTPHONE_CLASS_special = tl2.NOTPHONE_CLASS_special     # 特殊班別假日後一天人數不同
-Upper_shift = tl2.Upper_shift                           # 特殊班別每人排班上限
+NOTPHONE_CLASS = tl.NOTPHONE_CLASS                     # 特殊班別每天人數相同
+NOTPHONE_CLASS_special = tl.NOTPHONE_CLASS_special     # 特殊班別假日後一天人數不同
+Upper_shift = tl.Upper_shift                           # 特殊班別每人排班上限
 
 
 # =============================================================================#
@@ -87,21 +87,21 @@ WEEK = [tmp for tmp in range(nW)]               #WEEK - 週次集合，W=1,…,n
 SHIFT = [tmp for tmp in range(nK)]              #SHIFT - 班別種類集合，K=1,…,nK ;0代表休假
  
 # -------員工集合-------#
-E_POSITION  = tl2.E_POSI_set                    #E_POSITION - 擁有特定職稱的員工集合，POSI=1,…,nPOSI
-E_SKILL     = tl2.E_SKILL_set                   #E_SKILL - 擁有特定技能的員工集合，SKILL=1,…,nSKILL
-E_SENIOR    = tl2.E_SENIOR_set                  #E_SENIOR - 達到特定年資的員工集合    
+E_POSITION  = tl.E_POSI_set                    #E_POSITION - 擁有特定職稱的員工集合，POSI=1,…,nPOSI
+E_SKILL     = tl.E_SKILL_set                   #E_SKILL - 擁有特定技能的員工集合，SKILL=1,…,nSKILL
+E_SENIOR    = tl.E_SENIOR_set                  #E_SENIOR - 達到特定年資的員工集合    
 
 # -------日子集合-------#
-DAYset = tl2.D_WDAY_set                         #DAYset - 通用日子集合 [all,Mon,Tue...]
-D_WEEK = tl2.D_WEEK_set
-VACnextdayset = tl2.AH_list                     #VACnextdayset - 假期後或週一的日子集合
-NOT_VACnextdayset = tl2.NAH_list 
+DAYset = tl.D_WDAY_set                         #DAYset - 通用日子集合 [all,Mon,Tue...]
+D_WEEK = tl.D_WEEK_set
+VACnextdayset = tl.AH_list                     #VACnextdayset - 假期後或週一的日子集合
+NOT_VACnextdayset = tl.NAH_list 
 
 # -------班別集合-------#
-SHIFTset= tl2.K_CLASS_set                       #SHIFTset - 通用的班別集合，S=1,…,nS
+SHIFTset= tl.K_CLASS_set                       #SHIFTset - 通用的班別集合，S=1,…,nS
 S_NIGHT = SHIFTset['night']                     #S_NIGHT - 所有的晚班
 S_NOON = SHIFTset['noon']                       #S_NOON - 所有的午班
-S_BREAK =tl2.K_BREAK_set
+S_BREAK =tl.K_BREAK_set
 
 
 
@@ -287,11 +287,11 @@ m.optimize()
 #====================================================================================================#
 #=======================================================================================================#
 
-# year  = tl2.YEAR
-# month = tl2.MONTH
-# DATES = tl2.DATE_list
+# year  = tl.YEAR
+# month = tl.MONTH
+# DATES = tl.DATE_list
 # DEMAND_t = pd.read_csv("./data/per_month/Need.csv", header = 0, index_col = 0).T
-# A_t = tl2.ClassTime_t           #班別-時段對照表的原始檔案
+# A_t = tl.ClassTime_t           #班別-時段對照表的原始檔案
 
 
 # #輸出檔名
@@ -403,7 +403,7 @@ m.optimize()
 
 #============================================================================#
 # 輸出
-result = tl2.OUTPUT(work)           #建立一個專門用來輸出的class物件
+result = tl.OUTPUT(work)           #建立一個專門用來輸出的class物件
 df = result.printSchedule()         #將班表輸出為檔案
 print('\n\n\n\n=============== 班表 ===============\n', df)
 lack = result.printLackAndOver()    #計算缺工冗員表，並輸出為檔案
@@ -413,10 +413,10 @@ print('\n\n\n\n============= 缺工冗員表 ============\n', lack)
 
 
 #只有score需要的參數
-year  = tl2.YEAR
-month = tl2.MONTH
-A_t = tl2.ClassTime_t           #班別-時段對照表的原始檔案
-WEEK_of_DAY = tl2.WEEK_list     #WEEK_of_DAY - 日子j所屬的那一週
+year  = tl.YEAR
+month = tl.MONTH
+A_t = tl.ClassTime_t           #班別-時段對照表的原始檔案
+WEEK_of_DAY = tl.WEEK_list     #WEEK_of_DAY - 日子j所屬的那一週
 df_x = result.Schedule
 
 score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, nightdaylimit, S_BREAK, df_x.values.tolist())
