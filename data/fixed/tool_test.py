@@ -20,7 +20,6 @@ from datetime import datetime, date
         para /  class_time, class_kind, class_skill    
     表格：
 ================================================================================================================"""
-
 # 基本資料
 RECORD_FILE = open('record.log', 'w')   #運行紀錄檔案
 YEAR = 0

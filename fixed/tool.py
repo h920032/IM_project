@@ -15,13 +15,20 @@ from datetime import datetime, date
     上月末日為假日時，晚班計算錯誤
 
 ======================================================"""
+#測試檔案檔名 - 沒有要測試時請將TestPath留空白
+# TestPath = ""
+global EmployeeTest, AssignTest, NeedTest, U_ttest
+EmployeeTest = "_20191230"
+AssignTest = "_20191230"
+NeedTest = ""
+U_ttest = "_20191230"
 
 """================================================================================================================
     globle參數
 ================================================================================================================"""
 # 基本資料
 DIR = '../data'                         #預設總資料夾檔案路徑
-DIR_PER_MONTH = '../data/per_MONTH/'    #每月改變的資料(per_MONTH)的檔案路徑
+DIR_PER_MONTH = '../data/per_month/'    #每月改變的資料(per_MONTH)的檔案路徑
 DIR_PARA = '../data/parameters/'        #parameters的檔案路徑
 RECORD_FILE = './fixed/record.log'      #運行紀錄檔案
 with open(RECORD_FILE,'w', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
@@ -103,10 +110,10 @@ def ERROR(error_text):
     sys.exit()
 
 # 讀檔：try/except是為了因應條件全空時。 讀檔預設值：空的DataFrame
-def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, header_=None,skiprows_=None,index_col_=None):
+def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, header_=None,skiprows_=None,index_col_=None,encoding_=None,):
     try:
         t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
-                        encoding='utf-8-sig',engine='python')
+                        encoding=encoding_,engine='python')
         return t
     except FileNotFoundError:
         if acceptNoFile:
@@ -114,6 +121,7 @@ def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, header_=None,skipr
         else:
             ERROR('找不到檔案：'+dir)
     except:
+        #encoding='utf-8-sig',
         return default  #有檔案但是讀不了:多半是沒有限制式，使skiprow後為空。 一律用預設值
 
 """===========================================
@@ -463,7 +471,7 @@ def READ_parameters(path=DIR_PARA):
 
     # position
     POSI_list   = readFile(path+'fixed/position.csv').iloc[0].tolist()  #職位高低(低到高)
-
+    
     # time limit
     try:
         TIME_LIMIT = readFile(path+'time_limit.csv', header_=0)
@@ -484,7 +492,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     global ASSIGN, DEMAND, Employee_t
     #要用的
     global nD, DATE_list, CLASS_list
-
+    
 
     # Date
     Date_t = readFile(path+'Date.csv', index_col_ = 0)
@@ -497,21 +505,21 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     nW = get_nW(YEAR,MONTH)                         #總週數
     mDAY = int(calendar.monthrange(YEAR,MONTH)[1])  #本月總日數
 
-
+    
     # Employee
-    Employee_t  = readFile(path+"Employee.csv", header_ = 0)
+    Employee_t  = readFile(path+'Employee'+EmployeeTest+'.csv', header_ = 0)
     print(Employee_t)
-    Employee_t['ID'] = [ str(x) for x in Employee_t['ID'] ]           #強制將ID設為string
+    #Employee_t['ID'] = [ str(x) for x in Employee_t['ID'] ]           
 
     nE          = Employee_t.shape[0]
     NAME_list = list(Employee_t['Name_Chinese'])                                  #對照名字與員工index用
-    ID_list   = [ str(x) for x in Employee_t['ID'] ]                              #對照ID與員工index用
+    ID_list   = [ str(x) for x in Employee_t['ID'] ]                              #對照ID與員工index用  #強制將ID設為string
 
     SKILL_NAME  = list(filter(lambda x: re.match('skill-',x), Employee_t.columns))  #自動讀取技能名稱
     E_SKILL_set = SetSKILL(Employee_t[ SKILL_NAME ])                                #特定技能的員工集合
 
     E_POSI_set = SetPOSI(Employee_t['Position'], POSI_list)                         #某職稱以上的員工集合      
-
+    
 
     # Schedule (NM 及 NW 從人壽提供之上個月的班表裡面計算)
     if MONTH>1:
@@ -535,7 +543,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
 
     # Need
-    Need_t = readFile(path+"Need.csv", header_=0, index_col_=0).T
+    Need_t = readFile(path+'Need'+NeedTest+'.csv', header_=0, index_col_=0).T
     DATE_list = [ int(x) for x in Need_t.index ]            #所有的日期 - 對照用
     nD = len(DATE_list)                                     #總工作日數
     DEMAND = Need_t.values.tolist()                         #DEMAND_jt - 日子j於時段t的需求人數
@@ -548,7 +556,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
 
     # Assign
-    Assign_t = readFile(path+'Assign.csv', skiprows_=[0])
+    Assign_t = readFile(path+'Assign'+AssignTest+'.csv', skiprows_=[0])
     Assign_t[0] = [ str(x) for x in Assign_t[0] ]           #強制將ID設為string
     Assign_t[1] = [ int(x) for x in Assign_t[1] ]           #強制將日期設為int
     Assign_t[2] = [ str(x) for x in Assign_t[2] ]           #強制將班別設為string
@@ -581,14 +589,14 @@ def READ_limits(path=DIR_PARA):
     global Employee_t 
     # -------讀取限制式-------#
     # lower
-    LOWER = readFile(path+'lower_limit.csv').values.tolist()         #LOWER - 日期j，班別集合ks，職位p，上班人數下限
+    LOWER = readFile(path+'lower_limit.csv', header_=0).values.tolist()         #LOWER - 日期j，班別集合ks，職位p，上班人數下限
     for i in range(len(LOWER)):
         d = Tran_t2n( LOWER[i][0], DATE_list)
         LOWER[i][0] = d
-
+    
 
     # upper
-    Upper_t     = readFile(path+'upper_limit.csv', skiprows_=[0])   #指定星期幾、班別，人數上限
+    Upper_t     = readFile(path+'upper_limit'+U_ttest+'.csv', skiprows_=[0])   #指定星期幾、班別，人數上限
     Upper_t[0]  = [ str(x) for x in Upper_t[0] ]                    #強制將ID設為string
     #UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
     for c in range(Upper_t.shape[0]):

@@ -16,15 +16,6 @@ S_break及午休種類改為可以彈性調整
 tool.py Ktype直接刪除，皆改為直接由主程式碼代入function
 nightCount取晚班最大值時有考慮到係數（限制式14)
 """
-
-#測試檔案檔名 - 沒有要測試時請將TestPath留空白
-# TestPath = ""
-EmployeeTest = "_20191230"
-AssignTest = "_20191230"
-NeedTest = ""
-U_ttest = "_20191230"
-
-
 """
 # Indexs 都從0開始
 
