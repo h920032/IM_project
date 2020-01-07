@@ -1,3 +1,13 @@
-﻿
-tool_test.py import successfully
+﻿tool.py 開始執行：2020-01-08 02:38:42.573401
+
+Read file from ./data/per_month/ & ./data/parameters/
+讀取 2019 年 4 月 當月份資料
+
+
+=== 參數確認 ===
+nE=34, nD=20, nK=19, nT=24, nR=5, nW=5, mDAY=30
+
+
+= tool_test.py import successfully =
+
 
