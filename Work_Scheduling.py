@@ -6,7 +6,7 @@ import pandas as pd
 import data.fixed.tool as tl
 import datetime, calendar, sys
 from   data.fixed.score import score
-#import fixed.tool_test as tl2
+import fixed.tool_test as tl2
 """
 0101更新
 上限改為可以指定某CSR（限制式10)
@@ -432,7 +432,7 @@ m.optimize()
 #=================================================================================================#
 #====================================================================================================#
 #=======================================================================================================#
-
+"""
 #輸出檔名
 result_x = './Schedule_'+str(year)+'_'+str(month)+'.csv'
 result_y = './lack&over_'+str(year)+'_'+str(month)+'.csv'
@@ -655,6 +655,12 @@ new_2['name']=T_type
 new_2.set_index("name",inplace=True)
 new_2.to_csv(result_y, encoding="utf-8_sig")
 # print(new_2.T)
+
+#============================================================================#
+"""
+
+df_x = tl2.OUTPUT(work)
+
 
 #============================================================================#
 
