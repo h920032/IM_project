@@ -3,9 +3,7 @@
 from   gurobipy import *
 import numpy as np
 import pandas as pd
-
 from   data.fixed.score import score
-# import data.fixed.tool as tl
 import fixed.tool as tl
 
 """
@@ -266,139 +264,15 @@ m.optimize()
 #============================================================================#
 
 
-
-
-
-
-#=======================================================================================================#
-#====================================================================================================#
-#=================================================================================================#
-# print out
-#=================================================================================================#
-#====================================================================================================#
-#=======================================================================================================#
-
-# year  = tl.YEAR
-# month = tl.MONTH
-# DATES = tl.DATE_list
-# DEMAND_t = pd.read_csv("./data/per_month/Need.csv", header = 0, index_col = 0).T
-# A_t = tl.ClassTime_t           #班別-時段對照表的原始檔案
-
-
-# #輸出檔名
-# result = './schedule_data_'+str(year)+'_'+str(month)+'.xlsx'
-
-
-# #Dataframe_y
-# T_type = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30'
-#         ,'15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30']
-
-# lesspeople_count = []
-# for j in DAY:
-#     tmp = []
-#     for t in TIME:
-#         tmp.append(int(lack[j,t].x))
-#     lesspeople_count.append(tmp)
-
-
-# df_y = pd.DataFrame(lesspeople_count, index = DATES, columns = T_type) 
-
-# #計算總和
-# df_y['SUM_per_day'] = df_y.sum(axis=1)
-# df_y.loc['SUM_per_time'] = df_y.sum()
-
-# #計算需求
-# demand_day = DEMAND_t.sum(axis=1).values
-# demand_time = DEMAND_t.sum().values
-# #計算缺工比例
-# less_percent_day = (df_y['SUM_per_day'].drop(['SUM_per_time']).values)/demand_day
-# less_percent_time = (df_y.loc['SUM_per_time'].drop(['SUM_per_day']).values)/demand_time
-# df_percent_day = pd.DataFrame(less_percent_day, index = DATES, columns = ["Percentage"]) #which_day , columns = ["Percentage"])
-# df_percent_time = pd.DataFrame(less_percent_time, index = T_type , columns = ["Percentage"])
-
-
-# #h1h2
-# print("\n所有天每個時段人數與需求人數的差距中的最大值 = "+str(int(surplus.x))+"\n")
-
-
-
-# #晚班次數dataframe
-# night_work_total = []
-# for i in EMPLOYEE:
-#     count = 0
-#     for j in DAY:
-#         for k in SHIFTset['night']:
-#             if(int(work[i,j,k].x)==1):
-#                 count+=1
-#     night_work_total.append(count)
-
-
-# df_nightcount = pd.DataFrame(night_work_total, index = employee_name, columns = ['NightWork_count'])
-# print("\n員工中每人排晚班次數加權平均的最大值 = "+str(int(nightCount.x))+"\n")
-
-
-# #午班次數dataframe
-# noon_work_total = []
-# for i in EMPLOYEE:
-#     count = 0
-#     for j in DAY:
-#         for k in SHIFTset['noon']:
-#             if(int(work[i,j,k].x)==1):
-#                 count+=1
-#     noon_work_total.append(count)
-
-
-# df_nooncount = pd.DataFrame(noon_work_total, index = employee_name, columns = ['NoonWork_count'])
-# print("\n員工中每人排午班總次數的最大值 = "+str(int(noonCount.x))+"\n")
-
-      
-# #休息時間 Dataframe_z
-# R_type = ['11:30','12:00','12:30','13:00','13:30']     
-# which_week = [tmp+1 for tmp in WEEK] 
-# which_resttime = []     
-# for i in EMPLOYEE:
-#     tmp = []
-#     for w in WEEK:
-#         tmp2 = []
-#         for r in BREAK:
-#             if(breakCount[i,w,r].x==1):
-#                 tmp2.append(R_type[r])
-#         tmp.append(tmp2)
-#     which_resttime.append(tmp)
-
-
-# df_resttime = pd.DataFrame(which_resttime, index=employee_name, columns=which_week)
-
-
-# print("Final MIP gap value: %f" % m.MIPGap)
-# print("\n目標值 = "+str(m.objVal) + "\n")
-
-
-# # ============================================================================ #
-# # 輸出其他資訊
-# # ============================================================================ #
-# with pd.ExcelWriter(result) as writer:
-#     df_x.to_excel(writer, sheet_name="員工排班表")
-#     df_nightcount.to_excel(writer, sheet_name="員工本月晚班次數")
-#     df_percent_time.to_excel(writer, sheet_name="每個時段缺工百分比表")
-#     df_percent_day.to_excel(writer, sheet_name="每天缺工百分比表")
-#     df_nightcount.to_excel(writer, sheet_name="員工本月晚班次數")
-#     df_nooncount.to_excel(writer, sheet_name="員工本月午班次數")
-#     df_y.to_excel(writer, sheet_name="缺工人數表")
-#     df_resttime.to_excel(writer, sheet_name="員工每週有哪幾種休息時間")
-
-
-
-
-
-
+"""
 #============================================================================#
 # 輸出
 result = tl.OUTPUT(work)           #建立一個專門用來輸出的class物件
-df = result.printSchedule()         #將班表輸出為檔案
-print('\n\n\n\n=============== 班表 ===============\n', df)
-lack = result.printLackAndOver()    #計算缺工冗員表，並輸出為檔案
-print('\n\n\n\n============= 缺工冗員表 ============\n', lack)
+# df = result.printSchedule()         #將班表輸出為檔案
+# print('\n\n\n\n=============== 班表 ===============\n', df)
+# lack = result.printLackAndOver()    #計算缺工冗員表，並輸出為檔案
+# print('\n\n\n\n============= 缺工冗員表 ============\n', lack)
+result.printAll(makeFile=True)  #makefile=True會將班表、缺工冗員表存成csv，False則只有xlsx檔
 
 #============================================================================#
 
@@ -417,5 +291,5 @@ print('score:',score)
 # 下面這個現在在 tool 裡面檢查過了
 # if cutoff == True:
 #     print('\ngurobi運行被強迫中斷，因此以A2班填入空班別，目標式值可能較高。')
-
+"""
 
