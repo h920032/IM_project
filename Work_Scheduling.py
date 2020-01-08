@@ -3,7 +3,7 @@
 from   gurobipy import *
 import numpy as np
 import pandas as pd
-from   data.fixed.score import score
+from   fixed.score import score
 import fixed.tool as tl
 
 """
@@ -264,15 +264,15 @@ m.optimize()
 #============================================================================#
 
 
-"""
+
 #============================================================================#
 # 輸出
 result = tl.OUTPUT(work)           #建立一個專門用來輸出的class物件
+result.printAll(makeFile=True)  #makefile=True會將班表、缺工冗員表存成csv，False則只有xlsx檔
 # df = result.printSchedule()         #將班表輸出為檔案
 # print('\n\n\n\n=============== 班表 ===============\n', df)
 # lack = result.printLackAndOver()    #計算缺工冗員表，並輸出為檔案
 # print('\n\n\n\n============= 缺工冗員表 ============\n', lack)
-result.printAll(makeFile=True)  #makefile=True會將班表、缺工冗員表存成csv，False則只有xlsx檔
 
 #============================================================================#
 
@@ -291,5 +291,5 @@ print('score:',score)
 # 下面這個現在在 tool 裡面檢查過了
 # if cutoff == True:
 #     print('\ngurobi運行被強迫中斷，因此以A2班填入空班別，目標式值可能較高。')
-"""
+
 

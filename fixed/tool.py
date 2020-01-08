@@ -16,16 +16,25 @@ from datetime import datetime, date
 
 ======================================================"""
 
+#測試檔案檔名 - 沒有要測試時請將TestPath留空白
+# TestPath = ""
+global EmployeeTest, AssignTest, NeedTest, U_ttest
+EmployeeTest = ""
+AssignTest = ""
+NeedTest = ""
+U_ttest = ""
+
 """================================================================================================================
     globle參數
 ================================================================================================================"""
 # 基本資料
+ENCODING = 'utf-8-sig'                  #讀檔格式
 DIR = '../data'                         #預設總資料夾檔案路徑
 DIR_PER_MONTH = '../data/per_month/'    #每月改變的資料(per_MONTH)的檔案路徑
 DIR_PARA = '../data/parameters/'        #parameters的檔案路徑
 RECORD_FILE = './fixed/record.log'      #運行紀錄檔案
-with open(RECORD_FILE,'w', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
-    f.write('tool.py 開始執行：'+str(datetime.now())+'\n\n')
+# with open(RECORD_FILE,'w', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
+#     f.write('tool.py 開始執行：'+str(datetime.now())+'\n\n')
 
 YEAR = 2019
 MONTH = 4
@@ -93,8 +102,8 @@ Upper_shift = []
 # print到記錄檔
 def PRINT(text):
     print(text)
-    with open(RECORD_FILE,'a', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
-        f.write(text+'\n')
+    # with open(RECORD_FILE,'a', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
+    #     f.write(text+'\n')
 
 # 回報錯誤、儲存錯誤檔案並結束程式
 def ERROR(error_text):
@@ -104,7 +113,8 @@ def ERROR(error_text):
     sys.exit()
 
 # 讀檔：try/except是為了因應條件全空時。 讀檔預設值：空的DataFrame
-def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, header_=None,skiprows_=None,index_col_=None,encoding_=None,):
+def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, \
+             header_=None,skiprows_=None,index_col_=None,encoding_=ENCODING):
     try:
         t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
                         encoding=encoding_,engine='python')
@@ -126,7 +136,7 @@ def Tran_t2n(text, aList) -> int:
     try:
         ans = aList.index(text)     #找出 text 在 aList 中的 index，並回傳
     except:
-        PRINT('Tran_t2n():', text, 'not in', aList[0:3], '...')
+        print('Tran_t2n():', text, 'not in', aList[0:3], '...')
         ans = None
     return ans
 
@@ -135,7 +145,7 @@ def Tran_n2t(index:int, aList):
     try:
         ans = aList[index]     #回傳 aList[index] 的值
     except:
-        PRINT('Tran_n2t(): index['+str(index)+'] out of range '+\
+        print('Tran_n2t(): index['+str(index)+'] out of range '+\
             '(len of', aList[0:3], '=',len(aList),')')
         ans = None
     return ans
@@ -475,12 +485,12 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
     
     # Employee
-    Employee_t  = readFile(path+'Employee.csv', header_ = 0)
+    Employee_t  = readFile(path+'Employee'+EmployeeTest+'.csv', header_ = 0)
     Employee_t['ID'] = [ str(x) for x in Employee_t['ID'] ]           
 
     nE          = Employee_t.shape[0]
     NAME_list   = list(Employee_t['Name_Chinese'])                                  #對照名字與員工index用
-    ID_list     = [ str(x) for x in Employee_t['ID'] ]                              #對照ID與員工index用
+    ID_list     = list(Employee_t['ID'])                                            #對照ID與員工index用
 
     SKILL_NAME  = list(filter(lambda x: re.match('skill-',x), Employee_t.columns))  #自動讀取技能名稱
     E_SKILL_set = SetSKILL(Employee_t[ SKILL_NAME ])                                #特定技能的員工集合
@@ -510,7 +520,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
 
     # Need
-    Need_t = readFile(path+'Need.csv', header_=0, index_col_=0).T
+    Need_t = readFile(path+'Need'+NeedTest+'.csv', header_=0, index_col_=0).T
     DATE_list = [ int(x) for x in Need_t.index ]                    #所有的日期 - 對照用
     nD = len(DATE_list)                                             #總工作日數
     DEMAND = [list(map(int,l)) for l in Need_t.values.tolist()]     #DEMAND_jt - 日子j於時段t的需求人數(int)
@@ -523,7 +533,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
 
     # Assign
-    Assign_t = readFile(path+'Assign.csv', skiprows_=[0])
+    Assign_t = readFile(path+'Assign'+AssignTest+'.csv', skiprows_=[0])
     Assign_t[0] = [ str(x) for x in Assign_t[0] ]                   #強制將ID設為string
     Assign_t[1] = [ int(x) for x in Assign_t[1] ]                   #強制將日期設為int
     Assign_t[2] = [ str(x) for x in Assign_t[2] ]                   #強制將班別設為string
@@ -554,7 +564,7 @@ def READ_limits(path=DIR_PARA):
     global Employee_t 
     # -------讀取限制式-------#
     # lower
-    LOWER = readFile(path+'lower_limit.csv', header_=0).values.tolist()         #LOWER - 日期j，班別集合ks，職位p，上班人數下限
+    LOWER = readFile(path+'lower_limit.csv',skiprows_=[0]).values.tolist()     #日期j，班別集合ks，職位p，上班人數下限
     for i in range(len(LOWER)):
         d = Tran_t2n( LOWER[i][0], DATE_list)
         LOWER[i][0] = d
@@ -570,7 +580,7 @@ def READ_limits(path=DIR_PARA):
         if e==None:
             print('指定排班表中發現不明ID：',Upper_t.iloc[c,0],\
                 '不在員工資料的ID列表中，請再次確認ID正確性（包含大小寫、空格、換行）')
-        UPPER.append( (e, Upper_t.iloc[c,1], Upper_t.iloc[c,2], Upper_t.iloc[c,3]) )
+        UPPER.append( [e, Upper_t.iloc[c,1], Upper_t.iloc[c,2], Upper_t.iloc[c,3]] )
 
 
     # senior
@@ -661,7 +671,8 @@ class OUTPUT:
             # findWork = lambda t: True if int(t.x)==1 else False
         #計算
         work_list = []                                  #員工值的班別(數字)
-        work_text = []                                  #員工值的班別(文字)        
+        work_text = []                                  #員工值的班別(文字)  
+        error = 0                                       #發生錯誤的個數      
         for i in range(nE):
             tmp_i = []                                  #每個員工本月的班(數字)
             tmp_t = []                                  #每個員工本月的班(文字)
@@ -675,10 +686,14 @@ class OUTPUT:
                         OK = True
                         break
                 if not OK:                              #沒找到班別，填入預設值
-                    tmp_i.append(1)
-                    tmp_t.append(CLASS_list[k])
-                    PRINT(ID_list[i]+' 在 '+str(DATE_list[j])+' 號的排班發生錯誤。'+\
-                        '請嘗試讓程式運行更多時間，或是減少限制條件。\n')
+                    if error < 5:
+                        tmp_i.append(1)
+                        tmp_t.append(CLASS_list[1])
+                        PRINT(ID_list[i]+' 在 '+str(DATE_list[j])+' 號的排班發生錯誤。'+\
+                            '請嘗試讓程式運行更多時間，或是減少限制條件。\n')
+                        error += 1
+                    else:
+                        ERROR('班表錯誤！班表中有空格')   #錯誤過多就視為沒救了
             work_list.append(tmp_i)
             work_text.append(tmp_t)
         #回傳
@@ -866,6 +881,8 @@ def READ_CHECK():
     # print('LastWEEK_night=',LastWEEK_night)
     # print('LastDAY_night=',LastDAY_night)
     # print('\n')
+
+    # -------Set-------#
     # print('E_POSI_set=',E_POSI_set)
     # print('E_SENIOR_set=',E_SENIOR_set)
     # print('E_SKILL_set=',E_SKILL_set)
@@ -874,10 +891,20 @@ def READ_CHECK():
     # print('K_CLASS_set=',K_CLASS_set)
     # print('K_BREAK_set=',K_BREAK_set)
     # print('\n\n')
+    
+    # -------表格-------#
     # print('CONTAIN=',CONTAIN,'\n')
     # print('Employee_t=',Employee_t,'\n')
     # print('DEMAND=',DEMAND,'\n')
     # print('ASSIGN=',ASSIGN)
+    
+    # -------限制式-------#
+    print('LOWER=', LOWER)
+    print('UPPER=', UPPER)
+    print('PERCENT=', PERCENT)
+    print('NOTPHONE_CLASS=', NOTPHONE_CLASS)
+    print('NOTPHONE_CLASS_special=', NOTPHONE_CLASS_special)
+    print('Upper_shift=', Upper_shift)
     PRINT('=== ======= ===')
 READ_CHECK()
 
