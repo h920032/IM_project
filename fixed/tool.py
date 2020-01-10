@@ -662,8 +662,9 @@ class OUTPUT:
     # 計算誰哪天值哪個班，輸出：(數字班表[i,j]，文字班表[i,j])
     def _calculateClass(self, table):   #前加底線能讓函式在簡單import時被忽略(似private效果)
         global nE, nD, nK, ID_list, DATE_list
+        
         #依據不同的傳入型態，使用不同的判定式
-        if isinstance( table[0,0,0], (int,bool) ):      #isinstance()用以判斷型別
+        if isinstance( table[0,0,0].x, (int,float,bool) ):      #isinstance()用以判斷型別
             findWork = lambda t: True if t==1 else False
         else:
             findWork = lambda t: False if t==1 else True
@@ -679,8 +680,8 @@ class OUTPUT:
             for j in range(nD):
                 OK = False                              #判斷是否有找到班別
                 for k in range(nK):
-                    if findWork(table[i,j,k]):          #找到班別了
-                        print(table[i,j,k], type(table[i,j,k]))
+                    if findWork(table[i,j,k].x):          #找到班別了
+                        #print(table[i,j,k].x, type(table[i,j,k]))
                         tmp_i.append(k)
                         tmp_t.append(CLASS_list[k])
                         OK = True
