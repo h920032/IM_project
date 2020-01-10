@@ -670,6 +670,11 @@ class OUTPUT:
             return True
         else:
             return False
+    def _isT_alg(item, item2=None):
+        if isinstance( item2, (int,float) ):
+            return True        #演算法接到的是item=整數值班別   
+        else:
+            return False         
 
     # 計算誰哪天值哪個班，輸出：(數字班表[i,j]，文字班表[i,j])
     def _calculateClass(self, table):   #前加底線能讓函式在簡單import時被忽略(似private效果)
@@ -678,36 +683,68 @@ class OUTPUT:
         try:
             table[0,0,0].x      #如果table[0,0,0]是gurobi var,這行就能執行；否則報錯
             PRINT('＊輸出 gurobi solver 結果')
+            #計算
+            work_list = []                                  #員工值的班別(數字)
+            work_text = []                                  #員工值的班別(文字)  
+            error = 0                                       #發生錯誤的個數      
+            for i in range(nE):
+                tmp_i = []                                  #每個員工本月的班(數字)
+                tmp_t = []                                  #每個員工本月的班(文字)
+                for j in range(nD):
+                    OK = False                              #判斷是否有找到班別
+                    for k in range(nK):
+                        if self._isT(table[i,j,k]):         #找到班別了
+                            tmp_i.append(k)
+                            tmp_t.append(CLASS_list[k])
+                            OK = True
+                            break
+                    if not OK:                              #沒找到班別，填入預設值
+                        if error < 5:
+                            tmp_i.append(1)
+                            tmp_t.append(CLASS_list[1])
+                            PRINT(ID_list[i]+' 在 '+str(DATE_list[j])+' 號的排班發生錯誤。')
+                            error += 1
+                        else:
+                            ERROR('無法排出班表，請確認限制式是否衝突')  #錯誤過多就視為沒救了
+                work_list.append(tmp_i)
+                work_text.append(tmp_t)
+            if error > 0: 
+                PRINT('\n= ! = 部分班表尚未排完，目前已使用預設班別('+CLASS_list[1]+')補上。\n'+\
+                    '      建議將 time_limit 調高後，重新執行程式。\n')
         except:
             PRINT('＊輸出 基因演算法 結果')
-        #計算
-        work_list = []                                  #員工值的班別(數字)
-        work_text = []                                  #員工值的班別(文字)  
-        error = 0                                       #發生錯誤的個數      
-        for i in range(nE):
-            tmp_i = []                                  #每個員工本月的班(數字)
-            tmp_t = []                                  #每個員工本月的班(文字)
-            for j in range(nD):
-                OK = False                              #判斷是否有找到班別
-                for k in range(nK):
-                    if self._isT(table[i,j,k]):         #找到班別了
-                        tmp_i.append(k)
-                        tmp_t.append(CLASS_list[k])
+            K_type_int= {}
+            for i in range(len(CLASS_list)):
+                K_type_int[i] = CLASS_list[i]
+            Schedule = np.vectorize({v: k for k, v in K_type_int.items()}.get)(np.array(table))
+            #計算
+            work_list = []                                  #員工值的班別(數字)
+            work_text = []                                  #員工值的班別(文字)  
+            error = 0                                       #發生錯誤的個數      
+            for i in range(nE):
+                tmp_i = []                                  #每個員工本月的班(數字)
+                tmp_t = []                                  #每個員工本月的班(文字)
+                for j in range(nD):
+                    OK = False                              #判斷是否有找到班別
+                    if self._isT_alg(int(Schedule[i][j])):         #找到班別了
+                        shift = ''
+                        tmp_i.append(Schedule[i][j])
+                        shift = CLASS_list[Schedule[i][j]]
+                        tmp_t.append(shift)
                         OK = True
-                        break
-                if not OK:                              #沒找到班別，填入預設值
-                    if error < 5:
-                        tmp_i.append(1)
-                        tmp_t.append(CLASS_list[1])
-                        PRINT(ID_list[i]+' 在 '+str(DATE_list[j])+' 號的排班發生錯誤。')
-                        error += 1
-                    else:
-                        ERROR('無法排出班表，請確認限制式是否衝突')  #錯誤過多就視為沒救了
-            work_list.append(tmp_i)
-            work_text.append(tmp_t)
-        if error > 0: 
-            PRINT('\n= ! = 部分班表尚未排完，目前已使用預設班別('+CLASS_list[1]+')補上。\n'+\
-                  '      建議將 time_limit 調高後，重新執行程式。\n')
+                    if not OK:                              #沒找到班別，填入預設值
+                        if error < 5:
+                            tmp_i.append(1)
+                            tmp_t.append(CLASS_list[1])
+                            PRINT(ID_list[i]+' 在 '+str(DATE_list[j])+' 號的排班發生錯誤。')
+                            error += 1
+                        else:
+                            ERROR('無法排出班表，請確認限制式是否衝突')  #錯誤過多就視為沒救了
+                work_list.append(tmp_i)
+                work_text.append(tmp_t)
+            if error > 0: 
+                PRINT('\n= ! = 部分班表尚未排完，目前已使用預設班別('+CLASS_list[1]+')補上。\n'+\
+                    '      建議將 time_limit 調高後，重新執行程式。\n')
         #回傳
         return (work_list, pd.DataFrame(work_text, index = ID_list, columns = DATE_list) )
     
