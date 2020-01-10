@@ -661,12 +661,11 @@ class OUTPUT:
     #============================================================================#
     #依據不同的傳入table型態，使用不同的判定式
     def _isT(item, item2=None):
-        # print('get item=',item, 'item2=', item2)
-        if isinstance( item, (int,float,bool) ):
-            v = item
+        if isinstance( item2, (int,float,bool) ):
+            v = item2           #gurobi接到的會是item=<某位址> item2=bool值
         else:
             v = item2.x         #gurobi接到的會是item=<某位址> item2=<gurobi.Var (value 1.0)>
-        if v==1 or v==True:
+        if v==1 or v:
             return True
         else:
             return False
