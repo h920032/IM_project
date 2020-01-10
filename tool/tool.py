@@ -109,7 +109,7 @@ def ERROR(error_text):
 
 # 讀檔：try/except是為了因應條件全空時。 讀檔預設值：空的DataFrame
 def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, \
-             header_=None,skiprows_=None,index_col_=None,encoding_=ENCODING):
+             header_=None,skiprows_=None,index_col_=None,encoding_=None):
     try:
         t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
                         encoding=encoding_,engine='python')
@@ -456,13 +456,14 @@ def READ_parameters(path=DIR_PARA):
     for ki in range(nR):
         BREAK_list.append( str(RSet_t.index[ki]) )
         K_BREAK_set.append( [ Tran_t2n(x, CLASS_list) for x in RSet_t.iloc[ki].dropna().values ] )
-
+    
     # position
     POSI_list   = readFile(path+'fixed/position.csv').iloc[0].tolist()  #職位高低(低到高)
     
     # time limit
     try:
         TIME_LIMIT = readFile(path+'time_limit.csv', header_=0)
+        TIME_LIMIT = int(TIME_LIMIT.loc[0][0])
     except:
         print('\n無法讀取time_limit.csv，改用預設時間限制\n')
 READ_parameters()
