@@ -3,16 +3,18 @@
 from   gurobipy import *
 import numpy as np
 import pandas as pd
-from   fixed.score import score
-import fixed.tool as tl
+from   tool.score import score
+import tool.tool as tl
 
 """
 0101更新
-上限改為可以指定某CSR（限制式10)
-新增午休表格fix_resttime.csv
-S_break及午休種類改為可以彈性調整
-tool.py Ktype直接刪除，皆改為直接由主程式碼代入function
-nightCount取晚班最大值時有考慮到係數（限制式14)
+    上限改為可以指定某CSR（限制式10)
+    新增午休表格fix_resttime.csv
+    S_break及午休種類改為可以彈性調整
+    tool.py Ktype直接刪除，皆改為直接由主程式碼代入function
+    nightCount取晚班最大值時有考慮到係數（限制式14)
+0110更新
+    輸入輸出
 """
 """
 # Indexs 都從0開始
@@ -252,7 +254,7 @@ for i in EMPLOYEE:
 
 #============================================================================#
 #process
-# m.params.LogFile = './data/fixed/gurobi.log'    #設定gurobi記錄檔的存放位置與檔名 不知為何沒有效果
+m.params.LogFile = './tool/gurobi.log'         #設定gurobi記錄檔的存放位置與檔名 不知為何有時沒有效果
 try:
     m.params.TimeLimit = timelimit.loc[0][0]    #設定最多跑多久
 except:
@@ -267,12 +269,14 @@ m.optimize()
 
 #============================================================================#
 # 輸出
-result = tl.OUTPUT(work)           #建立一個專門用來輸出的class物件
-result.printAll(makeFile=True)  #makefile=True會將班表、缺工冗員表存成csv，False則只有xlsx檔
-# df = result.printSchedule()         #將班表輸出為檔案
-# print('\n\n\n\n=============== 班表 ===============\n', df)
-# lack = result.printLackAndOver()    #計算缺工冗員表，並輸出為檔案
-# print('\n\n\n\n============= 缺工冗員表 ============\n', lack)
+result = tl.OUTPUT(work)                        #建立一個專門用來輸出的class物件
+df, df_lack = result.printAll(makeFile=True)    
+""" result.printAll()
+    輸出：tuple (班表, 缺工冗員表)
+    參數：makefile, makeFile=True會將班表、缺工冗員表另外存成csv，False則只有xlsx檔
+"""
+print('\n\n\n\n=============== 班表 ===============\n', df)
+print('\n\n\n\n============= 缺工冗員表 ============\n', df_lack)
 
 #============================================================================#
 
