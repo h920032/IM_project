@@ -503,7 +503,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
     SKILL_NAME  = list(filter(lambda x: re.match('skill-',x), Employee_t.columns))  #自動讀取技能名稱
     E_SKILL_set = SetSKILL(Employee_t[ SKILL_NAME ])                                #特定技能的員工集合
-
+    E_NAME      = list(Employee_t['Name_English'])
     E_POSI_set  = SetPOSI(Employee_t['Position'], POSI_list)                        #某職稱以上的員工集合      
     
 
