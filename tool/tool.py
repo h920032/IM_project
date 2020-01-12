@@ -20,15 +20,23 @@ U_ttest = ""
 """================================================================================================================
     globle參數
 ================================================================================================================"""
-# 讀檔基本資料
-ENCODING = 'utf-8-sig'                  #讀檔格式
+# 作業系統 (ios和windows編碼不同)
+IS_APPLE = True if os.name in ['darwin','linux'] else False     #是不是蘋果
+if IS_APPLE:
+    ENCODING = 'utf-8'      #ios系統下，不需要考慮那麼多
+    PRINT('作業系統： iOS, 使用編碼： utf-8')
+else:
+    ENCODING = 'utf-8-sig'  #excel必須是具有BOM的utf-8才不會亂碼
+    PRINT('作業系統： Winodws, 使用編碼： 帶有BOM的utf-8')
+
+# 讀檔基本資料                  
 DIR = '../data'                         #預設總資料夾檔案路徑
 DIR_PER_MONTH = '../data/per_month/'    #每月改變的資料(per_MONTH)的檔案路徑
 DIR_PARA = '../data/parameters/'        #parameters的檔案路徑
 
 # 紀錄檔案
 RECORD_FILE = './tool/record.log'      #運行紀錄檔案
-with open(RECORD_FILE, 'w', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
+with open(RECORD_FILE, 'w', encoding=ENCODING) as f:      #用with一次性完成open、close檔案
     f.write('tool.py 開始執行：'+str(datetime.now())+'\n\n')
 
 YEAR = 2019
@@ -109,7 +117,7 @@ def ERROR(error_text):
 
 # 讀檔：try/except是為了因應條件全空時。 讀檔預設值：空的DataFrame
 def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, \
-             header_=None,skiprows_=None,index_col_=None,encoding_=None):
+             header_=None,skiprows_=None,index_col_=None,encoding_=ENCODING):
     try:
         t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
                         encoding=encoding_,engine='python')
@@ -137,8 +145,7 @@ def Tran_t2n(text, aList) -> int:
 
 # index to text
 def Tran_n2t(index:int, aList):
-    try:
-        ans = aList[index]     #回傳 aList[index] 的值
+    try: ans = aList[index]     #回傳 aList[index] 的值
     except:
         print('Tran_n2t(): index['+str(index)+'] out of range '+\
             '(len of', aList[0:3], '=',len(aList),')')
@@ -503,7 +510,6 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
     SKILL_NAME  = list(filter(lambda x: re.match('skill-',x), Employee_t.columns))  #自動讀取技能名稱
     E_SKILL_set = SetSKILL(Employee_t[ SKILL_NAME ])                                #特定技能的員工集合
-    E_NAME      = list(Employee_t['Name_English'])
     E_POSI_set  = SetPOSI(Employee_t['Position'], POSI_list)                        #某職稱以上的員工集合      
     
 
@@ -873,13 +879,13 @@ class OUTPUT:
         global NAME_list, ID_list
         df = self._addHoliday(self.Schedule, ID_list, 'ID')   #假日補X
         df.insert(0, 'Name', NAME_list)                       #加上員工名字
-        if makeFile: df.to_csv(self.outputName['main'], encoding="utf-8_sig")
+        if makeFile: df.to_csv(self.outputName['main'], encoding=ENCODING)
         return df
 
     # 輸出冗員與缺工人數表
     def printLackAndOver(self, makeFile=True):
         new_2 = self._addHoliday(self.LackOverList, self.T_type, 'time')    #假日補X
-        if makeFile: new_2.to_csv(self.outputName['sub'], encoding="utf-8_sig")
+        if makeFile: new_2.to_csv(self.outputName['sub'], encoding=ENCODING)
         return new_2
     
     # 輸出綜合資訊
