@@ -24,10 +24,10 @@ U_ttest = ""
 IS_APPLE = True if os.name in ['darwin','linux'] else False     #是不是蘋果
 if IS_APPLE:
     ENCODING = 'utf-8'      #ios系統下，不需要考慮那麼多
-    PRINT('作業系統： iOS, 使用編碼： utf-8')
+    print('作業系統： iOS, 使用編碼： utf-8')
 else:
     ENCODING = 'utf-8-sig'  #excel必須是具有BOM的utf-8才不會亂碼
-    PRINT('作業系統： Winodws, 使用編碼： 帶有BOM的utf-8')
+    print('作業系統： Winodws, 使用編碼： 帶有BOM的utf-8')
 
 # 讀檔基本資料                  
 DIR = '../data'                         #預設總資料夾檔案路徑
