@@ -2,9 +2,11 @@ import time
 import numpy as np
 import pandas as pd
 import random
+
+#our file
 import tool.tool as tl
-from tool.score import score
-from tool.CONFIRM import confirm
+from tool.score_1para import score
+from tool.functions.CONFIRM import confirm
 
 #1.永遠只拿前幾名，抽兩個來交配
 #2.用更好的子代取代親代
