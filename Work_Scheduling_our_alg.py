@@ -1148,12 +1148,14 @@ schedule = pd.DataFrame(gene_result, index = employee_name, columns = DATES)
 
 #============================================================================#
 # 輸出
-result = tl.OUTPUT(schedule)           #建立一個專門用來輸出的class物件
-result.printAll(makeFile=True)  #makefile=True會將班表、缺工冗員表存成csv，False則只有xlsx檔
-# df = result.printSchedule()         #將班表輸出為檔案
-# print('\n\n\n\n=============== 班表 ===============\n', df)
-# lack = result.printLackAndOver()    #計算缺工冗員表，並輸出為檔案
-# print('\n\n\n\n============= 缺工冗員表 ============\n', lack)
+result = tl.OUTPUT(schedule, isALG=True)     #建立一個專門用來輸出的class物件
+df, df_lack = result.printAll(makeFile=True)    
+""" result.printAll()
+    輸出：tuple (班表, 缺工冗員表)
+    參數：makefile, makeFile=True會將班表、缺工冗員表另外存成csv，False則只有xlsx檔
+"""
+print('\n\n\n\n=============== 班表 ===============\n', df)
+print('\n\n\n\n============= 缺工冗員表 ============\n', df_lack)
 
 #============================================================================#
 

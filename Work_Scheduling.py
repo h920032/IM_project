@@ -15,7 +15,8 @@ import tool.tool as tl
     nightCount取晚班最大值時有考慮到係數（限制式14)
 0110更新
     輸入輸出
-01122檢測完畢
+0112檢測完畢
+0113又出錯了
 """
 """
 # Indexs 都從0開始
@@ -270,7 +271,7 @@ m.optimize()
 
 #============================================================================#
 # 輸出
-result = tl.OUTPUT(work)                        #建立一個專門用來輸出的class物件
+result = tl.OUTPUT(work, isALG=False)           #建立一個專門用來輸出的class物件
 df, df_lack = result.printAll(makeFile=True)    
 """ result.printAll()
     輸出：tuple (班表, 缺工冗員表)
