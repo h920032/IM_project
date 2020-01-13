@@ -188,28 +188,28 @@ Set DAY Functions
 ==========================================="""
 #JW 第w周包含的日子集合，參數：第一天上班是星期幾,共幾天,共幾週,日子集合,日期集合
 def SetDAYW(day, total_day, total_week, DAY, DATE):  
-    ans = []
-    count  = 1
-    for i in range(total_week): #對每一周
-        tmp = []
-        if(i == 0): #第一周(很可能不完整)
-            for j in range(8-day):  #對星期日~一
-                for k in DAY:
-                    if count == DATE[k]:   #該天有上班
-                        tmp.append(k)
-                        break
-                count+=1
-        else:
-            for j in range(7):
-                for k in DAY:
-                    if count == DATE[k]:   #該天有上班
-                        tmp.append(k)       #加入
-                        break
-                count+=1
-                if count == total_day + 1:
-                    break
-        ans.append(tmp)
-    return ans
+	ans = []
+	count  = 1
+	for i in range(total_week): #對每一周
+	    tmp = []
+	    if(i == 0): #第一周(很可能不完整)
+	        for j in range(8-day):  #對星期日~一
+	            for k in DAY:
+	                if count == DATE[k]:   #該天有上班
+	                    tmp.append(k)
+	                    break
+	            count+=1
+	    else:
+	        for j in range(7):
+	            for k in DAY:
+	                if count == DATE[k]:   #該天有上班
+	                    tmp.append(k)       #加入
+	                    break
+	            count+=1
+	            if count == total_day + 1:
+	                break
+	    ans.append(tmp)
+	return ans
 
 def SetWEEKD(D_WEEK, total_week):  
     ans = []
@@ -306,125 +306,124 @@ def SetSENIOR(alist, bp):
 Calculation of NW & NM from last MONTH 
 """
 def calculate_NW(lastM_Schedule):   
-    global K_CLASS_set, ID_list, nE                     #K_CLASS_set是為了取得晚班列表
+	global K_CLASS_set, ID_list, nE                     #K_CLASS_set是為了取得晚班列表
 
-    lastday_column = -1                                 #最後一行(上月末日)
-    for c in range(len(lastM_Schedule.columns)-1,2,-1): #從最後一天倒數(2是為了去掉開頭index、ID、名字三行)
-        if lastM_Schedule[c][1] != 'X':                 #如果這一天不是假日的全'X'行，就取之為上月末日
-            lastday_column = c
-            break
-    if lastday_column == -1:
-        ERROR('上個月的班表有錯誤，找不到上個月最後一個上班日')
+	lastday_column = -1                                 #最後一行(上月末日)
+	for c in range(len(lastM_Schedule.columns)-1,2,-1): #從最後一天倒數(2是為了去掉開頭index、ID、名字三行)
+	    if lastM_Schedule[c][1] != 'X':                 #如果這一天不是假日的全'X'行，就取之為上月末日
+	        lastday_column = c
+	        break
+	if lastday_column == -1:
+	    ERROR('上個月的班表有錯誤，找不到上個月最後一個上班日')
 
-    lastM_ID = lastM_Schedule[0]
-    lastday_list = lastM_Schedule[lastday_column]
+	lastM_ID = lastM_Schedule[0]
+	lastday_list = lastM_Schedule[lastday_column]
 
-    ansList = [0] * nE                                  #對應到本月員工的數量
-    for i,ID in enumerate(lastM_ID):                    #上月第i人的ID
-        c = Tran_t2n(lastday_list[i], CLASS_list)       #取出此人上月末日的班別index
-        if c in K_CLASS_set['night']:                   #如果上月末日是晚班，更改回傳值中對應的項
-            try:                                        #(找不到人就算了)
-                ansList[ Tran_t2n(ID, ID_list) ] = 1                
-            except:
-                pass    #do nothing
-    return ansList
-    
+	ansList = [0] * nE                                  #對應到本月員工的數量
+	for i,ID in enumerate(lastM_ID):                    #上月第i人的ID
+	    c = Tran_t2n(lastday_list[i], CLASS_list)       #取出此人上月末日的班別index
+	    if c in K_CLASS_set['night']:                   #如果上月末日是晚班，更改回傳值中對應的項
+	        try:                                        #(找不到人就算了)
+	            ansList[ Tran_t2n(ID, ID_list) ] = 1                
+	        except:
+	            pass    #do nothing
+	return ansList
+	
 def calculate_NM (Employee_t,lastday_ofMONTH,lastday_row,lastday_column,lastMONTH,nEmployee):  
-    if (lastday_ofMONTH != "Fri") :
-	if (lastday_ofMONTH == "Sun") :
-                   
-            temp_part1 = lastMONTH.iloc[:, 0]
-            temp_part2 = lastMONTH.iloc[:, lastday_column-7 : lastday_column]
-            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
-            
-            for i in range(lastday_row) :     
-                for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
-                   
-                        temp_name = str(temp_dataframe.iloc[i,0])
+	if (lastday_ofMONTH != "Fri"):
+	    if (lastday_ofMONTH == "Sun"):
+	        temp_part1 = lastMONTH.iloc[:,0]
+	        temp_part2 = lastMONTH.iloc[:, lastday_column-7 : lastday_column]
+	        temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+	        
+	        for i in range(lastday_row):     
+	            for j in range (len(temp_dataframe.columns)):
+	                if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6"):
+	               
+	                    temp_name = str(temp_dataframe.iloc[i,0])
 
-                        for k in range (nEmployee) :
-                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
-                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1 
-	elif (lastday_ofMONTH == "Sat") :
-                   
-            temp_part1 = lastMONTH.iloc[:, 0]
-            temp_part2 = lastMONTH.iloc[:, lastday_column-6 : lastday_column]
-            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
-            
-            for i in range(lastday_row) :     
-                for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
-                   
-                        temp_name = str(temp_dataframe.iloc[i,0])
+	                    for k in range (nEmployee):
+	                        if (temp_name == str(Employee_t.loc[k,'id'])) : 
+	                            Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1 
+	    elif (lastday_ofMONTH == "Sat"):
+	               
+	        temp_part1 = lastMONTH.iloc[:, 0]
+	        temp_part2 = lastMONTH.iloc[:, lastday_column-6 : lastday_column]
+	        temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+	        
+	        for i in range(lastday_row):     
+	            for j in range (len(temp_dataframe.columns)):
+	                if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6"):
+	               
+	                    temp_name = str(temp_dataframe.iloc[i,0])
 
-                        for k in range (nEmployee) :
-                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
-                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1 
-        elif (lastday_ofMONTH == "Thu") :
-                   
-            temp_part1 = lastMONTH.iloc[:, 0]
-            temp_part2 = lastMONTH.iloc[:, lastday_column-4 : lastday_column]
-            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
-            
-            for i in range(lastday_row) :     
-                for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
-                   
-                        temp_name = str(temp_dataframe.iloc[i,0])
+	                    for k in range (nEmployee) :
+	                        if (temp_name == str(Employee_t.loc[k,'id'])) : 
+	                            Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1 
+	    elif (lastday_ofMONTH == "Thu"):
+	               
+	        temp_part1 = lastMONTH.iloc[:, 0]
+	        temp_part2 = lastMONTH.iloc[:, lastday_column-4 : lastday_column]
+	        temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+	        
+	        for i in range(lastday_row):     
+	            for j in range (len(temp_dataframe.columns)) :
+	                if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6"):
+	               
+	                    temp_name = str(temp_dataframe.iloc[i,0])
 
-                        for k in range (nEmployee) :
-                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
-                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1    
-        
-        elif (lastday_ofMONTH == "Wed") :
+	                    for k in range (nEmployee):
+	                        if (temp_name == str(Employee_t.loc[k,'id'])): 
+	                            Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1    
+	    
+	    elif (lastday_ofMONTH == "Wed"):
 
-            temp_part1 = lastMONTH.iloc[:, 0]
-            temp_part2 = lastMONTH.iloc[:, lastday_column-3 : lastday_column]
-            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
-         
-            for i in range(lastday_row) :
-                for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
-                   
-                        temp_name = str(temp_dataframe.iloc[i,0])
-                   
-                        for k in range (nEmployee) :
-                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
-                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
+	        temp_part1 = lastMONTH.iloc[:, 0]
+	        temp_part2 = lastMONTH.iloc[:, lastday_column-3 : lastday_column]
+	        temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+	     
+	        for i in range(lastday_row):
+	            for j in range (len(temp_dataframe.columns)) :
+	                if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6"):
+	               
+	                    temp_name = str(temp_dataframe.iloc[i,0])
+	               
+	                    for k in range (nEmployee) :
+	                        if (temp_name == str(Employee_t.loc[k,'id'])): 
+	                            Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
 
-        elif (lastday_ofMONTH == "Tue") :
-         
-            temp_part1 = lastMONTH.iloc[:, 0]
-            temp_part2 = lastMONTH.iloc[:, lastday_column-2 : lastday_column]
-            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
-        
-            for i in range(lastday_row) :
-                for j in range (len(temp_dataframe.columns)) :
-                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
-                  
-                        temp_name = str(temp_dataframe.iloc[i,0])
-                   
-                        for k in range (nEmployee) :
-                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
-                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
-        
-        elif (lastday_ofMONTH == "Mon") : 
-        
-            temp_part1 = lastMONTH.iloc[:, 0]
-            temp_part2 = lastMONTH.iloc[:, lastday_column-1 : lastday_column]
-            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
-        
-            for i in range (lastday_row):
-                for j in range (len(temp_dataframe.columns)) :
-                    if(temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
-                    
-                       temp_name = str(temp_dataframe.iloc[i,0])
-                    
-                       for k in range (nEmployee) :
-                           if (temp_name == str(Employee_t.loc[k,'id'])) : 
-                               Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
-    return Employee_t
+	    elif (lastday_ofMONTH == "Tue"):
+	     
+	        temp_part1 = lastMONTH.iloc[:, 0]
+	        temp_part2 = lastMONTH.iloc[:, lastday_column-2 : lastday_column]
+	        temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+	    
+	        for i in range(lastday_row):
+	            for j in range (len(temp_dataframe.columns)):
+	                if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6"):
+	              
+	                    temp_name = str(temp_dataframe.iloc[i,0])
+	               
+	                    for k in range (nEmployee):
+	                        if (temp_name == str(Employee_t.loc[k,'id'])): 
+	                            Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
+	    
+	    elif (lastday_ofMONTH == "Mon"): 
+	    
+	        temp_part1 = lastMONTH.iloc[:, 0]
+	        temp_part2 = lastMONTH.iloc[:, lastday_column-1 : lastday_column]
+	        temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+	    
+	        for i in range (lastday_row):
+	             for j in range (len(temp_dataframe.columns)) :
+	                if(temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6"):
+	                
+	                   temp_name = str(temp_dataframe.iloc[i,0])
+	                
+	                   for k in range (nEmployee):
+	                       if (temp_name == str(Employee_t.loc[k,'id'])): 
+	                           Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1
+	return Employee_t
 
 
 
