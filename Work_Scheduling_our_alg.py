@@ -4,17 +4,14 @@ import re, time
 import numpy as np
 import pandas as pd
 import random as rd
-import datetime, calendar, sys
-
-#from our files
-import tool.tool as tl
-from tool.score_1para import score
 import tool.functions.gene_alg as gen
-from tool.functions.CSR_order   import CSR_ORDER
+from tool.functions.CSR_order import CSR_ORDER
 from tool.functions.LIMIT_ORDER import LIMIT_ORDER
-from tool.functions.CONFIRM     import confirm
+from tool.functions.CONFIRM import confirm
+from tool.score_1para import score
 from tool.functions.final_score import final_score
-
+import tool.tool as tl
+import datetime, calendar, sys
 
 #========================================================================#
 # Global Variables
@@ -570,6 +567,30 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, csr_list):
     ans.sort(key=takeNeck, reverse=False)
 
     return ans
+
+def DAY_ORDER(demand_list):
+    ans = []
+    for i in range(len(demand_list)):
+        demand_t = []
+        demand_t.extend(demand_list[i])
+        dem_l = np.array(demand_t)
+        dem_s = np.array(demand_t)
+        dem_su = 0
+        for j in range(len(dem_l)):
+            if dem_l[j] < 0:
+                dem_l[j] = 0
+        for j in range(len(dem_s)):
+            if dem_s[j] > 0:
+                dem_s[j] = 0
+            if min(dem_s)*(-1) == maxsurplus:
+                dem_su = 0
+            else:
+                dem_su = 1
+        d = P0 * np.sum(dem_l) + P1 * dem_su
+        ans.append([i,d])
+    ans.sort(key=takeNeck, reverse=False)
+
+    return ans 
 #=======================================================================================================#
 #====================================================================================================#
 #=================================================================================================#
@@ -666,14 +687,7 @@ for p in range(parent):
                 DAY_DEMAND = []
                 DAY_DEMAND.extend(CURRENT_DEMAND[j])
                 LOWER_SET = LIMIT_CSR_SHIFT_ORDER(DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
-                #SHIFT_LIST = []
-                #if nightbound == True:
-                #    SHIFT_LIST.append(12)
-                #for k in range(len(SHIFT_SET)):
-                #    SHIFT_LIST.append(SHIFT_SET[k][0])
-                #if BOUND <= 0:  #若限制式參數(n)不合理，忽略之
-                #    break
-                #for k in SHIFT_LIST:
+                
                 for x in range(len(LOWER_SET)):
                     if BOUND <= 0:
                         break
@@ -728,8 +742,6 @@ for p in range(parent):
                     for i in range(len(RATIO_SET)):
                         if RATIO_SET[i][1] == k:
                             RATIO_CSR_LIST.append(RATIO_SET[i][0])
-                    #for i in range(len(RATIO_CSR_SET)):
-                    #    RATIO_CSR_LIST.append(RATIO_CSR_SET[i][0])
                     for i in RATIO_CSR_LIST:
                         if BOUND <= 0:
                             break
@@ -889,9 +901,6 @@ for p in range(parent):
     #=================================================================================================#
     #安排空班別
     #=================================================================================================#
-    DAY_LIST = []
-    DAY_LIST.extend(DAY)
-    rd.shuffle(DAY_LIST)
     E_LIST = []
     E_LIST.extend(EMPLOYEE)
     rd.shuffle(E_LIST)
@@ -899,6 +908,10 @@ for p in range(parent):
     fix_temp = []
     for i in E_LIST:
         employee = []
+        DAY_SET = DAY_ORDER(CURRENT_DEMAND)
+        DAY_LIST = []
+        for h in range(len(DAY_SET)):
+            DAY_LIST.append(DAY_SET[h][0])
         for j in DAY_LIST:
             is_arrange = False
             for k in range(nK):

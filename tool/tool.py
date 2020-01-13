@@ -693,6 +693,10 @@ class OUTPUT:
 
         if self.isALG:       
             PRINT('＊輸出 基因演算法 結果')
+            K_type_int= {}
+            for i in range(len(CLASS_list)):
+                K_type_int[i] = CLASS_list[i]
+            Schedule = np.vectorize({v: k for k, v in K_type_int.items()}.get)(np.array(table))
         else:
             try:
                 table[0,0,0].x      #如果table[0,0,0]是有值的gurobi var,這行就能執行；否則報錯
@@ -712,10 +716,10 @@ class OUTPUT:
                 ki = None                               #班別編號(沒找到班別=None)
                 if self.isALG:
                     try:
-                        self._isT_alg(table[i,j])       #如果有無解，這行會執行失敗
+                        self._isT_alg(int(Schedule[i][j]))       #如果有無解，這行會執行失敗
                     except:
                         ERROR('此組限制式導致班表無解，請調整限制式。')
-                    ki = table[i,j]                     #演算法版的table是數字班表，直接取
+                    ki = Schedule[i][j]                     #演算法版的table是數字班表，直接取
                 elif not self.isALG: 
                     for k in range(nK):                 #solver中才需要對K做loop
                         if self._isT(table[i,j,k]):     #找到班別了
@@ -723,8 +727,8 @@ class OUTPUT:
                             break
                 #看看班別是否為None
                 if ki==ki:                              #如果找到班別(ki不是None)
-                    tmp_i.append(k)
-                    tmp_t.append(CLASS_list[k])
+                    tmp_i.append(ki)
+                    tmp_t.append(CLASS_list[ki])
                 else:                                   #沒找到班別，填入預設值                             
                     if error < ERROR_LIMIT:
                         tmp_i.append(1)
