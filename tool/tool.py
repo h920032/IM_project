@@ -331,7 +331,37 @@ def calculate_NW(lastM_Schedule):
     
 def calculate_NM (Employee_t,lastday_ofMONTH,lastday_row,lastday_column,lastMONTH,nEmployee):  
     if (lastday_ofMONTH != "Fri") :
-        if (lastday_ofMONTH == "Thu") :
+	if (lastday_ofMONTH == "Sun") :
+                   
+            temp_part1 = lastMONTH.iloc[:, 0]
+            temp_part2 = lastMONTH.iloc[:, lastday_column-7 : lastday_column]
+            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+            
+            for i in range(lastday_row) :     
+                for j in range (len(temp_dataframe.columns)) :
+                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
+                   
+                        temp_name = str(temp_dataframe.iloc[i,0])
+
+                        for k in range (nEmployee) :
+                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
+                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1 
+	elif (lastday_ofMONTH == "Sat") :
+                   
+            temp_part1 = lastMONTH.iloc[:, 0]
+            temp_part2 = lastMONTH.iloc[:, lastday_column-6 : lastday_column]
+            temp_dataframe = pd.concat([temp_part1, temp_part2], axis =1 )
+            
+            for i in range(lastday_row) :     
+                for j in range (len(temp_dataframe.columns)) :
+                    if (temp_dataframe.iloc[i,j] == "N1" or temp_dataframe.iloc[i,j] == "M1" or temp_dataframe.iloc[i,j] == "W6") :
+                   
+                        temp_name = str(temp_dataframe.iloc[i,0])
+
+                        for k in range (nEmployee) :
+                            if (temp_name == str(Employee_t.loc[k,'id'])) : 
+                                Employee_t.at[k,'NM'] = int(Employee_t.iloc[k,9]) + 1 
+        elif (lastday_ofMONTH == "Thu") :
                    
             temp_part1 = lastMONTH.iloc[:, 0]
             temp_part2 = lastMONTH.iloc[:, lastday_column-4 : lastday_column]
