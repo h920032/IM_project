@@ -1,14 +1,14 @@
-﻿tool.py 開始執行：2020-01-13 15:45:11.949514
+﻿tool.py 開始執行：2020-01-13 15:52:41.193360
 
-沒有找到舊的錯誤紀錄檔
+已移除舊的錯誤紀錄檔
 tool.py開始讀檔
-Read file from ./data_Sam/per_month/ & ./data_Sam/parameters/
+Read file from ./data/per_month/ & ./data/parameters/
 讀取 2019 年 4 月資料
 
 
 
 === 參數確認 ===
-nE=44, nD=20, nK=19, nT=24, nR=5, nW=5, mDAY=30
+nE=42, nD=20, nK=19, nT=24, nR=5, nW=5, mDAY=30
 
 === ======= ===
 
@@ -16,7 +16,11 @@ nE=44, nD=20, nK=19, nT=24, nR=5, nW=5, mDAY=30
 
 
 
-2020-01-13 15:48:42.751615  開始輸出班表
+2020-01-13 15:54:58.870443  開始輸出班表
+
+＊輸出 基因演算法 結果
+
+2020-01-13 15:57:42.269611  開始輸出班表
 
 ＊輸出 gurobi solver 結果
 
@@ -27,7 +31,3 @@ nE=44, nD=20, nK=19, nT=24, nR=5, nW=5, mDAY=30
 
 Output results has save as ./schedule_data_2019_4.xlsx
 
-
-2020-01-13 15:50:08.030566  開始輸出班表
-
-＊輸出 基因演算法 結果
