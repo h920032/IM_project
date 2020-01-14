@@ -533,7 +533,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     mDAY = int(calendar.monthrange(YEAR,MONTH)[1])  #本月總日數
 
     
-    # Employee
+    # Employee (不允許為空!)
     Employee_t  = readFile(path+'Employee'+EmployeeTest+'.csv', header_ = 0)
     Employee_t['ID'] = [ str(x) for x in Employee_t['ID'] ]           
 
@@ -580,11 +580,14 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     WEEK_list   = SetWEEKD(D_WEEK_set, nW)                          #WEEK_list - 日子j所屬的那一週 
 
 
-    # Assign
+    # Assign (可以為空)
     Assign_t = readFile(path+'Assign'+AssignTest+'.csv', skiprows_=[0])
-    Assign_t[0] = [ str(x) for x in Assign_t[0] ]                   #強制將ID設為string
-    Assign_t[1] = [ int(x) for x in Assign_t[1] ]                   #強制將日期設為int
-    Assign_t[2] = [ str(x) for x in Assign_t[2] ]                   #強制將班別設為string
+    try:
+        Assign_t[0] = [ str(x) for x in Assign_t[0] ]                   #強制將ID設為string
+        Assign_t[1] = [ int(x) for x in Assign_t[1] ]                   #強制將日期設為int
+        Assign_t[2] = [ str(x) for x in Assign_t[2] ]                   #強制將班別設為string
+    except:
+        print('讀檔: Assign.csv 無內容')
     for c in range(Assign_t.shape[0]):
         e = Tran_t2n(Assign_t.iloc[c,0], ID_list)
         d = Tran_t2n(Assign_t.iloc[c,1], DATE_list)
