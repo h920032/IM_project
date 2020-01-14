@@ -725,10 +725,7 @@ class OUTPUT:
 
         if self.isALG:       
             PRINT('＊輸出 基因演算法 結果')
-            K_type_int= {}
-            for i in range(len(CLASS_list)):
-                K_type_int[i] = CLASS_list[i]
-            Schedule = np.vectorize({v: k for k, v in K_type_int.items()}.get)(np.array(table))
+            Schedule = np.array(table)
         else:
             try:
                 table[0,0,0].x      #如果table[0,0,0]是有值的gurobi var,這行就能執行；否則報錯

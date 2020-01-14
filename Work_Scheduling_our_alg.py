@@ -9,7 +9,7 @@ from tool.functions.CSR_order import CSR_ORDER
 from tool.functions.LIMIT_ORDER import LIMIT_ORDER
 from tool.functions.CONFIRM import confirm
 from tool.score_1para import score
-from tool.functions.final_score import final_score
+from tool.final_score import final_score
 import tool.tool as tl
 import datetime, calendar, sys
 
@@ -333,8 +333,8 @@ def REPEAT(this_i,this_j,this_k):   #一次安排可滿足多條限制式時使�
 #========================================================================#
 # GENE(): 切分並交配的函數 
 #========================================================================#
-def GENE(K_type_dict, timelimit, avaliable_sol, fix, generation, per_month_dir='./data/per_month/'):
-	return gen.gene_alg(K_type_dict, timelimit, avaliable_sol, fix, generation, per_month_dir)
+def GENE(timelimit, avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH):
+	return gen.gene_alg(timelimit, avaliable_sol, fix, generation, per_month_dir)
 
 #========================================================================#
 # SHIFT_ORDER(): 班別排序的函數 
@@ -1024,9 +1024,6 @@ for p in range(parent):
     #=================================================================================================#
     #Dataframe_x
     K_type = Shift_name
-    K_type_dict = {}
-    for i in range(len(K_type)):
-        K_type_dict[i] = K_type[i]
     
     employee_name = E_NAME
     employee_name2 = EMPLOYEE
@@ -1051,6 +1048,7 @@ for p in range(parent):
     df_x = pd.DataFrame(which_worktime, index = employee_name, columns = DATES)   #字串班表
     df_x1 = pd.DataFrame(which_worktime2, index = employee_name, columns = DATES) #整數班表
     df_x2 = which_worktime2                                                       #confirm用
+    
     
     #print(df_x)
     #=================================================================================================#
@@ -1143,7 +1141,7 @@ for i in range(parent):
 tstart_gen = time.time()
 print('\n基因演算法開始')
 print('time limit =',timelimit)
-gene_result = GENE(K_type_dict, timelimit,avaliable_sol, fix, generation, per_month_dir=dir_name+'per_month/')
+gene_result = GENE(timelimit,avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH)
 
 
 #=======================================================================================================#
@@ -1177,7 +1175,7 @@ print('\n\n\n\n============= 缺工冗員表 ============\n', df_lack)
 A_t = tl.ClassTime_t           #班別-時段對照表的原始檔案
 df_x = result.Schedule
 
-score = final_score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, nightdaylimit, S_BREAK, df_x.values.tolist())
+score = final_score(A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2, P3, P4, SHIFTset, WEEK_of_DAY, nightdaylimit, S_BREAK, df_x.values.tolist())
 
 print('score:',score)
 

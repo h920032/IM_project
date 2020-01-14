@@ -3,7 +3,7 @@
 from   gurobipy import *
 import numpy as np
 import pandas as pd
-from   tool.score import score
+from tool.final_score import final_score
 import tool.tool as tl
 
 """
@@ -290,7 +290,7 @@ A_t = tl.ClassTime_t           #班別-時段對照表的原始檔案
 WEEK_of_DAY = tl.WEEK_list     #WEEK_of_DAY - 日子j所屬的那一週
 df_x = result.Schedule
 
-score = score(year, month, A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2, P3, P4, SHIFTset, Shift_name, WEEK_of_DAY, nightdaylimit, S_BREAK, df_x.values.tolist())
+score = final_score(A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2, P3, P4, SHIFTset, WEEK_of_DAY, nightdaylimit, S_BREAK, df_x.values.tolist())
 
 print('score:',score)
 

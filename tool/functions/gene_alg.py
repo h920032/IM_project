@@ -109,39 +109,51 @@ def alg(score_liz):
     #print(np.zeros(a_org_one_two.shape))
     #判斷是否符合
     if confirm(a_one_one_two) == 'All constraints are met.':
+        #print('a_one_one_two',a_one_one_two)
         sort.append((a_one_one_two,new[num_list[0]][1],score(a_one_one_two.tolist())))
        
     if confirm(a_two_one_two) == 'All constraints are met.':
+        #print('a_two_one_two',a_two_one_two)
         sort.append((a_two_one_two,new[num_list[1]][1],score(a_two_one_two.tolist())))
     
     if confirm(a_one_two_one) == 'All constraints are met.':
+        #print('a_one_two_one',a_one_two_one)
         sort.append((a_one_two_one,new[num_list[0]][1],score(a_one_two_one.tolist())))
     
     if confirm(a_two_two_one) == 'All constraints are met.':
+        #print('a_two_two_one',a_two_two_one)
         sort.append((a_two_two_one,new[num_list[1]][1],score(a_two_two_one.tolist())))
     
     if confirm(a_org_one_two) == 'All constraints are met.':
+        #print('a_org_one_two',a_org_one_two)
         sort.append((a_org_one_two,np.zeros(a_org_one_two.shape),score(a_org_one_two.tolist())))
     
     if confirm(a_org_two_one) == 'All constraints are met.':
+        #print('a_org_two_one',a_org_two_one)
         sort.append((a_org_two_one,np.zeros(a_org_two_one.shape),score(a_org_two_one.tolist())))
     
     if confirm(b_one_one_two) == 'All constraints are met.':
+        #print('b_one_one_two',b_one_one_two)
         sort.append((b_one_one_two,new[num_list[0]][1],score(b_one_one_two.tolist())))
     
     if confirm(b_two_one_two) == 'All constraints are met.':
+        #print('b_two_one_two',b_two_one_two)
         sort.append((b_two_one_two,new[num_list[1]][1],score(b_two_one_two.tolist())))
     
     if confirm(b_one_two_one) == 'All constraints are met.':
+        #print('b_one_two_one',b_one_two_one)
         sort.append((b_one_two_one,new[num_list[0]][1],score(b_one_two_one.tolist())))
     
     if confirm(b_two_two_one) == 'All constraints are met.':
+        #print('b_two_two_one',b_two_two_one)
         sort.append((b_two_two_one,new[num_list[1]][1],score(b_two_two_one.tolist())))
 
     if confirm(b_org_one_two) == 'All constraints are met.':
+        #print('b_org_one_two',b_org_one_two)
         sort.append((b_org_one_two,np.zeros(b_org_one_two.shape),score(b_org_one_two.tolist())))
 
     if confirm(b_org_two_one) == 'All constraints are met.':
+        #print('b_org_two_one',b_org_two_one)
         sort.append((b_org_two_one,np.zeros(b_org_two_one.shape),score(b_org_two_one.tolist())))
              
     # sort = sorted(sort, key = lambda s: s[2],reverse = True)
@@ -152,7 +164,7 @@ def alg(score_liz):
     #print(len(sort))
     return sort
 
-def gene_alg(K_type_dict, timelimit,avaliable_sol,fix,gen,per_month_dir='./data/per_month/'): #avaliavle_sol 可行解列表 fix 不能移動的列表
+def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH): #avaliavle_sol 可行解列表 fix 不能移動的列表
     print('per_month_dir =',per_month_dir)
     i_nb = []
     tStart = time.time()    #紀錄演算法開始的時間
@@ -174,6 +186,6 @@ def gene_alg(K_type_dict, timelimit,avaliable_sol,fix,gen,per_month_dir='./data/
         gene_log.append([i+1,score_liz[0][2]])
     gene_log = pd.DataFrame(np.array(gene_log))
     gene_log.to_csv('gene_log.csv')
-    result = np.vectorize(K_type_dict.get)(score_liz[0][0])
+    result = score_liz[0][0]
     print('\n\n基因演算法最佳解：',score_liz[0][2])
     return result
