@@ -472,10 +472,10 @@ def READ_parameters(path=DIR_PARA):
 
     # weight p1~4
     Weight_t    = readFile(path+'weight_p.csv', index_col_=0)        #權重
-    P[1]        = Weight_t[1]['P1']             #目標式中的調整權重(surplus)
-    P[2]        = Weight_t[1]['P2']             #目標式中的調整權重(nightCount)
-    P[3]        = Weight_t[1]['P3']             #目標式中的調整權重(breakCount)
-    P[4]        = Weight_t[1]['P4']             #目標式中的調整權重(noonCount)
+    P[1]        = Weight_t[1]['P1'] * 61            #目標式中的調整權重(surplus)
+    P[2]        = Weight_t[1]['P2'] * 200            #目標式中的調整權重(nightCount)
+    P[3]        = Weight_t[1]['P3'] * 2.5            #目標式中的調整權重(breakCount)
+    P[4]        = Weight_t[1]['P4'] * 130            #目標式中的調整權重(noonCount)
 
     # class time
     ClassTime_t = readFile(path+'fixed/fix_class_time.csv', header_=0, index_col_=[0])  #class-time table
