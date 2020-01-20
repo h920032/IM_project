@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
-import os
+import os, sys
 import tool.tool as tl
 import datetime, calendar
+import subprocess
+
 
 def score(df_x,main,fixed_dir = tl.DIR_PARA+'fixed/'):
     #30
@@ -18,6 +20,7 @@ def score(df_x,main,fixed_dir = tl.DIR_PARA+'fixed/'):
     #print(main)
     # print(df_x_s)
     f = os.popen(main)
+    #f = subprocess.Popen(main,shell=True, stdout=subprocess.PIPE).communicate()
     #print(f)
     data = f.readlines()
     f.close()
