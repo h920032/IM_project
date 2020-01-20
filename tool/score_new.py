@@ -15,11 +15,12 @@ def score(df_x,main,fixed_dir = tl.DIR_PARA+'fixed/'):
 
     main += df_x_s
     main += " "
-
+    #print(main)
     # print(df_x_s)
     f = os.popen(main)
+    #print(f)
     data = f.readlines()
     f.close()
     #os.system(main)
-    # print(data)
+    #print(data)
     return int(data[0])
