@@ -10,6 +10,7 @@ from datetime import datetime, date
 
 目前發現的問題：上月末日為假日時，斷頭周晚班計算錯誤
 
+#0121防呆機制(skill與職位完成)：ERROR_CHECK():
 ======================================================"""
 
 #測試檔案檔名 - 沒有要測試時請留空白
@@ -1058,3 +1059,22 @@ READ_CHECK()
 
 # 結束
 PRINT('\n= tool_test.py import successfully =\n\n')
+# ================================================================================================================
+# 防呆＿判斷技能年資職位是否抵觸
+def ERROR_CHECK():
+    #技能
+    for item in NOTPHONE_CLASS:
+        if(len(E_SKILL_set[item[2]])<item[1]):
+            ERROR(item[2]+'技能的總人數小於給定限制人數，請檢查skill_class_limit')
+    for item in NOTPHONE_CLASS_special:
+        if(len(E_SKILL_set[item[2]])<item[1]):
+            ERROR(item[2]+'技能的總人數小於給定限制人數，請檢查skill_class_limit')
+        if(len(E_SKILL_set[item[2]])<item[3]):
+            ERROR(item[2]+'技能的總人數小於給定特殊日限制人數，請檢查skill_class_limit')
+    #職位
+    for item in LOWER:
+        if(len(E_POSI_set[item[2]])<item[3]):
+            ERROR(item[2]+'以上職位的總人數小於下限人數，請檢查lower_limit')
+    #年資無法先行防呆 
+        
+ERROR_CHECK()   
