@@ -335,7 +335,7 @@ def REPEAT(this_i,this_j,this_k):   #一次安排可滿足多條限制式時使�
 # GENE(): 切分並交配的函數 
 #========================================================================#
 def GENE(timelimit, avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = 0.05):
-	return gen.gene_alg(timelimit, avaliable_sol, fix, generation, per_month_dir, posibility)
+	return gen.gene_alg(timelimit, avaliable_sol, fix, generation, per_month_dir, posibility = posibility)
 
 #========================================================================#
 # SHIFT_ORDER(): 班別排序的函數 
