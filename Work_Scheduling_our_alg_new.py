@@ -21,7 +21,7 @@ import datetime, calendar, sys
 parent = 100	    # int
 ordernum = 100      #limit_order的排序數量
 #基因演算法的世代數量
-generation = 1000
+generation = 10000
 shuffle = False    
 
 # 生成Initial pool的100個親代
@@ -334,8 +334,8 @@ def REPEAT(this_i,this_j,this_k):   #一次安排可滿足多條限制式時使�
 #========================================================================#
 # GENE(): 切分並交配的函數 
 #========================================================================#
-def GENE(timelimit, avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH):
-	return gen.gene_alg(timelimit, avaliable_sol, fix, generation, per_month_dir)
+def GENE(timelimit, avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = 0.05):
+	return gen.gene_alg(timelimit, avaliable_sol, fix, generation, per_month_dir, posibility)
 
 #========================================================================#
 # SHIFT_ORDER(): 班別排序的函數 
@@ -1142,7 +1142,7 @@ for i in range(parent):
 tstart_gen = time.time()
 print('\n基因演算法開始')
 print('time limit =',timelimit)
-gene_result = GENE(timelimit,avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH)
+gene_result = GENE(timelimit,avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = 0.5)
 
 
 #=======================================================================================================#
