@@ -24,6 +24,7 @@ U_ttest = ""
     globle參數
 ================================================================================================================"""
 # 作業系統 (ios和windows編碼不同)
+global IS_APPLE
 IS_APPLE = True if os.name in ['darwin','linux'] else False     #是不是蘋果
 if IS_APPLE:
     ENCODING = 'utf-8'      #ios系統下，不需要考慮那麼多

@@ -2,6 +2,7 @@ import time
 import numpy as np
 import pandas as pd
 import random
+import os
 
 #our file
 import tool.tool as tl
@@ -165,7 +166,15 @@ def alg(score_liz, main):
     return sort
 
 def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixed_dir = tl.DIR_PARA+'fixed/'): #avaliavle_sol 可行解列表 fix 不能移動的列表
-    main = "./tool/c++/score "
+    if tl.IS_APPLE == True:
+        main = "./tool/c++/score "
+    else:
+        try:
+            open('./tool/c++/score.exe','r')
+        except FileNotFoundError:
+            print('找不到score.exe檔案，請用C++編譯生成一個執行檔。')
+        director = str(os.getcwd()).replace("\\","/")
+        main = director+"/tool/c++/score.exe "
     A_t = pd.read_csv(fixed_dir + 'fix_class_time.csv', header = 0, index_col = 0)
     EMPLOYEE_t = tl.Employee_t
     
