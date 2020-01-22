@@ -98,6 +98,28 @@ S_BREAK =tl.K_BREAK_set
 
 
 
+#=======================================================================as ms o to a#
+assign_par = []
+for i in range(nEMPLOYEE):
+    ass_j = []
+    for j in range(nDAY):
+        ass_k =[]
+        for k in range(nK):
+            
+            onair = False
+            for c in ASSIGN:
+                if (c[0] == i) and (c[1] == j) and (c[2] == k)
+                    onair = True 
+                    break
+
+            if onair == True:
+                ass_k.append(1)
+            else:
+                ass_k.append(0)
+        ass_j.append(ass_k)
+        
+    assign_par.append(ass_j)  
+
 
 
 # =============================================================================#
@@ -120,7 +142,11 @@ for i in range(nEMPLOYEE):
     for j in range(nDAY):
         for k in range(nK):
             work[i, j, k] = m.addVar(vtype=GRB.BINARY)
-              
+
+
+
+
+
             
 lack = {}  #y_jt - 代表第j天中時段t的缺工人數
 for j in range(nDAY):
@@ -254,15 +280,13 @@ for i in EMPLOYEE:
     m.addConstr(noonCount >= quicksum(work[i,j,k]  for k in S_NOON for j in DAY), "c21")
 
 
-#AS to A
+#AS MS O to A
 
-# for i in EMPLOYEE:
-#     for j in DAY:
-#         for k in [0,5,6]
 
-# #MS to A
-
-# #O to A
+for i in EMPLOYEE:
+    for j in DAY:
+        for k in [0,5,6]:
+            m.addConstr(work[i,j,k] <=  assign_par[i][j][k], "c22_1")
 
 #============================================================================#
 #process
@@ -278,65 +302,65 @@ m.optimize()
 #============================================================================#
 
 
-#對第r個班表的第i個員工
-for i in EMPLOYEE:
-    #找對i員工的assing 並存到 aasign_for_i
-    assign_for_i =[]
-    for p in range(len(tl.ASSIGN)):
-        as_index =  tl.ASSIGN[p][0]  
-        as_day = tl.ASSIGN[p][1]
-        as_class = tl.ASSIGN[p][2]
-        as_list = []
+# 對第r個班表的第i個員工
+# for i in EMPLOYEE:
+#     找對i員工的assing 並存到 aasign_for_i
+#     assign_for_i =[]
+#     for p in range(len(tl.ASSIGN)):
+#         as_index =  tl.ASSIGN[p][0]  
+#         as_day = tl.ASSIGN[p][1]
+#         as_class = tl.ASSIGN[p][2]
+#         as_list = []
             
-        if as_index == i:
-            as_list.append(as_day)
-            as_list.append(as_class)
-            assign_for_i.append(as_list)
+#         if as_index == i:
+#             as_list.append(as_day)
+#             as_list.append(as_class)
+#             assign_for_i.append(as_list)
         
-    #對第r個班表的第i個員工的日子j
-    for j in DAY:
+#     對第r個班表的第i個員工的日子j
+#     for j in DAY:
              
-        #AS
-        if work[i][j][6].x == 1:
-            as_ok = False
-            for p in range(len(assign_for_i)):
+#         AS
+#         if work[i][j][6].x == 1:
+#             as_ok = False
+#             for p in range(len(assign_for_i)):
 
-                if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 6):
-                    as_ok = True
-                    break
+#                 if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 6):
+#                     as_ok = True
+#                     break
 
-            if as_ok != True:
-                x = rd.choice([1,2,3,4])
-                work[i][j][6].x = 0
-                work[i][j][x].x = 1
+#             if as_ok != True:
+#                 x = rd.choice([1,2,3,4])
+#                 work[i][j][6].x = 0
+#                 work[i][j][x].x = 1
 
 
-        #MS    
-        elif work[i][j][5].x == 1:
-            ms_ok = False
-            for p in range(len(assign_for_i)):
+#         MS    
+#         elif work[i][j][5].x == 1:
+#             ms_ok = False
+#             for p in range(len(assign_for_i)):
 
-                if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 5):
-                    ms_ok = True
-                    break
+#                 if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 5):
+#                     ms_ok = True
+#                     break
 
-            if ms_ok != True:
-                x = rd.choice([1,2,3,4])
-                work[i][j][5].x = 0
-                work[i][j][x].x = 1
-        #O
-        elif work[i][j][0].x == 1 :
-            o_ok = False
-            for p in range(len(assign_for_i)):
+#             if ms_ok != True:
+#                 x = rd.choice([1,2,3,4])
+#                 work[i][j][5].x = 0
+#                 work[i][j][x].x = 1
+#         O
+#         elif work[i][j][0].x == 1 :
+#             o_ok = False
+#             for p in range(len(assign_for_i)):
 
-                if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 0):
-                    o_ok = True
-                    break
+#                 if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 0):
+#                     o_ok = True
+#                     break
 
-            if o_ok != True:
-                x = rd.choice([1,2,3,4])
-                work[i][j][0].x = 0
-                work[i][j][x].x = 1
+#             if o_ok != True:
+#                 x = rd.choice([1,2,3,4])
+#                 work[i][j][0].x = 0
+#                 work[i][j][x].x = 1
 
 #============================================================================#
 # 輸出
