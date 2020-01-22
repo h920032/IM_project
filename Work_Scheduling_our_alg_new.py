@@ -21,7 +21,8 @@ import datetime, calendar, sys
 parent = 100	    # int
 ordernum = 100      #limit_order的排序數量
 #基因演算法的世代數量
-generation = 10000
+generation = 100000
+mutate_prob = 0.05
 shuffle = False    
 
 # 生成Initial pool的100個親代
@@ -59,7 +60,8 @@ mDAY      = tl.mDAY
 
 # -----基礎項目---------#
 P0, P1, P2, P3, P4 = tl.P          #目標式中的調整權重(lack, surplus, nightCount, breakCount, noonCount)
-timelimit     = tl.TIME_LIMIT
+#timelimit     = tl.TIME_LIMIT
+timelimit = 1000000000
 Posi       = tl.POSI_list
 
 # -------表格---------#
@@ -334,7 +336,7 @@ def REPEAT(this_i,this_j,this_k):   #一次安排可滿足多條限制式時使�
 #========================================================================#
 # GENE(): 切分並交配的函數 
 #========================================================================#
-def GENE(timelimit, avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = 0.05):
+def GENE(timelimit, avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = mutate_prob):
 	return gen.gene_alg(timelimit, avaliable_sol, fix, generation, per_month_dir, posibility = posibility)
 
 #========================================================================#
