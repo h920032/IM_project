@@ -395,8 +395,8 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
         score_liz = alg(score_liz, main, nDAY, nEMPLOYEE,posibility)
         if i % 100 == 0:
             print('第',i+1,'世代最佳分數：',score_liz[0][2], ' Time: ', int(time.time() - tStart),'s')
-        gene_log.append([i+1,score_liz[0][2],time.time() - tStart])
-    gene_log = pd.DataFrame(np.array(gene_log))
+        gene_log.append([i+1,time.time() - tStart],score_liz[0][2])
+    gene_log = pd.DataFrame(np.array(gene_log),columns=['generation','time','score'])
     gene_log.to_csv('gene_log.csv')
     result = score_liz[0][0]
     print('\n\n基因演算法最佳解：',score_liz[0][2])
