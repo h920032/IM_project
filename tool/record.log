@@ -1,32 +1,17 @@
-
-﻿tool.py 開始執行：2020-01-22 18:00:02.413532
-
+﻿tool.py 開始執行：2020-01-22 18:24:02.343354
 
 沒有找到舊的錯誤紀錄檔
 tool.py開始讀檔
-Read file from ./data_9/per_month/ & ./data_9/parameters/
-讀取 2019 年 9 月資料
+Read file from ./data/per_month/ & ./data/parameters/
+讀取 2019 年 4 月資料
 
 
 
 === 參數確認 ===
-nE=42, nD=20, nK=19, nT=24, nR=5, nW=6, mDAY=30
+nE=42, nD=20, nK=19, nT=24, nR=5, nW=5, mDAY=30
 
 === ======= ===
 
 = tool_test.py import successfully =
 
-
-
-
-2020-01-22 18:00:07.421563  開始輸出班表
-
-＊輸出 gurobi solver 結果
-
-所有天每個時段人數與需求人數的差距中的最大值 = 8
-
-值 noon 班型的加權次數最高者，本月共值： 1.0 次(加權後)
-值 night 班型的加權次數最高者，本月共值： 4.0 次(加權後)
-
-Output results has save as ./schedule_data_2019_9.xlsx
 
