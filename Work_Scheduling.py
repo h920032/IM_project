@@ -254,6 +254,14 @@ for i in EMPLOYEE:
     m.addConstr(noonCount >= quicksum(work[i,j,k]  for k in S_NOON for j in DAY), "c21")
 
 
+#AS to A
+
+
+
+#MS to A
+
+#O to A
+
 #============================================================================#
 #process
 m.params.LogFile = './tool/gurobi.log'         #設定gurobi記錄檔的存放位置與檔名 不知為何有時沒有效果
@@ -269,7 +277,7 @@ m.optimize()
 
 
 #對第r個班表的第i個員工
-for i in range(len(work)):
+for i in EMPLOYEE:
     #找對i員工的assing 並存到 aasign_for_i
     assign_for_i =[]
     for p in range(len(tl.ASSIGN)):
@@ -284,7 +292,7 @@ for i in range(len(work)):
             assign_for_i.append(as_list)
         
     #對第r個班表的第i個員工的日子j
-    for j in range(len(work[i])):
+    for j in DAY:
              
         #AS
         if work[i][j][6] == 1:
