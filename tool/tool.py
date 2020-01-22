@@ -180,10 +180,10 @@ def get_nDAY(YEAR,MONTH):
 		ans += (date(YEAR,MONTH,i+1).weekday()<5)
 	return ans
 
-#start day
+#start day (Mon=0, Sun=6)
 def get_startD(YEAR,MONTH):
 	d = date(YEAR,MONTH,1).weekday()
-	return (d if d<5 else 0) 
+	return d
 
 """===========================================
 Set DAY Functions
@@ -195,7 +195,7 @@ def SetDAYW(day, total_day, total_week, DAY, DATE):
 	for i in range(total_week): #對每一周
 	    tmp = []
 	    if(i == 0): #第一周(很可能不完整)
-	        for j in range(8-day):  #對星期日~一
+	        for j in range(7-day):  #對星期一~日
 	            for k in DAY:
 	                if count == DATE[k]:   #該天有上班
 	                    tmp.append(k)
@@ -232,18 +232,24 @@ def SetDAYW_fri(JWset, total_week):   #JW日子集合/幾週
     return ans
 
 #Jset 通用日子集合
-def SetDAY(day, total_day, DATE):   #第一天上班是星期幾/幾天
+def SetDAY(DATE):	#day, total_day, DATE):   #第一天上班是星期幾/幾天
+    #參數
+    day = datetime(YEAR, MONTH, 1).weekday()	#本月1號是星期幾
+    total_day = len(DATE)
+    #set: 所有日子, 所有周一，所有週二，所有週三...
     set = {'all':list(range(total_day))}
     set['Mon']=[]; set['Tue']=[]; set['Wed']=[]
-    set['Thu']=[]; set['Fri']=[]
-    # 所有周一，所有週二，所有週三...
-    w = ['Mon','Tue','Wed','Thu','Fri']
-    if(day==0):
-        for i in range(total_day):
-            set[ w[(DATE[i]-DATE[0])%7] ].append(i)
-    else:
-        for i in range(total_day):
-            set[ w[(DATE[i]+day-1)%7] ].append(i)        
+    set['Thu']=[]; set['Fri']=[]; set['Sat']=[]; set['Sun']=[]    
+    w = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']	#對照用
+    #對每個日子，一一將index放到對應的set
+    for i in range(total_day):
+        set[ w[(DATE[i]-1+day) %7] ].append(i)
+    # if(day==0):
+    #     for i in range(total_day):
+    #         set[ w[(DATE[i]-DATE[0])%7] ].append(i)
+    # else:
+    #     for i in range(total_day):
+    #         set[ w[(DATE[i]+day-1)%7] ].append(i)        
     return set
 
 #VACnextdayset 假日後或週一的集合
@@ -565,7 +571,6 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     #上個月的最後一天有排晚班者是1，沒有則是0
     # Employee_t['NW'] = 
     LastDAY_night  = calculate_NW(Schedule_t)     #上月末日
-    #!!!!!計算上月底晚班狀況!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # Employee_t = calculate_NW(Employee_t,lastday_ofMONTH,lastday_row,lastday_column,Schedule_t,nE)
     #上月底的斷頭週，計算該斷頭週總共排了幾次晚班
     Employee_t['NM'] = pd.DataFrame([0] * nE)
@@ -582,7 +587,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     MONTH_start = get_startD(YEAR,MONTH)                            #本月第一天是禮拜幾 (Mon=0, Tue=1..)
     AH_list, NAH_list = SetVACnext(MONTH_start, nD, DATE_list)      #VACnextdayset - 假期後或週一的日子集合
     D_WEEK_set  = SetDAYW(MONTH_start+1,mDAY,nW, list(range(nD)), DATE_list)    #第 w 週包含的日期集合
-    D_WDAY_set  = SetDAY(MONTH_start, nD, DATE_list)                #DAYset - 通用日子集合 [all,Mon,Tue...]
+    D_WDAY_set  = SetDAY(DATE_list)                					#DAYset - 通用日子集合 [all,Mon,Tue...]
     WEEK_list   = SetWEEKD(D_WEEK_set, nW)                          #WEEK_list - 日子j所屬的那一週 
 
 
@@ -1027,8 +1032,8 @@ def READ_CHECK():
     PRINT('nE='+str(nE)+', nD='+str(nD)+', nK='+str(nK)+', nT='+str(nT)+\
           ', nR='+str(nR)+', nW='+str(nW)+', mDAY='+str(mDAY)+'\n')
     print('DATE_list=',DATE_list)
-    print('CLASS_list=',CLASS_list)
-    print('ID_list=',ID_list)
+    # print('CLASS_list=',CLASS_list)
+    # print('ID_list=',ID_list)
     # print('NAME_list=',NAME_list)
     # print('AH_list=',AH_list)
     # print('POSI_list=',POSI_list)
@@ -1040,8 +1045,8 @@ def READ_CHECK():
     # print('E_POSI_set=',E_POSI_set)
     # print('E_SENIOR_set=',E_SENIOR_set)
     # print('E_SKILL_set=',E_SKILL_set)
-    # print('D_WEEK_set=',D_WEEK_set)
-    # print('D_WDAY_set=',D_WDAY_set)
+    print('D_WEEK_set=',D_WEEK_set)
+    print('D_WDAY_set=',D_WDAY_set)
     # print('K_CLASS_set=',K_CLASS_set)
     # print('K_BREAK_set=',K_BREAK_set)
     # print('\n\n')
