@@ -98,7 +98,7 @@ S_BREAK =tl.K_BREAK_set
 
 
 
-#=======================================================================as ms o to a#
+#=======================================================================as ms o to a parameter#
 assign_par = []
 for i in range(nEMPLOYEE):
     ass_j = []
@@ -282,11 +282,10 @@ for i in EMPLOYEE:
 
 #AS MS O to A
 
-
 for i in EMPLOYEE:
     for j in DAY:
         for k in [0,5,6]:
-            m.addConstr(work[i,j,k] <=  assign_par[i][j][k], "c22_1")
+            m.addConstr(work[i,j,k] <=  assign_par[i][j][k], "c22")
 
 #============================================================================#
 #process
@@ -301,66 +300,6 @@ except:
 m.optimize()
 #============================================================================#
 
-
-# 對第r個班表的第i個員工
-# for i in EMPLOYEE:
-#     找對i員工的assing 並存到 aasign_for_i
-#     assign_for_i =[]
-#     for p in range(len(tl.ASSIGN)):
-#         as_index =  tl.ASSIGN[p][0]  
-#         as_day = tl.ASSIGN[p][1]
-#         as_class = tl.ASSIGN[p][2]
-#         as_list = []
-            
-#         if as_index == i:
-#             as_list.append(as_day)
-#             as_list.append(as_class)
-#             assign_for_i.append(as_list)
-        
-#     對第r個班表的第i個員工的日子j
-#     for j in DAY:
-             
-#         AS
-#         if work[i][j][6].x == 1:
-#             as_ok = False
-#             for p in range(len(assign_for_i)):
-
-#                 if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 6):
-#                     as_ok = True
-#                     break
-
-#             if as_ok != True:
-#                 x = rd.choice([1,2,3,4])
-#                 work[i][j][6].x = 0
-#                 work[i][j][x].x = 1
-
-
-#         MS    
-#         elif work[i][j][5].x == 1:
-#             ms_ok = False
-#             for p in range(len(assign_for_i)):
-
-#                 if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 5):
-#                     ms_ok = True
-#                     break
-
-#             if ms_ok != True:
-#                 x = rd.choice([1,2,3,4])
-#                 work[i][j][5].x = 0
-#                 work[i][j][x].x = 1
-#         O
-#         elif work[i][j][0].x == 1 :
-#             o_ok = False
-#             for p in range(len(assign_for_i)):
-
-#                 if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 0):
-#                     o_ok = True
-#                     break
-
-#             if o_ok != True:
-#                 x = rd.choice([1,2,3,4])
-#                 work[i][j][0].x = 0
-#                 work[i][j][x].x = 1
 
 #============================================================================#
 # 輸出
