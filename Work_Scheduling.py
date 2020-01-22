@@ -108,7 +108,7 @@ for i in range(nEMPLOYEE):
             
             onair = False
             for c in ASSIGN:
-                if (c[0] == i) and (c[1] == j) and (c[2] == k)
+                if (c[0] == i) and (c[1] == j) and (c[2] == k):
                     onair = True 
                     break
 

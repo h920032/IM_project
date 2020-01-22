@@ -18,10 +18,10 @@ import datetime, calendar, sys
 # Global Variables
 #========================================================================#
 # 產生親代的迴圈數
-parent = 100	    # int
+parent = 10	    # int
 ordernum = 100      #limit_order的排序數量
 #基因演算法的世代數量
-generation = 100000
+generation = 1000
 mutate_prob = 0.05
 shuffle = False    
 
