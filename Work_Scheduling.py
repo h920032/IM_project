@@ -256,7 +256,9 @@ for i in EMPLOYEE:
 
 #AS to A
 
-
+for i in EMPLOYEE:
+    for j in DAY:
+        for k in [0,5,6]
 
 #MS to A
 
@@ -295,7 +297,7 @@ for i in EMPLOYEE:
     for j in DAY:
              
         #AS
-        if work[i][j][6] == 1:
+        if work[i][j][6].x == 1:
             as_ok = False
             for p in range(len(assign_for_i)):
 
@@ -305,12 +307,12 @@ for i in EMPLOYEE:
 
             if as_ok != True:
                 x = rd.choice([1,2,3,4])
-                work[i][j][6] = 0
-                work[i][j][x] = 1
+                work[i][j][6].x = 0
+                work[i][j][x].x = 1
 
 
         #MS    
-        elif work[i][j][5] == 1:
+        elif work[i][j][5].x == 1:
             ms_ok = False
             for p in range(len(assign_for_i)):
 
@@ -320,10 +322,10 @@ for i in EMPLOYEE:
 
             if ms_ok != True:
                 x = rd.choice([1,2,3,4])
-                work[i][j][5] = 0
-                work[i][j][x] = 1
+                work[i][j][5].x = 0
+                work[i][j][x].x = 1
         #O
-        elif work[i][j][0] == 1 :
+        elif work[i][j][0].x == 1 :
             o_ok = False
             for p in range(len(assign_for_i)):
 
@@ -333,8 +335,8 @@ for i in EMPLOYEE:
 
             if o_ok != True:
                 x = rd.choice([1,2,3,4])
-                work[i][j][0] = 0
-                work[i][j][x] = 1
+                work[i][j][0].x = 0
+                work[i][j][x].x = 1
 
 #============================================================================#
 # 輸出
