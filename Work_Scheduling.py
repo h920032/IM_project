@@ -256,13 +256,13 @@ for i in EMPLOYEE:
 
 #AS to A
 
-for i in EMPLOYEE:
-    for j in DAY:
-        for k in [0,5,6]
+# for i in EMPLOYEE:
+#     for j in DAY:
+#         for k in [0,5,6]
 
-#MS to A
+# #MS to A
 
-#O to A
+# #O to A
 
 #============================================================================#
 #process
