@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import random
 import os
+import platform
 
 #our file
 import tool.tool as tl
@@ -19,15 +20,11 @@ from tool.tool import ERROR
 #K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
 #K_type_dict = {0:'O',1:'A2',2:'A3',3:'A4',4:'A5',5:'MS',6:'AS',7:'P2',8:'P3',9:'P4',10:'P5',11:'N1',12:'M1',13:'W6',14:'CD',15:'C2',16:'C3',17:'C4',18:'OB'}
 
-#def score(input):
-#    return random.randint(1,10000)
+def alg(score_liz, main, nDAY, nEMPLOYEE, posibility = 0.05):
 
-def alg(score_liz, main):
-
-    nDAY      = tl.nD
-    nEMPLOYEE = tl.nE
-    sort = sorted(score_liz, key = lambda s: s[2]) #親代排名
-    new = np.copy(sort[:int(len(score_liz)/3)]) #取出前1/3
+    org_len = len(score_liz)
+    #sort = sorted(score_liz, key = lambda s: s[2]) #親代排名
+    new = np.copy(score_liz[:int(len(score_liz)/3)]) #取出前1/3
     num_list = list(range(len(new)))
     random.shuffle(num_list)
     #print(num_list[0],num_list[1], end=' ')
@@ -81,95 +78,98 @@ def alg(score_liz, main):
     b_org_one_two = np.concatenate((one_org_col_left, two_org_col_right), axis=0)
     b_org_two_one = np.concatenate((two_org_col_left, one_org_col_right), axis=0)
 
-
+    range_num = int(1 / posibility) - 1
     #突變
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         a_one_one_two[random.randint(0,a_one_one_two.shape[0]-1)][random.randint(0,a_one_one_two.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         a_two_one_two[random.randint(0,a_two_one_two.shape[0]-1)][random.randint(0,a_two_one_two.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         a_one_two_one[random.randint(0,a_one_two_one.shape[0]-1)][random.randint(0,a_one_two_one.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         a_two_two_one[random.randint(0,a_two_two_one.shape[0]-1)][random.randint(0,a_two_two_one.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         a_org_one_two[random.randint(0,a_org_one_two.shape[0]-1)][random.randint(0,a_org_one_two.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         a_org_two_one[random.randint(0,a_org_two_one.shape[0]-1)][random.randint(0,a_org_two_one.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         b_one_one_two[random.randint(0,b_one_one_two.shape[0]-1)][random.randint(0,b_one_one_two.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         b_two_one_two[random.randint(0,b_two_one_two.shape[0]-1)][random.randint(0,b_two_one_two.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         b_one_two_one[random.randint(0,b_one_two_one.shape[0]-1)][random.randint(0,b_one_two_one.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         b_two_two_one[random.randint(0,b_two_two_one.shape[0]-1)][random.randint(0,b_two_two_one.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         b_org_one_two[random.randint(0,b_org_one_two.shape[0]-1)][random.randint(0,b_org_one_two.shape[1]-1)] = random.randint(0,18)
-    if random.randint(0,19) == 0:
+    if random.randint(0,range_num) == 0:
         b_org_two_one[random.randint(0,b_org_two_one.shape[0]-1)][random.randint(0,b_org_two_one.shape[1]-1)] = random.randint(0,18)
     
     #print(np.zeros(a_org_one_two.shape))
     #判斷是否符合
     if confirm(a_one_one_two) == 'All constraints are met.':
         #print('a_one_one_two',a_one_one_two)
-        sort.append((a_one_one_two,new[num_list[0]][1],score(a_one_one_two.tolist(), main)))
+        score_liz.append((a_one_one_two,new[num_list[0]][1],score(a_one_one_two.tolist(), main)))
        
     if confirm(a_two_one_two) == 'All constraints are met.':
         #print('a_two_one_two',a_two_one_two)
-        sort.append((a_two_one_two,new[num_list[1]][1],score(a_two_one_two.tolist(), main)))
+        score_liz.append((a_two_one_two,new[num_list[1]][1],score(a_two_one_two.tolist(), main)))
     
     if confirm(a_one_two_one) == 'All constraints are met.':
         #print('a_one_two_one',a_one_two_one)
-        sort.append((a_one_two_one,new[num_list[0]][1],score(a_one_two_one.tolist(), main)))
+        score_liz.append((a_one_two_one,new[num_list[0]][1],score(a_one_two_one.tolist(), main)))
     
     if confirm(a_two_two_one) == 'All constraints are met.':
         #print('a_two_two_one',a_two_two_one)
-        sort.append((a_two_two_one,new[num_list[1]][1],score(a_two_two_one.tolist(), main)))
+        score_liz.append((a_two_two_one,new[num_list[1]][1],score(a_two_two_one.tolist(), main)))
     
     if confirm(a_org_one_two) == 'All constraints are met.':
         #print('a_org_one_two',a_org_one_two)
-        sort.append((a_org_one_two,np.zeros(a_org_one_two.shape),score(a_org_one_two.tolist(), main)))
+        score_liz.append((a_org_one_two,np.zeros(a_org_one_two.shape),score(a_org_one_two.tolist(), main)))
     
     if confirm(a_org_two_one) == 'All constraints are met.':
         #print('a_org_two_one',a_org_two_one)
-        sort.append((a_org_two_one,np.zeros(a_org_two_one.shape),score(a_org_two_one.tolist(), main)))
+        score_liz.append((a_org_two_one,np.zeros(a_org_two_one.shape),score(a_org_two_one.tolist(), main)))
     
     if confirm(b_one_one_two) == 'All constraints are met.':
         #print('b_one_one_two',b_one_one_two)
-        sort.append((b_one_one_two,new[num_list[0]][1],score(b_one_one_two.tolist(), main)))
+        score_liz.append((b_one_one_two,new[num_list[0]][1],score(b_one_one_two.tolist(), main)))
     
     if confirm(b_two_one_two) == 'All constraints are met.':
         #print('b_two_one_two',b_two_one_two)
-        sort.append((b_two_one_two,new[num_list[1]][1],score(b_two_one_two.tolist(), main)))
+        score_liz.append((b_two_one_two,new[num_list[1]][1],score(b_two_one_two.tolist(), main)))
     
     if confirm(b_one_two_one) == 'All constraints are met.':
         #print('b_one_two_one',b_one_two_one)
-        sort.append((b_one_two_one,new[num_list[0]][1],score(b_one_two_one.tolist(), main)))
+        score_liz.append((b_one_two_one,new[num_list[0]][1],score(b_one_two_one.tolist(), main)))
     
     if confirm(b_two_two_one) == 'All constraints are met.':
         #print('b_two_two_one',b_two_two_one)
-        sort.append((b_two_two_one,new[num_list[1]][1],score(b_two_two_one.tolist(), main)))
+        score_liz.append((b_two_two_one,new[num_list[1]][1],score(b_two_two_one.tolist(), main)))
 
     if confirm(b_org_one_two) == 'All constraints are met.':
         #print('b_org_one_two',b_org_one_two)
-        sort.append((b_org_one_two,np.zeros(b_org_one_two.shape),score(b_org_one_two.tolist(), main)))
+        score_liz.append((b_org_one_two,np.zeros(b_org_one_two.shape),score(b_org_one_two.tolist(), main)))
 
     if confirm(b_org_two_one) == 'All constraints are met.':
         #print('b_org_two_one',b_org_two_one)
-        sort.append((b_org_two_one,np.zeros(b_org_two_one.shape),score(b_org_two_one.tolist(), main)))
+        score_liz.append((b_org_two_one,np.zeros(b_org_two_one.shape),score(b_org_two_one.tolist(), main)))
              
     # sort = sorted(sort, key = lambda s: s[2],reverse = True)
-    sort = sorted(sort, key = lambda s: s[2])
+    #sort = sorted(sort, key = lambda s: s[2])
+    score_liz.sort(key = lambda s: s[2])
     #print(len(sort))
-    sort = sort[:len(score_liz)]
+    #score_liz = score_liz[:len(score_liz)]
     #print(sort)
     #print(len(sort))
-    return sort
+    return score_liz[:org_len]
 
-def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixed_dir = tl.DIR_PARA+'fixed/'): #avaliavle_sol 可行解列表 fix 不能移動的列表
-    if tl.IS_APPLE == True:
-        main = "./tool/c++/score "
-    else:
+def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixed_dir = tl.DIR_PARA+'fixed/',posibility = 0.05): #avaliavle_sol 可行解列表 fix 不能移動的列表
+    if platform.system() == "Linux":
+        main = "./tool/c++/score_linux "
+    elif platform.system() == "Darwin":
+        main = "./tool/c++/score_mac "
+    elif platform.system() == "Windows":
         try:
             open('./tool/c++/score.exe','r')
         except FileNotFoundError:
@@ -388,14 +388,16 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
     for i ,j in zip(i_nb,fix):
         score_liz.append((i,j, score(i, main)))
     
+    score_liz.sort(key = lambda s: s[2])   
     for i in range(gen):    #重複指定的次數
         if time.time() - tStart > timelimit:    #如果時間已到，就跳出
             print('限制時間已至，於第',i,'世代跳出')
             break
-        score_liz = alg(score_liz, main)
-        print('第',i+1,'世代最佳分數：',score_liz[0][2], ' Time: ', int(time.time() - tStart),'s')
-        gene_log.append([i+1,score_liz[0][2]])
-    gene_log = pd.DataFrame(np.array(gene_log))
+        score_liz = alg(score_liz, main, nDAY, nEMPLOYEE,posibility)
+        if i % 100 == 0:
+            print('第',i+1,'世代最佳分數：',score_liz[0][2], ' Time: ', int(time.time() - tStart),'s')
+        gene_log.append([i+1,time.time() - tStart],score_liz[0][2])
+    gene_log = pd.DataFrame(np.array(gene_log),columns=['generation','time','score'])
     gene_log.to_csv('gene_log.csv')
     result = score_liz[0][0]
     print('\n\n基因演算法最佳解：',score_liz[0][2])
