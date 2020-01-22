@@ -8,6 +8,7 @@ import os
 import tool.tool as tl
 from tool.score_new import score
 from tool.functions.CONFIRM import confirm
+from tool.tool import ERROR
 
 #1.永遠只拿前幾名，抽兩個來交配
 #2.用更好的子代取代親代
@@ -172,7 +173,7 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
         try:
             open('./tool/c++/score.exe','r')
         except FileNotFoundError:
-            print('找不到score.exe檔案，請用C++編譯生成一個執行檔。')
+            ERROR('找不到score.exe檔案，請用C++編譯生成一個執行檔。')
         director = str(os.getcwd()).replace("\\","/")
         main = director+"/tool/c++/score.exe "
     A_t = pd.read_csv(fixed_dir + 'fix_class_time.csv', header = 0, index_col = 0)
