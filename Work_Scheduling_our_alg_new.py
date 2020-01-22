@@ -336,8 +336,8 @@ def REPEAT(this_i,this_j,this_k):   #一次安排可滿足多條限制式時使�
 #========================================================================#
 # GENE(): 切分並交配的函數 
 #========================================================================#
-def GENE(timelimit, avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = mutate_prob):
-	return gen.gene_alg(timelimit, avaliable_sol, fix, generation, per_month_dir, posibility = posibility)
+def GENE(timelimit, available_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = mutate_prob):
+	return gen.gene_alg(timelimit, available_sol, fix, generation, per_month_dir, posibility = posibility)
 
 #========================================================================#
 # SHIFT_ORDER(): 班別排序的函數 
@@ -1127,11 +1127,73 @@ for p in range(parent):
 print('\n產生',parent,'個結果於 initail pool (',success,'個合理解) ，共花費', (time.time()-tStart) ,'秒')
 print("\n親代最佳分數: result = ",miniresult,'\n\n')
 
-avaliable_sol = []
+available_sol = []
 
 for i in range(parent):
-    avaliable_sol.append(INITIAL_POOL[i].df_x1.values.tolist())
+    available_sol.append(INITIAL_POOL[i].df_x1.values.tolist())
 
+#=======================================================================================================#
+# 若在非ASSIGN情況下被排AS、MS、O班  則用A班取代
+#=======================================================================================================#
+
+#對r個班表
+for r in range(len(available_sol)):
+    #對第r個班表的第i個員工
+    for i in range(len(available_sol[r])):
+        #找對i員工的assing 並存到 aasign_for_i
+        assign_for_i =[]
+        for p in range(len(tl.ASSIGN)):
+            as_index =  tl.ASSIGN[p][0]  
+            as_day = tl.ASSIGN[p][1]
+            as_class = tl.ASSIGN[p][2]
+            as_list = []
+            
+            if as_index == i:
+                as_list.append(as_day)
+                as_list.append(as_class)
+                assign_for_i.append(as_list)
+        
+        #對第r個班表的第i個員工的日子j
+        for j in range(len(available_sol[r][i])):
+             
+            #AS
+            if available_sol[r][i][j] == 6:
+                as_ok = False
+                for p in range(len(assign_for_i)):
+
+                    if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 6):
+                        as_ok = True
+                        break
+
+                if as_ok != True:
+                    x = rd.choice([1,2,3,4])
+                    available_sol[r][i][j] = x
+
+
+            #MS    
+            elif available_sol[r][i][j] == 5:
+                ms_ok = False
+                for p in range(len(assign_for_i)):
+
+                    if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 5):
+                        ms_ok = True
+                        break
+
+                if ms_ok != True:
+                    x = rd.choice([1,2,3,4])
+                    available_sol[r][i][j] = x
+            #O
+            elif available_sol[r][i][j] == 0 :
+                o_ok = False
+                for p in range(len(assign_for_i)):
+
+                    if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 0):
+                        o_ok = True
+                        break
+
+                if o_ok != True:
+                    x = rd.choice([1,2,3,4])
+                    available_sol[r][i][j] = x
 
 
 #=======================================================================================================#
@@ -1144,7 +1206,7 @@ for i in range(parent):
 tstart_gen = time.time()
 print('\n基因演算法開始')
 print('time limit =',timelimit)
-gene_result = GENE(timelimit,avaliable_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = 0.5)
+gene_result = GENE(timelimit,available_sol, fix, generation, per_month_dir=tl.DIR_PER_MONTH, posibility = 0.5)
 
 
 #=======================================================================================================#
