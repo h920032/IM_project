@@ -238,8 +238,12 @@ def SetDAY(day, total_day, DATE):   #第一天上班是星期幾/幾天
     set['Thu']=[]; set['Fri']=[]
     # 所有周一，所有週二，所有週三...
     w = ['Mon','Tue','Wed','Thu','Fri']
-    for i in range(total_day):
-        set[ w[(DATE[i]-1)%7] ].append(i)
+    if(day==0):
+        for i in range(total_day):
+            set[ w[(DATE[i]-DATE[0])%7] ].append(i)
+    else:
+        for i in range(total_day):
+            set[ w[(DATE[i]+day-1)%7] ].append(i)        
     return set
 
 #VACnextdayset 假日後或週一的集合
