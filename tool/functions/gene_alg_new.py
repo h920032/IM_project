@@ -167,9 +167,12 @@ def alg(score_liz, main, nDAY, nEMPLOYEE, posibility = 0.05):
 def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixed_dir = tl.DIR_PARA+'fixed/',posibility = 0.05): #avaliavle_sol 可行解列表 fix 不能移動的列表
     if platform.system() == "Linux":
         main = "./tool/c++/score_linux "
+        print("使用的作業系統為：Linux")
     elif platform.system() == "Darwin":
         main = "./tool/c++/score_mac "
+        print("使用的作業系統為：Mac")
     elif platform.system() == "Windows":
+        print("使用的作業系統為：Windows")
         try:
             open('./tool/c++/score.exe','r')
         except FileNotFoundError:
