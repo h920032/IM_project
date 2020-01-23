@@ -21,7 +21,7 @@ import datetime, calendar, sys
 parent = 100	    # int
 ordernum = 100      #limit_order的排序數量
 #基因演算法的世代數量
-generation = 1000
+generation = 10000
 mutate_prob = 0.05
 shuffle = False    
 
