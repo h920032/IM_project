@@ -21,7 +21,7 @@ import datetime, calendar, sys
 parent = 100	    # int
 ordernum = 100      #limit_order的排序數量
 #基因演算法的世代數量
-generation = 10000
+generation = 1000
 mutate_prob = 0.05
 shuffle = False    
 
@@ -930,7 +930,7 @@ for p in range(parent):
             if is_arrange == False:
                 DAY_DEMAND = []
                 DAY_DEMAND.extend(CURRENT_DEMAND[j])
-                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['phone'], j, maxsurplus, maxnight, maxnoon, i)
+                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['phone_new'], j, maxsurplus, maxnight, maxnoon, i)
                 SHIFT_LIST = []
                 for k in range(len(SHIFT_SET)):
                     SHIFT_LIST.append(SHIFT_SET[k][0])
@@ -1180,12 +1180,12 @@ for i in range(len(schedule_list)):
     #對第i個員工的日子j
     for j in range(len(schedule_list[i])):
         
-        #AS
-        if schedule_list[i][j] == 6:
+        #AS、MS、O
+        if schedule_list[i][j] in SHIFTset['not_assigned']:
             as_ok = False
             for q in range(len(assign_for_i)):
 
-                if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 6):
+                if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] in SHIFTset['not_assigned']):
                     as_ok = True
                     break
 
@@ -1193,31 +1193,7 @@ for i in range(len(schedule_list)):
                 x = rd.choice([1,2,3,4])
                 schedule_list[i][j] = x
 
-
-        #MS    
-        elif schedule_list[i][j] == 5:
-            ms_ok = False
-            for q in range(len(assign_for_i)):
-
-                if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 5):
-                    ms_ok = True
-                    break
-
-            if ms_ok != True:
-                x = rd.choice([1,2,3,4])
-                schedule_list[i][j] = x
-        #O
-        elif schedule_list[i][j] == 0 :
-            o_ok = False
-            for q in range(len(assign_for_i)):
-
-                if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 0):
-                    o_ok = True
-                    break
-
-            if o_ok != True:
-                x = rd.choice([1,2,3,4])
-                schedule_list[i][j] = x
+        
 #============================================================================#
 # 輸出
 schedule = pd.DataFrame(schedule_list, index = employee_name, columns = DATES)

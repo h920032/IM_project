@@ -284,7 +284,7 @@ for i in EMPLOYEE:
 
 for i in EMPLOYEE:
     for j in DAY:
-        for k in [0,5,6]:
+        for k in SHIFTset['not_assigned']:
             m.addConstr(work[i,j,k] <=  assign_par[i][j][k], "c22")
 
 #============================================================================#
