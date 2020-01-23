@@ -1050,68 +1050,8 @@ for p in range(parent):
     
     #df_x = pd.DataFrame(which_worktime, index = employee_name, columns = DATES)   #字串班表
     #print(df_x)
-    #=======================================================================================================#
-    # 若在非ASSIGN情況下被排AS、MS、O班  則用A班取代
-    #=======================================================================================================#
-
     df_list = which_worktime2
-    #對第i個員工
-    for i in range(len(df_list)):
-        #找對i員工的assing 並存到 aasign_for_i
-        assign_for_i =[]
-        for q in range(len(tl.ASSIGN)):
-            as_index =  tl.ASSIGN[q][0]  
-            as_day = tl.ASSIGN[q][1]
-            as_class = tl.ASSIGN[q][2]
-            as_list = []
-            
-            if as_index == i:
-                as_list.append(as_day)
-                as_list.append(as_class)
-                assign_for_i.append(as_list)
-        
-        #對第i個員工的日子j
-        for j in range(len(df_list[i])):
-            
-            #AS
-            if df_list[i][j] == 6:
-                as_ok = False
-                for q in range(len(assign_for_i)):
-
-                    if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 6):
-                        as_ok = True
-                        break
-
-                if as_ok != True:
-                    x = rd.choice([1,2,3,4])
-                    df_list[i][j] = x
-
-
-            #MS    
-            elif df_list[i][j] == 5:
-                ms_ok = False
-                for q in range(len(assign_for_i)):
-
-                    if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 5):
-                        ms_ok = True
-                        break
-
-                if ms_ok != True:
-                    x = rd.choice([1,2,3,4])
-                    df_list[i][j] = x
-            #O
-            elif df_list[i][j] == 0 :
-                o_ok = False
-                for q in range(len(assign_for_i)):
-
-                    if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 0):
-                        o_ok = True
-                        break
-
-                if o_ok != True:
-                    x = rd.choice([1,2,3,4])
-                    df_list[i][j] = x
-        
+    
     #=================================================================================================#
     #確認解是否可行
     #=================================================================================================#
@@ -1214,12 +1154,73 @@ gene_result = GENE(timelimit,available_sol, fix, generation, per_month_dir=tl.DI
 #=======================================================================================================#
 print('基因演算法共耗時',time.time()-tstart_gen,'秒\n')
 print('基因演算法進行',generation,'代\n')
-schedule = pd.DataFrame(gene_result, index = employee_name, columns = DATES)
-#print(schedule)
+schedule_t = pd.DataFrame(gene_result, index = employee_name, columns = DATES)
+#print(schedule_t)
 #schedule.to_csv(EmployeeTest[1:]+'alg_Schedul_2019_4.csv', encoding="utf-8_sig")
 
+#=======================================================================================================#
+# 若在非ASSIGN情況下被排AS、MS、O班  則用A班取代
+#=======================================================================================================#
+schedule_list = schedule_t.values.tolist()
+#對第i個員工
+for i in range(len(schedule_list)):
+    #找對i員工的assing 並存到 aasign_for_i
+    assign_for_i =[]
+    for q in range(len(tl.ASSIGN)):
+        as_index =  tl.ASSIGN[q][0]  
+        as_day = tl.ASSIGN[q][1]
+        as_class = tl.ASSIGN[q][2]
+        as_list = []
+        
+        if as_index == i:
+            as_list.append(as_day)
+            as_list.append(as_class)
+            assign_for_i.append(as_list)
+    
+    #對第i個員工的日子j
+    for j in range(len(schedule_list[i])):
+        
+        #AS
+        if schedule_list[i][j] == 6:
+            as_ok = False
+            for q in range(len(assign_for_i)):
+
+                if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 6):
+                    as_ok = True
+                    break
+
+            if as_ok != True:
+                x = rd.choice([1,2,3,4])
+                schedule_list[i][j] = x
+
+
+        #MS    
+        elif schedule_list[i][j] == 5:
+            ms_ok = False
+            for q in range(len(assign_for_i)):
+
+                if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 5):
+                    ms_ok = True
+                    break
+
+            if ms_ok != True:
+                x = rd.choice([1,2,3,4])
+                schedule_list[i][j] = x
+        #O
+        elif schedule_list[i][j] == 0 :
+            o_ok = False
+            for q in range(len(assign_for_i)):
+
+                if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 0):
+                    o_ok = True
+                    break
+
+            if o_ok != True:
+                x = rd.choice([1,2,3,4])
+                schedule_list[i][j] = x
 #============================================================================#
 # 輸出
+schedule = pd.DataFrame(schedule_list, index = employee_name, columns = DATES)
 result = tl.OUTPUT(schedule, isALG=True)     #建立一個專門用來輸出的class物件
 df, df_lack = result.printAll(makeFile=True)    
 """ result.printAll()
