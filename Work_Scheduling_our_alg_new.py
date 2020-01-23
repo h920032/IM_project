@@ -21,7 +21,7 @@ import datetime, calendar, sys
 parent = 100	    # int
 ordernum = 100      #limit_order的排序數量
 #基因演算法的世代數量
-generation = 20000
+generation = 1000
 mutate_prob = 0.05
 shuffle = False    
 
@@ -1047,23 +1047,82 @@ for p in range(parent):
         which_worktime.append(tmp)
         which_worktime2.append(tmp2)
             
-
-    df_x = pd.DataFrame(which_worktime, index = employee_name, columns = DATES)   #字串班表
-    df_x1 = pd.DataFrame(which_worktime2, index = employee_name, columns = DATES) #整數班表
-    df_x2 = which_worktime2                                                       #confirm用
     
-    
+    #df_x = pd.DataFrame(which_worktime, index = employee_name, columns = DATES)   #字串班表
     #print(df_x)
+    #=======================================================================================================#
+    # 若在非ASSIGN情況下被排AS、MS、O班  則用A班取代
+    #=======================================================================================================#
+
+    df_list = which_worktime2
+    #對第i個員工
+    for i in range(len(df_list)):
+        #找對i員工的assing 並存到 aasign_for_i
+        assign_for_i =[]
+        for q in range(len(tl.ASSIGN)):
+            as_index =  tl.ASSIGN[q][0]  
+            as_day = tl.ASSIGN[q][1]
+            as_class = tl.ASSIGN[q][2]
+            as_list = []
+            
+            if as_index == i:
+                as_list.append(as_day)
+                as_list.append(as_class)
+                assign_for_i.append(as_list)
+        
+        #對第i個員工的日子j
+        for j in range(len(df_list[i])):
+            
+            #AS
+            if df_list[i][j] == 6:
+                as_ok = False
+                for q in range(len(assign_for_i)):
+
+                    if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 6):
+                        as_ok = True
+                        break
+
+                if as_ok != True:
+                    x = rd.choice([1,2,3,4])
+                    df_list[i][j] = x
+
+
+            #MS    
+            elif df_list[i][j] == 5:
+                ms_ok = False
+                for q in range(len(assign_for_i)):
+
+                    if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 5):
+                        ms_ok = True
+                        break
+
+                if ms_ok != True:
+                    x = rd.choice([1,2,3,4])
+                    df_list[i][j] = x
+            #O
+            elif df_list[i][j] == 0 :
+                o_ok = False
+                for q in range(len(assign_for_i)):
+
+                    if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] == 0):
+                        o_ok = True
+                        break
+
+                if o_ok != True:
+                    x = rd.choice([1,2,3,4])
+                    df_list[i][j] = x
+        
     #=================================================================================================#
     #確認解是否可行
     #=================================================================================================#
     message = 'All constraints are met.'
-    message = confirm(df_x2)
+    message = confirm(df_list)
         
     
     #====================================================================================================#
     #計算目標式
     #====================================================================================================#
+    df_x1 = pd.DataFrame(df_list, index = employee_name, columns = DATES) #整數班表
     result = score(df_x1)
     """
     sumlack = 0
@@ -1131,69 +1190,6 @@ available_sol = []
 
 for i in range(parent):
     available_sol.append(INITIAL_POOL[i].df_x1.values.tolist())
-
-#=======================================================================================================#
-# 若在非ASSIGN情況下被排AS、MS、O班  則用A班取代
-#=======================================================================================================#
-
-#對r個班表
-for r in range(len(available_sol)):
-    #對第r個班表的第i個員工
-    for i in range(len(available_sol[r])):
-        #找對i員工的assing 並存到 aasign_for_i
-        assign_for_i =[]
-        for p in range(len(tl.ASSIGN)):
-            as_index =  tl.ASSIGN[p][0]  
-            as_day = tl.ASSIGN[p][1]
-            as_class = tl.ASSIGN[p][2]
-            as_list = []
-            
-            if as_index == i:
-                as_list.append(as_day)
-                as_list.append(as_class)
-                assign_for_i.append(as_list)
-        
-        #對第r個班表的第i個員工的日子j
-        for j in range(len(available_sol[r][i])):
-             
-            #AS
-            if available_sol[r][i][j] == 6:
-                as_ok = False
-                for p in range(len(assign_for_i)):
-
-                    if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 6):
-                        as_ok = True
-                        break
-
-                if as_ok != True:
-                    x = rd.choice([1,2,3,4])
-                    available_sol[r][i][j] = x
-
-
-            #MS    
-            elif available_sol[r][i][j] == 5:
-                ms_ok = False
-                for p in range(len(assign_for_i)):
-
-                    if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 5):
-                        ms_ok = True
-                        break
-
-                if ms_ok != True:
-                    x = rd.choice([1,2,3,4])
-                    available_sol[r][i][j] = x
-            #O
-            elif available_sol[r][i][j] == 0 :
-                o_ok = False
-                for p in range(len(assign_for_i)):
-
-                    if (assign_for_i[p][0]  == j) and (assign_for_i[p][1] == 0):
-                        o_ok = True
-                        break
-
-                if o_ok != True:
-                    x = rd.choice([1,2,3,4])
-                    available_sol[r][i][j] = x
 
 
 #=======================================================================================================#
