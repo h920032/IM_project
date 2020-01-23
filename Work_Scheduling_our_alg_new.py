@@ -21,7 +21,7 @@ import datetime, calendar, sys
 parent = 100	    # int
 ordernum = 100      #limit_order的排序數量
 #基因演算法的世代數量
-generation = 1000
+generation = 10000
 mutate_prob = 0.05
 shuffle = False    
 
@@ -696,6 +696,8 @@ for p in range(parent):
                         break
                     i = LOWER_SET[x][0]
                     k = LOWER_SET[x][1]
+                    if k in SHIFTset['not_assigned']:
+                        continue
                     if ABLE(i, j, k) == True: #若此人可以排此班，就排
                         repeat = False
                         if REPEAT(i, j, k) == True:
@@ -739,6 +741,8 @@ for p in range(parent):
                 RATIO_SET = LIMIT_CSR_SHIFT_ORDER(DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                 rd.shuffle(LIMIT[3])
                 for k in LIMIT[3]:
+                    if k in SHIFTset['not_assigned']:
+                        continue
                     BOUND = LIMIT[4]
                     #RATIO_CSR_SET = RATIO_CSR_ORDER(DAY_DEMAND, k, j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                     RATIO_CSR_LIST = []
