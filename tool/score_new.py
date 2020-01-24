@@ -6,7 +6,7 @@ import datetime, calendar
 import subprocess
 
 
-def score(df_x,main,fixed_dir = tl.DIR_PARA+'fixed/'):
+def score(df_x,main):
     #30
     df_x_s = ""
     for i in df_x: # .values:
