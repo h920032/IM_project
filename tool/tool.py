@@ -37,6 +37,7 @@ else:
 DIR = '../data'                         #預設總資料夾檔案路徑
 DIR_PER_MONTH = '../data/per_month/'    #每月改變的資料(per_MONTH)的檔案路徑
 DIR_PARA = '../data/parameters/'        #parameters的檔案路徑
+# 這只是預設讀檔路徑，要改路徑請去找path.txt檔案裡改，謝謝
 
 # 紀錄檔案
 RECORD_FILE = './tool/record.log'      #運行紀錄檔案
@@ -46,7 +47,7 @@ with open(RECORD_FILE, 'w', encoding=ENCODING) as f:      #用with一次性完�
 # 基本資料
 ERROR_LIMIT = 5         #最多允許多少班表空格
 YEAR = 2019
-MONTH = 4
+MONTH = 9
 TIME_LIMIT = 300
 P = [100,0,0,0,0]       #權重，P0是缺工人數
 
