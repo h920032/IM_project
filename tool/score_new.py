@@ -14,7 +14,7 @@ def score(df_x,main,fixed_dir = tl.DIR_PARA+'fixed/'):
             df_x_s += str(j)
             df_x_s += ","
         df_x_s += "!"
-
+    
     main += df_x_s
     main += " "
     #print(main)

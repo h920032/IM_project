@@ -369,7 +369,7 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
             D_WEEK_s += str(j)
             D_WEEK_s += ","
         D_WEEK_s += "!"
-
+    
     main += D_WEEK_s
     main += " "
 
@@ -378,10 +378,10 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
     for i in WEEK_of_DAY:
         WEEK_of_DAY_s += str(i)
         WEEK_of_DAY_s += ","
-
+    
     main += WEEK_of_DAY_s
     main += " "
-
+    
     print('per_month_dir =',per_month_dir)
     i_nb = []
     tStart = time.time()    #紀錄演算法開始的時間

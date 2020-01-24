@@ -168,9 +168,10 @@ nJ, nW
 ==========================================="""
 #nW
 def get_nW(YEAR,MONTH):
-	startDay = date(YEAR,MONTH,1).weekday()	#Mon=0,Tue=1...
-	totalDay = (date(YEAR,MONTH+1,1) - date(YEAR,MONTH,1)).days if MONTH<12 else 31
-	return math.ceil( (totalDay+startDay) / 7 )
+    startDay = date(YEAR,MONTH,1).weekday()	#Mon=0,Tue=1...
+    totalDay = (date(YEAR,MONTH+1,1) - date(YEAR,MONTH,1)).days if MONTH<12 else 31
+    
+    return math.ceil( (totalDay+startDay) / 7)
 
 #nJ
 def get_nDAY(YEAR,MONTH):
@@ -210,6 +211,8 @@ def SetDAYW(day, total_day, total_week, DAY, DATE):
 	            count+=1
 	            if count == total_day + 1:
 	                break
+	    #if not tmp:
+	    #    continue
 	    ans.append(tmp)
 	return ans
 
