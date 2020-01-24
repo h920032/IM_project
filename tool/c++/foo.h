@@ -98,13 +98,16 @@ void input_D_WEEK(VAR *var, char **argv)
 		string input =  D_WEEK_s.substr(0,D_WEEK_s.find(",!"));
 		D_WEEK_s = D_WEEK_s.substr(D_WEEK_s.find(",!") + 2,D_WEEK_s.length());
 		vector<int> temp;
-		while (input.find(",") != std::string::npos)
+		if (input.length() != 0)
 		{
-			string num = input.substr(0,input.find(","));
-			temp.push_back(stoi(num));
-			input = input.substr(input.find(",") + 1,input.length());
+			while (input.find(",") != std::string::npos)
+			{
+				string num = input.substr(0,input.find(","));
+				temp.push_back(stoi(num));
+				input = input.substr(input.find(",") + 1,input.length());
+			}
+			temp.push_back(stoi(input));
 		}
-		temp.push_back(stoi(input));
 		var->D_WEEK.push_back(temp);
 	}
 }
@@ -178,13 +181,16 @@ void input_s_break(VAR *var, char **argv)
 		string input =  s_break_s.substr(0,s_break_s.find(",!"));
 		s_break_s = s_break_s.substr(s_break_s.find(",!") + 2,s_break_s.length());
 		vector<int> temp;
-		while (input.find(",") != std::string::npos)
+		if (input.length() != 0)
 		{
-			string num = input.substr(0,input.find(","));
-			temp.push_back(stoi(num));
-			input = input.substr(input.find(",") + 1,input.length());
+			while (input.find(",") != std::string::npos)
+			{
+				string num = input.substr(0,input.find(","));
+				temp.push_back(stoi(num));
+				input = input.substr(input.find(",") + 1,input.length());
+			}
+			temp.push_back(stoi(input));
 		}
-		temp.push_back(stoi(input));
 		var->s_break.push_back(temp);
 	}
 }
