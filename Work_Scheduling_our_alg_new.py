@@ -9,7 +9,7 @@ import tool.functions.gene_alg_new as gen
 from tool.functions.CSR_order import CSR_ORDER
 from tool.functions.LIMIT_ORDER import LIMIT_ORDER
 from tool.functions.CONFIRM import confirm
-from tool.score_1para import score
+#from tool.score_1para import score
 from tool.final_score import final_score
 import tool.tool as tl
 import datetime, calendar, sys
@@ -28,7 +28,7 @@ shuffle = False
 # 生成Initial pool的100個親代
 INITIAL_POOL = []
 
-miniresult = 1000000 #親代最佳分數
+miniresult = 100000000 #親代最佳分數
 #=======================================================================================================#
 #=======================================================================================================#
 tstart_0 = time.time()  #計時用
@@ -128,7 +128,7 @@ for i in range(nEMPLOYEE):
         for k in range(nK):
             work[i, j, k] = False  
 
-"""
+
 #Test Variables
 lack = {}  #y_jt - 代表第j天中時段t的缺工人數
 for j in range(nDAY):
@@ -145,31 +145,8 @@ for i in range(nEMPLOYEE):
             breakCount[i, w, r] = False
 
 noonCount = 0 #員工中每人排午班總次數的最大值
-"""
-"""
-#============================================================================#
-#=======================================================================as ms o to a parameter#
-assign_par = []
-for i in range(nEMPLOYEE):
-    ass_j = []
-    for j in range(nDAY):
-        ass_k =[]
-        for k in range(nK):
-            
-            onair = False
-            for c in ASSIGN:
-                if (c[0] == i) and (c[1] == j) and (c[2] == k):
-                    onair = True 
-                    break
 
-            if onair == True:
-                ass_k.append(1)
-            else:
-                ass_k.append(0)
-        ass_j.append(ass_k)
-        
-    assign_par.append(ass_j)  
-"""
+
 #========================================================================#
 # class
 #========================================================================#
@@ -1001,7 +978,7 @@ for p in range(parent):
     
     
     
-    """
+    
     #=================================================================================================#
     #計算變數
     #=================================================================================================#
@@ -1046,7 +1023,7 @@ for p in range(parent):
                     break
         if noonCount_temp[i] > noonCount:
             noonCount = noonCount_temp[i]
-    """
+    
     #=================================================================================================#
     # 輸出
     #=================================================================================================#
@@ -1088,8 +1065,8 @@ for p in range(parent):
     #計算目標式
     #====================================================================================================#
     df_x1 = pd.DataFrame(df_list, index = employee_name, columns = DATES) #整數班表
-    result = score(df_x1)
-    """
+    #result = score(df_x1)
+    
     sumlack = 0
     for j in range(nDAY):
         for t in range(nT):
@@ -1102,8 +1079,8 @@ for p in range(parent):
                 if breakCount[i,w,r] == True:
                     sumbreak += 1
     
-    result2 = P0 * sumlack + P1 * surplus + P2 * nightCount + P3 * sumbreak + P4 * noonCount
-    print(result2, sumlack, surplus, nightCount, sumbreak, noonCount)
+    result = P0 * sumlack + P1 * surplus + P2 * nightCount + P3 * sumbreak + P4 * noonCount
+    #print(result2, sumlack, surplus, nightCount, sumbreak, noonCount)
     
     #print("result2 = ", result2)
     for j in range(nDAY):
@@ -1119,7 +1096,7 @@ for p in range(parent):
                 breakCount[i, w, r] = False
     
     noonCount = 0
-    """
+    
     #====================================================================================================#
     #將結果放入INITIAL_POOL中
     #====================================================================================================#
