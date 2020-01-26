@@ -50,6 +50,7 @@ Posi       = tl.POSI_list
 CONTAIN = tl.CONTAIN               #CONTAIN_kt - 1表示班別k包含時段t，0則否
 DEMAND = tl.DEMAND                 #DEMAND_jt - 日子j於時段t的需求人數
 ASSIGN = tl.ASSIGN                 #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
+assign_par = tl.assign_par
 EMPLOYEE_t = tl.Employee_t
 
 # -------list---------#
@@ -95,30 +96,7 @@ SHIFTset= tl.K_CLASS_set                       #SHIFTset - 通用的班別集合
 S_NIGHT = SHIFTset['night']                     #S_NIGHT - 所有的晚班
 S_NOON = SHIFTset['noon']                       #S_NOON - 所有的午班
 S_BREAK =tl.K_BREAK_set
-
-
-
-#=======================================================================as ms o to a parameter#
-assign_par = []
-for i in range(nEMPLOYEE):
-    ass_j = []
-    for j in range(nDAY):
-        ass_k =[]
-        for k in range(nK):
-            
-            onair = False
-            for c in ASSIGN:
-                if (c[0] == i) and (c[1] == j) and (c[2] == k):
-                    onair = True 
-                    break
-
-            if onair == True:
-                ass_k.append(1)
-            else:
-                ass_k.append(0)
-        ass_j.append(ass_k)
-        
-    assign_par.append(ass_j)  
+ 
 
 
 
@@ -142,11 +120,6 @@ for i in range(nEMPLOYEE):
     for j in range(nDAY):
         for k in range(nK):
             work[i, j, k] = m.addVar(vtype=GRB.BINARY)
-
-
-
-
-
             
 lack = {}  #y_jt - 代表第j天中時段t的缺工人數
 for j in range(nDAY):

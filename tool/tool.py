@@ -532,7 +532,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     global YEAR, MONTH,   nW, mDAY, nE
     global NAME_list, ID_list,   LastWEEK_night, LastDAY_night,   AH_list, NAH_list, WEEK_list
     global D_WDAY_set, D_WEEK_set,   E_SKILL_set, E_POSI_set
-    global ASSIGN, DEMAND, Employee_t
+    global ASSIGN, DEMAND, Employee_t, assign_par
     #要用的
     global nD, DATE_list, CLASS_list
     
@@ -618,6 +618,27 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
             ERROR('指定排班中發現不明班別：',Assign_t.iloc[c,2],\
                 '不在登錄的班別中，請指定班別列表中的一個班別（注意大小寫）')
         ASSIGN.append( (e, d, k) )
+    
+    assign_par = []
+    for i in range(nE):
+        ass_j = []
+        for j in range(nD):
+            ass_k =[]
+            for k in range(nK):
+                
+                onair = False
+                for c in ASSIGN:
+                    if (c[0] == i) and (c[1] == j) and (c[2] == k):
+                        onair = True 
+                        break
+
+                if onair == True:
+                    ass_k.append(1)
+                else:
+                    ass_k.append(0)
+            ass_j.append(ass_k)
+            
+        assign_par.append(ass_j)  
 READ_per_MONTH()
 
 #=============================================================================#

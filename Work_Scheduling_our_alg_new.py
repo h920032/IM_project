@@ -68,6 +68,7 @@ Posi       = tl.POSI_list
 CONTAIN = tl.CONTAIN               #CONTAIN_kt - 1表示班別k包含時段t，0則否
 DEMAND = tl.DEMAND                 #DEMAND_jt - 日子j於時段t的需求人數
 ASSIGN = tl.ASSIGN                 #ASSIGN_ijk - 員工i指定第j天須排班別k，形式為 [(i,j,k)]
+assign_par = tl.assign_par
 EMPLOYEE_t = tl.Employee_t
 E_NAME = tl.NAME_list
 
@@ -145,10 +146,30 @@ for i in range(nEMPLOYEE):
 
 noonCount = 0 #員工中每人排午班總次數的最大值
 """
-
+"""
 #============================================================================#
+#=======================================================================as ms o to a parameter#
+assign_par = []
+for i in range(nEMPLOYEE):
+    ass_j = []
+    for j in range(nDAY):
+        ass_k =[]
+        for k in range(nK):
+            
+            onair = False
+            for c in ASSIGN:
+                if (c[0] == i) and (c[1] == j) and (c[2] == k):
+                    onair = True 
+                    break
 
-
+            if onair == True:
+                ass_k.append(1)
+            else:
+                ass_k.append(0)
+        ass_j.append(ass_k)
+        
+    assign_par.append(ass_j)  
+"""
 #========================================================================#
 # class
 #========================================================================#
@@ -257,7 +278,11 @@ def ABLE(this_i,this_j,this_k):
                 ans = False
                 return ans
 
-    
+    # 若在非ASSIGN情況下不能排AS、MS、O班
+    if this_k in SHIFTset['not_assigned']:
+        if(assign_par[this_i][this_j][this_k]==0):
+            ans = False
+            return ans
 
     
     #排特殊技能班別的上限
@@ -696,8 +721,6 @@ for p in range(parent):
                         break
                     i = LOWER_SET[x][0]
                     k = LOWER_SET[x][1]
-                    if k in SHIFTset['not_assigned']:
-                        continue
                     if ABLE(i, j, k) == True: #若此人可以排此班，就排
                         repeat = False
                         if REPEAT(i, j, k) == True:
@@ -741,8 +764,6 @@ for p in range(parent):
                 RATIO_SET = LIMIT_CSR_SHIFT_ORDER(DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                 rd.shuffle(LIMIT[3])
                 for k in LIMIT[3]:
-                    if k in SHIFTset['not_assigned']:
-                        continue
                     BOUND = LIMIT[4]
                     #RATIO_CSR_SET = RATIO_CSR_ORDER(DAY_DEMAND, k, j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                     RATIO_CSR_LIST = []
@@ -934,7 +955,7 @@ for p in range(parent):
             if is_arrange == False:
                 DAY_DEMAND = []
                 DAY_DEMAND.extend(CURRENT_DEMAND[j])
-                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['phone_new'], j, maxsurplus, maxnight, maxnoon, i)
+                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['phone'], j, maxsurplus, maxnight, maxnoon, i)
                 SHIFT_LIST = []
                 for k in range(len(SHIFT_SET)):
                     SHIFT_LIST.append(SHIFT_SET[k][0])
@@ -1168,12 +1189,12 @@ schedule_t = pd.DataFrame(gene_result, index = employee_name, columns = DATES)
 schedule_list = schedule_t.values.tolist()
 #對第i個員工
 for i in range(len(schedule_list)):
-    #找對i員工的assing 並存到 aasign_for_i
+    #找對i員工的assign 並存到 aasign_for_i
     assign_for_i =[]
-    for q in range(len(tl.ASSIGN)):
-        as_index =  tl.ASSIGN[q][0]  
-        as_day = tl.ASSIGN[q][1]
-        as_class = tl.ASSIGN[q][2]
+    for q in range(len(ASSIGN)):
+        as_index =  ASSIGN[q][0]  
+        as_day = ASSIGN[q][1]
+        as_class = ASSIGN[q][2]
         as_list = []
         
         if as_index == i:

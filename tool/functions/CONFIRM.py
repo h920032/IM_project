@@ -21,6 +21,10 @@ necessary constraints:
 
 (7)在特定日子中數個指定班別，針對特定群組員工，必續佔總排班人數特定比例以上 senior_limit.csv
 
+(8)針對特定技能的員工，有上班人數上限 ->class_upperlimit.csv
+
+(9)若在非ASSIGN情況下不能排AS、MS、O班
+
 """
 
 #schedule為班表二維list
@@ -438,6 +442,54 @@ def confirm(schedule):
     if us_limit_bool ==False:
         return us_limit_err
     
+    #=========================================================================================================================================================
+    #(9)若在非ASSIGN情況下不能排AS、MS、O班
+    #需要參數:schedule, assign, SHIFTset
+    not_assigned_bool = True
+    not_assigned_err =''
+    for i in range(len(schedule)):
+        #找對i員工的assign 並存到 aasign_for_i
+        assign_for_i =[]
+        for q in range(len(assign)):
+            as_index =  assign[q][0]  
+            as_day = assign[q][1]
+            as_class = assign[q][2]
+            as_list = []
+            
+            if as_index == i:
+                as_list.append(as_day)
+                as_list.append(as_class)
+                assign_for_i.append(as_list)
+        
+        #對第i個員工的日子j
+        for j in range(len(schedule[i])):
+            
+            #AS、MS、O
+            if schedule[i][j] in SHIFTset['not_assigned']:
+                as_ok = False
+                for q in range(len(assign_for_i)):
+
+                    if (assign_for_i[q][0]  == j) and (assign_for_i[q][1] in SHIFTset['not_assigned']):
+                        as_ok = True
+                        break
+
+                if as_ok != True:
+                    not_assigned_bool = False
+                    not_assigned_err +=str(i)
+                    not_assigned_err +='th employee cannot be assinged to '
+                    not_assigned_err +=str(schedule[i][j])
+                    not_assigned_err +=' at '
+                    not_assigned_err +=str(j)
+                    not_assigned_err +='th'
+                    not_assigned_err +='working day.'
+                    break
+        
+        if not_assigned_bool == False:
+            break
+    
+    if not_assigned_bool == False:
+        return not_assigned_err
+
 
     success_mes = 'All constraints are met.'
     return success_mes
