@@ -19,7 +19,8 @@ import datetime, calendar, sys
 #========================================================================#
 # 產生親代的迴圈數
 parent = 100	    # int
-ordernum = 100      #limit_order的排序數量
+ordernum = 1        #limit_order的排序數量
+cutpoint = 10       #不同安排方式的切分點
 #基因演算法的世代數量
 generation = 1000
 mutate_prob = 0.05
@@ -27,8 +28,6 @@ shuffle = False
 
 # 生成Initial pool的100個親代
 INITIAL_POOL = []
-
-miniresult = 100000000 #親代最佳分數
 #=======================================================================================================#
 #=======================================================================================================#
 tstart_0 = time.time()  #計時用
@@ -57,6 +56,8 @@ nT        = tl.nT                  #總時段數
 nR        = tl.nR                  #午休種類數
 nW        = tl.nW                  #總週數
 mDAY      = tl.mDAY
+
+miniresult = 100000000*nEMPLOYEE*nDAY*nT #親代最佳分數
 
 # -----基礎項目---------#
 P0, P1, P2, P3, P4 = tl.P          #目標式中的調整權重(lack, surplus, nightCount, breakCount, noonCount)
@@ -352,84 +353,91 @@ def takeNeck(alist):
 		print(alist,end='')
 		print(' 的瓶頸程度參數')
 		return None
-def SHIFT_ORDER(demand, shift, day, maxsurplus, maxnight, maxnoon, csr):
+def SHIFT_ORDER(demand, shift, day, maxsurplus, maxnight, maxnoon, csr, arranged):
     ans = []
-    for i in shift:
-        demand_t = []
-        demand_t.extend(demand)
-        for t in range(nT):
-            if CONTAIN[i][t] == 1:
-                demand_t[t] -=1
-        dem_l = np.array(demand_t)
-        dem_s = np.array(demand_t)
-        dem_su = 0
-        dem_ni = 0
-        dem_br = 0
-        dem_no = 0
-        for j in range(len(dem_l)):
-            if dem_l[j] < 0:
-                dem_l[j] = 0
-        for j in range(len(dem_s)):
-            if dem_s[j] > 0:
-                dem_s[j] = 0
-            if min(dem_s)*(-1) >= maxsurplus:
-                dem_su = 1
+    for c in csr:
+        for a in range(len(day)):
+            if arranged[c][day[a]] == True:
+                continue
             else:
-                dem_su = 0
-        if i in S_NIGHT:
-            if nightdaylimit[csr] > 0:
-                ni = 0
-                for y in range(nDAY):
-                    for z in S_NIGHT:
-                        if work[csr,y,z] == True:
-                            ni += 1
-                            break
-                ni = ni / nightdaylimit[csr]
-                if ni >= maxnight:
-                    dem_ni = 1
-                else:
-                    dem_ni = 0
-            else:
-                dem_ni = 1000000
-        elif i in S_NOON:
-            no = 0
-            for y in range(nDAY):
-                for z in S_NOON:
-                    if work[csr,y,z] == True:
-                        no += 1
-                        break
-            if no >= maxnoon: 
-                dem_no = 1
-            else:
-                dem_no = 0
-        takebreak = -1
-        for r in range(len(S_BREAK)):
-            if i in S_BREAK[r]:
-                takebreak = r
-                break
-        if takebreak != -1:
-            found = False
-            w = WEEK_of_DAY[day]
-            for y in D_WEEK[w]:
-                for k in SHIFT:
-                    if work[csr,y,k] == True:
-                        if k in S_BREAK[takebreak]:
-                            dem_br = 0
-                            found = True
-                            break
-                        else:
-                            dem_br = 1
-                            break
-                    else:
-                        dem_br = 1
+                for i in shift:
+                    if ABLE(c,day[a],i)==False:
                         continue
-                if found == True:
-                    break
+                    demand_t = []
+                    demand_t.extend(demand[a])
+                    for t in range(nT):
+                        if CONTAIN[i][t] == 1:
+                            demand_t[t] -=1
+                    dem_l = np.array(demand_t)
+                    dem_s = np.array(demand_t)
+                    dem_su = 0
+                    dem_ni = 0
+                    dem_br = 0
+                    dem_no = 0
+                    for j in range(len(dem_l)):
+                        if dem_l[j] < 0:
+                            dem_l[j] = 0
+                    for j in range(len(dem_s)):
+                        if dem_s[j] > 0:
+                            dem_s[j] = 0
+                        if min(dem_s)*(-1) >= maxsurplus:
+                            dem_su = 1
+                        else:
+                            dem_su = 0
+                    if i in S_NIGHT:
+                        if nightdaylimit[c] > 0:
+                            ni = 0
+                            for y in range(nDAY):
+                                for z in S_NIGHT:
+                                    if work[c,y,z] == True:
+                                        ni += 1
+                                        break
+                            ni = ni / nightdaylimit[c]
+                            if ni >= maxnight:
+                                dem_ni = 1
+                            else:
+                                dem_ni = 0
+                        else:
+                            dem_ni = 1000000*nEMPLOYEE*nDAY*nT
+                    elif i in S_NOON:
+                        no = 0
+                        for y in range(nDAY):
+                            for z in S_NOON:
+                                if work[c,y,z] == True:
+                                    no += 1
+                                    break
+                        if no >= maxnoon: 
+                            dem_no = 1
+                        else:
+                            dem_no = 0
+                    takebreak = -1
+                    for r in range(len(S_BREAK)):
+                        if i in S_BREAK[r]:
+                            takebreak = r
+                            break
+                    if takebreak != -1:
+                        found = False
+                        w = WEEK_of_DAY[day[a]]
+                        for y in D_WEEK[w]:
+                            for k in SHIFT:
+                                if work[c,y,k] == True:
+                                    if k in S_BREAK[takebreak]:
+                                        dem_br = 0
+                                        found = True
+                                        break
+                                    else:
+                                        dem_br = 1
+                                        break
+                                else:
+                                    dem_br = 1
+                                    continue
+                            if found == True:
+                                break
 
-        d = P0 * np.sum(dem_l) + P1 * dem_su + P2 * dem_ni + P3 * dem_br + P4 * dem_no
-        ans.append([i,d])
+                    d = P0 * np.sum(dem_l) + P1 * dem_su + P2 * dem_ni + P3 * dem_br + P4 * dem_no
+                    ans.append([c,day[a],i,d])
     ans.sort(key=takeNeck, reverse=False)
-
+    
     return ans 
 
 def LIMIT_CSR_SHIFT_ORDER(demand, shift_list, day, maxsurplus, maxnight, maxnoon, csr_list, skilled):
@@ -471,7 +479,7 @@ def LIMIT_CSR_SHIFT_ORDER(demand, shift_list, day, maxsurplus, maxnight, maxnoon
                     else:
                         dem_ni = 0
                 else:
-                    dem_ni = 1000000
+                    dem_ni = 1000000*nEMPLOYEE*nDAY*nT
             elif s in S_NOON:
                 no = 0
                 for y in range(nDAY):
@@ -542,7 +550,7 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, csr_list):
                 else:
                     dem_ni = 0
             else:
-                dem_ni = 1000000
+                dem_ni = 1000000*nEMPLOYEE*nDAY*nT
         takebreak = -1
         for r in range(len(S_BREAK)):
             if shift in S_BREAK[r]:
@@ -573,9 +581,9 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, csr_list):
 
     return ans
 
-def DAY_ORDER(demand_list):
+def DAY_ORDER(day, demand_list):
     ans = []
-    for i in range(len(demand_list)):
+    for i in range(len(day)):
         demand_t = []
         demand_t.extend(demand_list[i])
         dem_l = np.array(demand_t)
@@ -592,7 +600,7 @@ def DAY_ORDER(demand_list):
             else:
                 dem_su = 1
         d = P0 * np.sum(dem_l) + P1 * dem_su
-        ans.append([i,d])
+        ans.append([day[i],d])
     ans.sort(key=takeNeck, reverse=False)
 
     return ans 
@@ -618,6 +626,7 @@ success = 0
 #產生100個親代的迴圈
 for p in range(parent):
     
+    ordercount = p+1     #每重算一次SHIFT_SET的排序數
     maxnight = 0
     maxnoon = 0
     maxsurplus = 0
@@ -682,8 +691,15 @@ for p in range(parent):
                 nightbound = True
                 break
         CSR_LIST = CSR_ORDER(char, LIMIT[0], LIMIT[1], EMPLOYEE_t, Posi, nightbound) #員工沒用度排序
-        rd.shuffle(LIMIT[2])
-        for j in LIMIT[2]:
+        #rd.shuffle(LIMIT[2])
+        demand_list = []
+        for m in LIMIT[2]:
+            demand_list.append(CURRENT_DEMAND[m])
+        DAY_SET = DAY_ORDER(LIMIT[2], demand_list)
+        DAY_LIST = []
+        for h in range(len(DAY_SET)):
+            DAY_LIST.append(DAY_SET[h][0])
+        for j in DAY_LIST:
             if shuffle == True:
                 rd.shuffle(CSR_LIST)
             if LIMIT[0] == 'lower' :
@@ -883,7 +899,7 @@ for p in range(parent):
                             BOUND -= 1
                         else:
                             continue
-    
+    """
     sequence += 1
     if sequence >= len(LIMIT_MATRIX) and char == 'a':
         sequence = 0
@@ -900,84 +916,162 @@ for p in range(parent):
     elif sequence >= len(LIMIT_MATRIX) and char == 'e':
         sequence = 0
         char = 'a'
-    
+    """
     
     
     #=================================================================================================#
     #安排空班別
     #=================================================================================================#
-    E_LIST = []
-    E_LIST.extend(EMPLOYEE)
-    rd.shuffle(E_LIST)
-    
     fix_temp = []
-    for i in E_LIST:
+    arranged = []
+    for i in range(nEMPLOYEE):
         employee = []
-        DAY_SET = DAY_ORDER(CURRENT_DEMAND)
-        DAY_LIST = []
-        for h in range(len(DAY_SET)):
-            DAY_LIST.append(DAY_SET[h][0])
-        for j in DAY_LIST:
-            is_arrange = False
+        arranged_t = []
+        for j in range(nDAY):
+            employee.append(-1)
+            arranged_t.append(False)
+        fix_temp.append(employee)
+        arranged.append(arranged_t)
+    for i in range(nEMPLOYEE):
+        for j in range(nDAY):
             for k in range(nK):
                 if work[i,j,k] == True:
-                    for c in ASSIGN:
-                        if i == c[0] and j == c[1] and k == c[2]:
-                            is_arrange = True
-                            employee.append(1)
-                            break
-                    if is_arrange == False:
-                        is_arrange = True
-                        employee.append(1)
-            if is_arrange == False:
+                    #for c in ASSIGN:
+                    #    if i == c[0] and j == c[1] and k == c[2]:
+                    #        arranged[i][j] = True
+                    #        fix_temp[i][j] = 1
+                    #        break
+                    arranged[i][j] = True
+                    fix_temp[i][j] = 1
+                    break
+    if p < cutpoint:
+        print('Loading...')
+        #優先排能減少缺工冗員最多的班
+        for y in range(nEMPLOYEE*nDAY*nK):
+            finished = True
+            count = 0
+            for i in range(nEMPLOYEE):
+                for j in range(nDAY):
+                    if fix_temp[i][j] == -1:
+                        count += 1
+                        finished = False
+            #print(y, count)
+            if finished == True:
+                break
+            else: 
                 DAY_DEMAND = []
-                DAY_DEMAND.extend(CURRENT_DEMAND[j])
-                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['phone'], j, maxsurplus, maxnight, maxnoon, i)
-                SHIFT_LIST = []
-                for k in range(len(SHIFT_SET)):
-                    SHIFT_LIST.append(SHIFT_SET[k][0])
-                #優先排能減少缺工冗員最多的班
-                for r in SHIFT_LIST:
-                    if ABLE(i,j,r) == True and REPEAT(i, j, r) == False:
-                        work[i,j,r] = True
-                        if r in SHIFTset['phone']: #非其他班別時扣除需求
-                            for t in range(nT):
-                                if CONTAIN[r][t] == 1:              
-                                    CURRENT_DEMAND[j][t] -= 1
-                            demand = []
-                            demand.extend(CURRENT_DEMAND[j])
-                            for q in range(len(demand)):
-                                demand[q] = demand[q]*(-1)
-                            if max(demand) > maxsurplus:
-                                maxsurplus = max(demand)
-                        if r in S_NIGHT:
-                            ni = 0
-                            for y in range(nDAY):
-                                for z in S_NIGHT:
-                                    if work[i,y,z] == True:
-                                        ni += 1
-                                        break
-                            ni = ni / nightdaylimit[i]
-                            if ni > maxnight:
-                                maxnight = ni
-                        elif r in S_NOON:
-                            no = 0
-                            for y in range(nDAY):
-                                for z in S_NOON:
-                                    if work[i,y,z] == True:
-                                        no += 1
-                                        break
-                            if no > maxnoon:
-                                maxnoon = no
-                        is_arrange = True
-                        employee.append(0)
+                DAY_DEMAND.extend(CURRENT_DEMAND)
+                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['phone'], DAY, maxsurplus, maxnight, maxnoon, EMPLOYEE, arranged)
+                order = 0
+                #for q in range(10):
+                #    print(y, SHIFT_SET[q])
+                for x in range(len(SHIFT_SET)):
+                    i = SHIFT_SET[x][0]
+                    j = SHIFT_SET[x][1]
+                    
+                    if arranged[i][j] == True:
+                        continue
+                    else:
+                        r = SHIFT_SET[x][2]
+                        #print(i, j, r)
+                        if ABLE(i,j,r) == True and REPEAT(i, j, r) == False:
+                            work[i,j,r] = True
+                            if r in SHIFTset['phone']: #非其他班別時扣除需求
+                                for t in range(nT):
+                                    if CONTAIN[r][t] == 1:              
+                                        CURRENT_DEMAND[j][t] -= 1
+                                demand = []
+                                demand.extend(CURRENT_DEMAND[j])
+                                for q in range(len(demand)):
+                                    demand[q] = demand[q]*(-1)
+                                if max(demand) > maxsurplus:
+                                    maxsurplus = max(demand)
+                            if r in S_NIGHT:
+                                ni = 0
+                                for y in range(nDAY):
+                                    for z in S_NIGHT:
+                                        if work[i,y,z] == True:
+                                            ni += 1
+                                            break
+                                ni = ni / nightdaylimit[i]
+                                if ni > maxnight:
+                                    maxnight = ni
+                            elif r in S_NOON:
+                                no = 0
+                                for y in range(nDAY):
+                                    for z in S_NOON:
+                                        if work[i,y,z] == True:
+                                            no += 1
+                                            break
+                                if no > maxnoon:
+                                    maxnoon = no
+                            arranged[i][j] = True
+                            fix_temp[i][j] = 0
+                            order += 1
+                    if order >= ordercount:
                         break
-        fix_temp.append(employee)
+    else:
+        E_LIST = []
+        E_LIST.extend(EMPLOYEE)
+        rd.shuffle(E_LIST)
+        
+        for i in E_LIST:
+            DAY_SET = DAY_ORDER(DAY, CURRENT_DEMAND)
+            DAY_LIST = []
+            for h in range(len(DAY_SET)):
+                DAY_LIST.append(DAY_SET[h][0])
+            #print(i, DAY_LIST)
+            for j in DAY_LIST:
+                if arranged[i][j] == True:
+                    continue
+                else:
+                    DAY_DEMAND = []
+                    DAY_DEMAND.extend(CURRENT_DEMAND[j])
+                    SHIFT_SET = SHIFT_ORDER([DAY_DEMAND], SHIFTset['phone'], [j], maxsurplus, maxnight, maxnoon, [i], arranged)
+                    SHIFT_LIST = []
+                    for k in range(len(SHIFT_SET)):
+                        SHIFT_LIST.append(SHIFT_SET[k][2])
+                    #優先排能減少缺工冗員最多的班
+                    for r in SHIFT_LIST:
+                        if ABLE(i,j,r) == True and REPEAT(i, j, r) == False:
+                            work[i,j,r] = True
+                            if r in SHIFTset['phone']: #非其他班別時扣除需求
+                                for t in range(nT):
+                                    if CONTAIN[r][t] == 1:              
+                                        CURRENT_DEMAND[j][t] -= 1
+                                demand = []
+                                demand.extend(CURRENT_DEMAND[j])
+                                for q in range(len(demand)):
+                                    demand[q] = demand[q]*(-1)
+                                if max(demand) > maxsurplus:
+                                    maxsurplus = max(demand)
+                            if r in S_NIGHT:
+                                ni = 0
+                                for y in range(nDAY):
+                                    for z in S_NIGHT:
+                                        if work[i,y,z] == True:
+                                            ni += 1
+                                            break
+                                ni = ni / nightdaylimit[i]
+                                if ni > maxnight:
+                                    maxnight = ni
+                            elif r in S_NOON:
+                                no = 0
+                                for y in range(nDAY):
+                                    for z in S_NOON:
+                                        if work[i,y,z] == True:
+                                            no += 1
+                                            break
+                                if no > maxnoon:
+                                    maxnoon = no
+                            arranged[i][j] = True
+                            fix_temp[i][j] = 0
+                            break
+    
+
     #work, fix_temp, CURRENT_DEMAND = ARRANGEMENT(work, nEMPLOYEE, nDAY, nK, CONTAIN, CURRENT_DEMAND, nT)
-    fix.append(fix_temp)    
-    
-    
-    
+    fix.append(fix_temp)
+    #print(fix)
     
     #=================================================================================================#
     #計算變數
@@ -1164,6 +1258,7 @@ schedule_t = pd.DataFrame(gene_result, index = employee_name, columns = DATES)
 # 若在非ASSIGN情況下被排AS、MS、O班  則用A班取代
 #=======================================================================================================#
 schedule_list = schedule_t.values.tolist()
+"""
 #對第i個員工
 for i in range(len(schedule_list)):
     #找對i員工的assign 並存到 aasign_for_i
@@ -1194,7 +1289,7 @@ for i in range(len(schedule_list)):
             if as_ok != True:
                 x = rd.choice([1,2,3,4])
                 schedule_list[i][j] = x
-
+"""
         
 #============================================================================#
 # 輸出
@@ -1220,3 +1315,5 @@ score = final_score(A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2, P3
 print('score:',score)
 
 print('\n\n*** Done in', time.time()-tstart_0 ,'sec. ***')
+
+

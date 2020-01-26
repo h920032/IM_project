@@ -1,14 +1,14 @@
-﻿tool.py 開始執行：2020-01-26 14:50:51.690876
+﻿tool.py 開始執行：2020-01-27 03:24:29.614947
 
 沒有找到舊的錯誤紀錄檔
 tool.py開始讀檔
-Read file from ./data_9/per_month/ & ./data_9/parameters/
-讀取 2019 年 9 月資料
+Read file from ./data/per_month/ & ./data/parameters/
+讀取 2019 年 4 月資料
 
 
 
 === 參數確認 ===
-nE=42, nD=20, nK=19, nT=24, nR=5, nW=6, mDAY=30
+nE=42, nD=20, nK=19, nT=24, nR=5, nW=5, mDAY=30
 
 === ======= ===
 
@@ -16,14 +16,14 @@ nE=42, nD=20, nK=19, nT=24, nR=5, nW=6, mDAY=30
 
 
 
-2020-01-26 15:06:08.189548  開始輸出班表
+2020-01-27 03:50:33.055743  開始輸出班表
 
 ＊輸出 基因演算法 結果
 
-所有天每個時段人數與需求人數的差距中的最大值 = 15
+所有天每個時段人數與需求人數的差距中的最大值 = 20
 
 值 noon 班型的加權次數最高者，本月共值： 0.0 次(加權後)
-值 night 班型的加權次數最高者，本月共值： 5.0 次(加權後)
+值 night 班型的加權次數最高者，本月共值： 4.0 次(加權後)
 
-Output results has save as ./schedule_data_2019_9.xlsx
+Output results has save as ./schedule_data_2019_4.xlsx
 

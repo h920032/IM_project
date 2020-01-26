@@ -178,6 +178,6 @@ def LIMIT_ORDER(N):
 	==========================================="""
 	if len(main)>N:
 		main = main[0:N]
-	print('\nLIMIT_ORDER(): return', len(main) ,'kinds of order\n')
+	print('\nLIMIT_ORDER(): return', len(main) ,'kind(s) of order\n')
 	return main
 
