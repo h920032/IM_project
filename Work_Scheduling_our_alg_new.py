@@ -626,7 +626,7 @@ success = 0
 #產生100個親代的迴圈
 for p in range(parent):
     
-    ordercount = p+1     #每重算一次SHIFT_SET的排序數
+    ordercount = (p)%10+1     #每重算一次SHIFT_SET的排序數
     maxnight = 0
     maxnoon = 0
     maxsurplus = 0
