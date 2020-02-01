@@ -61,8 +61,8 @@ miniresult = 100000000*nEMPLOYEE*nDAY*nT #親代最佳分數
 
 # -----基礎項目---------#
 P0, P1, P2, P3, P4 = tl.P          #目標式中的調整權重(lack, surplus, nightCount, breakCount, noonCount)
-#timelimit     = tl.TIME_LIMIT
-timelimit = 1000000000
+timelimit     = tl.TIME_LIMIT
+#timelimit = 1000000000
 Posi       = tl.POSI_list
 
 # -------表格---------#
@@ -83,6 +83,8 @@ Shift_name = tl.CLASS_list
 LOWER = tl.LOWER                   #LOWER - 日期j，班別集合ks，職位p，上班人數下限
 UPPER = tl.UPPER                   #UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
 PERCENT = tl.PERCENT               #PERCENT - 日子集合，班別集合，要求占比，年資分界線
+SKILL = tl.NOTPHONE_CLASS
+SKILL_SPECIAL = tl.NOTPHONE_CLASS_special
 
 # -----新  特殊班別一定人數--------------#
 NOTPHONE_CLASS = tl.NOTPHONE_CLASS                     # 特殊班別每天人數相同
@@ -516,16 +518,16 @@ def LIMIT_CSR_SHIFT_ORDER(demand, shift_list, day, maxsurplus, maxnight, maxnoon
                         break
 
             d = P0 * np.sum(dem_l) + P1 * dem_su + P2 * dem_ni + P3 * dem_br + P4 * dem_no
-            if i in E_SKILL['CD'] and skilled['CD',day] == False:
-                d = d * 1000000
-            elif i in E_SKILL['chat'] and skilled['C2',day] == False:
-                d = d * 1000000
-            elif i in E_SKILL['chat'] and skilled['C3',day] == False:
-                d = d * 1000000
-            elif i in E_SKILL['chat'] and skilled['C4',day] == False:
-                d = d * 1000000
-            elif i in E_SKILL['outbound'] and skilled['OB',day] == False:
-                d = d * 1000000
+            for oth in SKILL:
+                if SHIFTset[oth[0]][0] not in SHIFTset['phone']:
+                    #if skilled[oth[0],day]==False:
+                    #    print(E_SKILL[oth[2]], oth[0], day, skilled[oth[0],day])
+                    if i in E_SKILL[oth[2]] and skilled[oth[0],day] == False:
+                        d = d * 1000000*nEMPLOYEE*nDAY*nT
+            for oth in SKILL_SPECIAL:
+                if SHIFTset[oth[0]][0] not in SHIFTset['phone']:
+                    if i in E_SKILL[oth[2]] and skilled[oth[0],day] == False:
+                        d = d * 1000000*nEMPLOYEE*nDAY*nT
             ans.append([i,s,d])
     ans.sort(key=takeNeck, reverse=False)
 
@@ -576,9 +578,12 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, csr_list):
                     break
 
         d = P2 * dem_ni + P3 * dem_br
+        for e in E_SKILL:
+            if i in E_SKILL[e]:
+                d = d + 100
         ans.append([i,d])
     ans.sort(key=takeNeck, reverse=False)
-
+   
     return ans
 
 def DAY_ORDER(day, demand_list):
@@ -632,11 +637,9 @@ for p in range(parent):
     maxsurplus = 0
     skilled = {}
     for j in DAY:
-        skilled['CD',j] = False
-        skilled['C2',j] = False
-        skilled['C3',j] = False
-        skilled['C4',j] = False
-        skilled['OB',j] = False
+        for k in SHIFTset['other']:
+            skilled[Shift_name[k],j] = False
+        
     #動態需工人數
     CURRENT_DEMAND = [tmp for tmp in range(nDAY)]
     for j in DAY:
@@ -812,7 +815,6 @@ for p in range(parent):
                         SPECIAL_CSR_LIST.append(SPECIAL_CSR_SET[i][0])
                     for i in SPECIAL_CSR_LIST:
                         if BOUND <= 0:
-                            skilled[Shift_name[k],j] = True
                             break
                         elif ABLE(i, j, k) == True: #若此人可以排此班，就排
                             repeat = False
@@ -849,6 +851,9 @@ for p in range(parent):
                                 if no > maxnoon:
                                     maxnoon = no
                             BOUND -= 1
+                            if BOUND <= 0:
+                                if k not in SHIFTset['phone']:
+                                    skilled[Shift_name[k],j] = True
                         else:
                             continue
             elif LIMIT[0] == 'skill_special':
@@ -860,7 +865,6 @@ for p in range(parent):
                         SPECIAL_CSR_LIST.append(SPECIAL_CSR_SET[i][0])
                     for i in SPECIAL_CSR_LIST:
                         if BOUND <= 0:
-                            skilled[Shift_name[k],j] = True
                             break
                         elif ABLE(i, j, k) == True: #若此人可以排此班，就排
                             repeat = False
@@ -897,9 +901,12 @@ for p in range(parent):
                                 if no > maxnoon:
                                     maxnoon = no
                             BOUND -= 1
+                            if BOUND <= 0:
+                                if k not in SHIFTset['phone']:
+                                    skilled[Shift_name[k],j] = True
                         else:
                             continue
-    """
+    
     sequence += 1
     if sequence >= len(LIMIT_MATRIX) and char == 'a':
         sequence = 0
@@ -916,7 +923,7 @@ for p in range(parent):
     elif sequence >= len(LIMIT_MATRIX) and char == 'e':
         sequence = 0
         char = 'a'
-    """
+    
     
     
     #=================================================================================================#
@@ -1118,6 +1125,7 @@ for p in range(parent):
         if noonCount_temp[i] > noonCount:
             noonCount = noonCount_temp[i]
     
+    
     #=================================================================================================#
     # 輸出
     #=================================================================================================#
@@ -1213,6 +1221,7 @@ for p in range(parent):
         print('Some constraints fails.')
     if INITIAL_POOL[p].result < miniresult:
         miniresult = INITIAL_POOL[p].result
+        #minidf = INITIAL_POOL[p].df_x1
     
     if p == parent-1:
         print("\nINITIAL POOL completed")
@@ -1221,6 +1230,7 @@ for p in range(parent):
     #====================================================================================================#
 print('\n產生',parent,'個結果於 initail pool (',success,'個合理解) ，共花費', (time.time()-tStart) ,'秒')
 print("\n親代最佳分數: result = ",miniresult,'\n\n')
+#print(minidf)
 
 available_sol = []
 
@@ -1294,6 +1304,7 @@ for i in range(len(schedule_list)):
 #============================================================================#
 # 輸出
 schedule = pd.DataFrame(schedule_list, index = employee_name, columns = DATES)
+#print(schedule)
 result = tl.OUTPUT(schedule, isALG=True)     #建立一個專門用來輸出的class物件
 df, df_lack = result.printAll(makeFile=True)    
 """ result.printAll()
