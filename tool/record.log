@@ -1,14 +1,14 @@
-﻿tool.py 開始執行：2020-02-02 07:32:47.320576
+﻿tool.py 開始執行：2020-02-02 18:25:12.265443
 
 沒有找到舊的錯誤紀錄檔
 tool.py開始讀檔
-Read file from ./data_skill/per_month/ & ./data_skill/parameters/
+Read file from ./data_rest/per_month/ & ./data_rest/parameters/
 讀取 2019 年 4 月資料
 
 
 
 === 參數確認 ===
-nE=42, nD=20, nK=18, nT=24, nR=5, nW=5, mDAY=30
+nE=42, nD=20, nK=19, nT=24, nR=6, nW=5, mDAY=30
 
 === ======= ===
 
@@ -16,7 +16,7 @@ nE=42, nD=20, nK=18, nT=24, nR=5, nW=5, mDAY=30
 
 
 
-2020-02-02 08:03:57.077367  開始輸出班表
+2020-02-02 18:58:38.655670  開始輸出班表
 
 ＊輸出 基因演算法 結果
 

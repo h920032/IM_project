@@ -972,8 +972,8 @@ class OUTPUT:
 
     # 每周休息時間，輸出：DataFrame
     def _breakCount(self):
-        global nE, nD, nW, NAME_list, BREAK_list, WEEK_list
-        breakCount = np.zeros((nE,nW,5), dtype=np.int)      #建立空表格
+        global nE, nD, nW, nR, NAME_list, BREAK_list, WEEK_list
+        breakCount = np.zeros((nE,nW,nR), dtype=np.int)      #建立空表格
         for i in range(nE):
             for j in range(nD):
                 w_d = WEEK_list[j]

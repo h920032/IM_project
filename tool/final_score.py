@@ -57,7 +57,7 @@ def final_score(A_t, nEMPLOYEE, nDAY, nW, nK, nT, nR, DEMAND, P0, P1, P2, P3, P4
         nooncount.append(count)
     nooncount = max(nooncount)
     
-    breakCount = np.zeros((nEMPLOYEE,nW,5))
+    breakCount = np.zeros((nEMPLOYEE,nW,nR))
     for i in range(nEMPLOYEE):
         for j in range(nDAY):
             w_d = WEEK_of_DAY[j]
