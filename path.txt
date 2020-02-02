@@ -1,1 +1,1 @@
-./data_rest/
+./data/
