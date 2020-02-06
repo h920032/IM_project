@@ -1,1 +1,1 @@
-./data_Sam/
+./data_Ting/
