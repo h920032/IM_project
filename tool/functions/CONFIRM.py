@@ -25,12 +25,15 @@ necessary constraints:
 
 (9)若在非ASSIGN情況下不能排AS、MS、O班
 
+(10)無技能者不得排技能班
+
 """
 
 #schedule為班表二維list
 
 def confirm(schedule):
     
+    nE = tl.nE
     nDAY      = tl.nD
     LMNIGHT  = tl.LastWEEK_night 
     FRINIGHT = tl.LastDAY_night
@@ -41,6 +44,7 @@ def confirm(schedule):
     S_NIGHT = SHIFTset['night']                    
     D_WEEK = tl.D_WEEK_set
     nightdaylimit = EMPLOYEE_t['night_perWeek']
+    EMPLOYEE = [tmp for tmp in range(nE)]
     E_POSITION  = tl.E_POSI_set
     E_SKILL     = tl.E_SKILL_set
     E_SENIOR    = tl.E_SENIOR_set
@@ -229,7 +233,7 @@ def confirm(schedule):
     
     #=========================================================================================================================================================
     #(6)在特定日子中的指定班別，針對特定技能的員工，有上班人數規定
-    #需要參數:schedule, NOTPHONE_CLASS, NOTPHONE_CLASS_special, weekdaylist, SHIFTset, E_SKILL, VACnextdayset, NOT_VACnextdayset
+    #需要參數:schedule, NOTPHONE_CLASS, NOTPHONE_CLASS_special, weekdaylist, SHIFTset, E_SKILL, EMPLOYEE_t, VACnextdayset, NOT_VACnextdayset
     sk_limit_bool = True
     sk_limit_err = ''
 
@@ -240,16 +244,25 @@ def confirm(schedule):
         skill = NOTPHONE_CLASS[i][2] 
         e_in_require_skill = E_SKILL[skill]
         sk_limit = NOTPHONE_CLASS[i][1]
-
+        
+        day0 = -1
         day1 = -1
         day2 = -1
         for k in require_day:  
             for r in range(len(require_type)):
                 count = 0
+                other = 0
                 for j in e_in_require_skill:
                     if schedule[j][k] == require_type[r]:
                         count+=1
+                for j2 in EMPLOYEE:
+                    if j2 not in e_in_require_skill:
+                        if schedule[j2][k] == require_type[r]:
+                            other+=1 
 
+            if other > 0:
+                day0 = k
+                break
             if count == sk_limit:
                 continue
             elif count < sk_limit:
@@ -278,6 +291,15 @@ def confirm(schedule):
             sk_limit_err +=' class at '
             sk_limit_err +=str(day2)
             sk_limit_err +='th working day '
+        elif other > 0:
+            sk_limit_bool= False
+            sk_limit_err +='Someone who does not belong to '
+            sk_limit_err +=skill
+            sk_limit_err +=' 技能人員 was assigned to '
+            sk_limit_err +=class_type
+            sk_limit_err +=' class at '
+            sk_limit_err +=str(day0)
+            sk_limit_err +='th working day '
     if sk_limit_bool == False:
         return sk_limit_err
     
@@ -293,15 +315,24 @@ def confirm(schedule):
         sk_limit1 = NOTPHONE_CLASS_special[i][1]
         sk_limit2 = NOTPHONE_CLASS_special[i][3]
         
+        day0 = -1
         day1 = -1
         day2 = -1
         for k in require_day1:    
             for r in range(len(require_type)):
                 count = 0
+                other = 0
                 for j in e_in_require_skill:
                     if schedule[j][k] == require_type[r]:
                         count+=1
+                for j2 in EMPLOYEE:
+                    if j2 not in e_in_require_skill:
+                        if schedule[j2][k] == require_type[r]:
+                            other+=1
 
+            if other > 0:
+                day0 = k
+                break
             if count == sk_limit1:
                 continue
             elif count < sk_limit1:
@@ -330,14 +361,31 @@ def confirm(schedule):
             sk_limit_err +=' class at '
             sk_limit_err +=str(day2)
             sk_limit_err +='th working day '
+        elif other > 0:
+            sk_limit_bool= False
+            sk_limit_err +='Someone who does not belong to '
+            sk_limit_err +=skill
+            sk_limit_err +=' 技能人員 was assigned to '
+            sk_limit_err +=class_type
+            sk_limit_err +=' class at '
+            sk_limit_err +=str(day0)
+            sk_limit_err +='th working day '
         
         for k in require_day2:    
             for r in range(len(require_type)):
                 count = 0
+                other = 0
                 for j in e_in_require_skill:
                     if schedule[j][k] == require_type[r]:
                         count+=1
+                for j2 in EMPLOYEE:
+                    if j2 not in e_in_require_skill:
+                        if schedule[j2][k] == require_type[r]:
+                            other+=1
             
+            if other > 0:
+                day0 = k
+                break
             if count == sk_limit2:
                 continue
             elif count < sk_limit2:
@@ -365,6 +413,15 @@ def confirm(schedule):
             sk_limit_err +=class_type
             sk_limit_err +=' class at '
             sk_limit_err +=str(day2)
+            sk_limit_err +='th working day '
+        elif other > 0:
+            sk_limit_bool= False
+            sk_limit_err +='Someone who does not belong to '
+            sk_limit_err +=skill
+            sk_limit_err +=' 技能人員 was assigned to '
+            sk_limit_err +=class_type
+            sk_limit_err +=' class at '
+            sk_limit_err +=str(day0)
             sk_limit_err +='th working day '
         
     if sk_limit_bool == False:
@@ -489,6 +546,44 @@ def confirm(schedule):
     
     if not_assigned_bool == False:
         return not_assigned_err
+    
+    #=========================================================================================================================================================
+    #(10)無技能者不得排技能班
+
+    not_skilled_bool = True
+    not_skilled_err =''
+    for i in range(len(schedule)):
+        
+        
+        #對第i個員工的日子j
+        for j in range(len(schedule[i])):
+            
+            #other
+            if schedule[i][j] in SHIFTset['other']:
+                sk_ok = False
+                skilled = False
+                for sk in E_SKILL:
+                    if i in E_SKILL[sk]:
+                        skilled = True
+                if skilled == True:
+                    sk_ok = True
+
+                if sk_ok != True:
+                    not_skilled_bool = False
+                    not_skilled_err +=str(i)
+                    not_skilled_err +='th employee does not have the skill in able to be assinged to '
+                    not_skilled_err +=str(schedule[i][j])
+                    not_skilled_err +=' at '
+                    not_skilled_err +=str(j)
+                    not_skilled_err +='th'
+                    not_skilled_err +='working day.'
+                    break
+        
+        if not_skilled_bool == False:
+            break
+    
+    if not_skilled_bool == False:
+        return not_skilled_err
 
 
     success_mes = 'All constraints are met.'

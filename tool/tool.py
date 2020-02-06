@@ -128,6 +128,7 @@ def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, \
     try:
         t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
                         encoding=encoding_,engine='python')
+        #print(t)
         return t
     except FileNotFoundError:
         if acceptNoFile:
@@ -334,7 +335,7 @@ def calculate_NW(lastM_Schedule):
 
 	lastM_ID = lastM_Schedule[0]
 	lastday_list = lastM_Schedule[lastday_column]
-
+	#print(lastM_ID, lastday_list)
 	ansList = [0] * nE                                  #對應到本月員工的數量
 	for i,ID in enumerate(lastM_ID):                    #上月第i人的ID
 	    c = Tran_t2n(lastday_list[i], CLASS_list)       #取出此人上月末日的班別index
@@ -483,7 +484,7 @@ READ_path()
 #=============================================================================#
 # 讀取參數
 def READ_parameters(path=DIR_PARA):
-    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list
+    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list, nK_phone
     global K_CLASS_set, K_BREAK_set,   CONTAIN, ClassTime_t
 
     # weight p1~4
@@ -498,14 +499,15 @@ def READ_parameters(path=DIR_PARA):
     CLASS_list  = list(ClassTime_t.index)
     nK = len(CLASS_list)                        #班別種類數
     CONTAIN = ClassTime_t.values.tolist()       #CONTAIN_kt - 1表示班別k包含時段t，0則否
-
+    
     # class set
     KSet_t      = readFile(path+'fixed/fix_classes.csv', index_col_=[0])                    #class set
     for ki in range(len(KSet_t)):               #將檔案中的班別集合登錄成dict
         K_CLASS_set[KSet_t.index[ki]] = [ Tran_t2n(x, CLASS_list) for x in KSet_t.iloc[ki].dropna().values ]
     for ki in range(nK):
         K_CLASS_set[CLASS_list[ki]] = [ki]      #每個班別自身也都是獨立的(單一元素)集合
-
+    nK_phone = len(K_CLASS_set['phone'])
+    
     # rest set
     RSet_t      = readFile(path+'fixed/fix_resttime.csv', index_col_=[0])               #rest set
     nR = RSet_t.shape[0]         #午休種類數
@@ -552,7 +554,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     # Employee (不允許為空!)
     Employee_t  = readFile(path+'Employee'+EmployeeTest+'.csv', header_ = 0)
     Employee_t['ID'] = [ str(x) for x in Employee_t['ID'] ]           
-
+    
     nE          = Employee_t.shape[0]
     NAME_list   = list(Employee_t['Name_Chinese'])                                  #對照名字與員工index用
     ID_list     = list(Employee_t['ID'])                                            #對照ID與員工index用
@@ -580,20 +582,20 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     Employee_t['NM'] = pd.DataFrame([0] * nE)
     calculate_NM(Employee_t,lastday_ofMONTH,lastday_row,lastday_column,Schedule_t,nE)
     LastWEEK_night = list(Employee_t['NM'].values)     #上月底斷頭周
-
+    
 
     # Need
     Need_t = readFile(path+'Need'+NeedTest+'.csv', header_=0, index_col_=0).T
     DATE_list = [ int(x) for x in Need_t.index ]                    #所有的日期 - 對照用
     nD = len(DATE_list)                                             #總工作日數
     DEMAND = [list(map(int,l)) for l in Need_t.values.tolist()]     #DEMAND_jt - 日子j於時段t的需求人數(int)
-
+    
     MONTH_start = get_startD(YEAR,MONTH)                            #本月第一天是禮拜幾 (Mon=0, Tue=1..)
     AH_list, NAH_list = SetVACnext(MONTH_start, nD, DATE_list)      #VACnextdayset - 假期後或週一的日子集合
     D_WEEK_set  = SetDAYW(MONTH_start+1,mDAY,nW, list(range(nD)), DATE_list)    #第 w 週包含的日期集合
     D_WDAY_set  = SetDAY(DATE_list)                					#DAYset - 通用日子集合 [all,Mon,Tue...]
     WEEK_list   = SetWEEKD(D_WEEK_set, nW)                          #WEEK_list - 日子j所屬的那一週 
-
+    
 
     # Assign (可以為空)
     Assign_t = readFile(path+'Assign'+AssignTest+'.csv', skiprows_=[0])
@@ -656,7 +658,6 @@ def READ_limits(path=DIR_PARA):
         d = Tran_t2n( LOWER[i][0], DATE_list)
         LOWER[i][0] = d
     
-
     # upper
     Upper_t     = readFile(path+'upper_limit'+U_ttest+'.csv', skiprows_=[0])   #指定星期幾、班別，人數上限
     Upper_t[0]  = [ str(x) for x in Upper_t[0] ]                    #強制將ID設為string
@@ -668,7 +669,7 @@ def READ_limits(path=DIR_PARA):
             print('指定排班表中發現不明ID：',Upper_t.iloc[c,0],\
                 '不在員工資料的ID列表中，請再次確認ID正確性（包含大小寫、空格、換行）')
         UPPER.append( [e, Upper_t.iloc[c,1], Upper_t.iloc[c,2], Upper_t.iloc[c,3]] )
-
+    
 
     # senior
     Senior_t    = readFile(path+'senior_limit.csv', skiprows_=[0])
