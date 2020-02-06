@@ -27,8 +27,8 @@ U_ttest = ""
 global IS_APPLE
 IS_APPLE = True if os.name in ['darwin','linux'] else False     #是不是蘋果
 if IS_APPLE:
-    ENCODING = 'utf-8'      #ios系統下，不需要考慮那麼多
-    print('作業系統： iOS, 使用編碼： utf-8')
+    ENCODING = 'default'      #ios系統下，不需要考慮那麼多
+    print('作業系統： iOS, 使用編碼： default')
 else:
     ENCODING = 'default'  #excel編碼的默認值(無中文為utf-8,有中文為Big5)
     print('作業系統： Winodws, 使用編碼： default')
