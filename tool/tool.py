@@ -131,7 +131,7 @@ def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, \
                         engine='python')
         else:
             t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
-                            encoding_=ENCODING,engine='python')
+                            encoding=encoding_,engine='python')
         #print(t)
         return t
     except FileNotFoundError:
@@ -521,6 +521,8 @@ def READ_parameters(path=DIR_PARA):
     
     # position
     POSI_list   = readFile(path+'fixed/position.csv').iloc[0].tolist()  #職位高低(低到高)
+    if POSI_list[0] != '約聘':
+        ERROR('沒有偵測到約聘職位，很可能data資料夾檔案因中文編碼問題而出現亂碼，請試著將所有含中文的data資料夾檔案另存新檔並覆蓋原有檔案。')
     
     # time limit
     try:
