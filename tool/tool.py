@@ -488,7 +488,7 @@ READ_path()
 #=============================================================================#
 # 讀取參數
 def READ_parameters(path=DIR_PARA):
-    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list, nK_phone
+    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list
     global K_CLASS_set, K_BREAK_set,   CONTAIN, ClassTime_t
 
     # weight p1~4
@@ -510,7 +510,7 @@ def READ_parameters(path=DIR_PARA):
         K_CLASS_set[KSet_t.index[ki]] = [ Tran_t2n(x, CLASS_list) for x in KSet_t.iloc[ki].dropna().values ]
     for ki in range(nK):
         K_CLASS_set[CLASS_list[ki]] = [ki]      #每個班別自身也都是獨立的(單一元素)集合
-    nK_phone = len(K_CLASS_set['phone'])
+    
     
     # rest set
     RSet_t      = readFile(path+'fixed/fix_resttime.csv', index_col_=[0])               #rest set

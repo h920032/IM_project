@@ -20,7 +20,7 @@ from tool.tool import ERROR
 #K_type = ['O','A2','A3','A4','A5','MS','AS','P2','P3','P4','P5','N1','M1','W6','CD','C2','C3','C4','OB']
 #K_type_dict = {0:'O',1:'A2',2:'A3',3:'A4',4:'A5',5:'MS',6:'AS',7:'P2',8:'P3',9:'P4',10:'P5',11:'N1',12:'M1',13:'W6',14:'CD',15:'C2',16:'C3',17:'C4',18:'OB'}
 
-def alg(score_liz, main, nDAY, nEMPLOYEE, nK, posibility = 0.05):
+def alg(score_liz, main, nDAY, nEMPLOYEE, shiftset, posibility = 0.05):
 
     org_len = len(score_liz)
     #sort = sorted(score_liz, key = lambda s: s[2]) #親代排名
@@ -81,29 +81,29 @@ def alg(score_liz, main, nDAY, nEMPLOYEE, nK, posibility = 0.05):
     range_num = int(1 / posibility) - 1
     #突變
     if random.randint(0,range_num) == 0:
-        a_one_one_two[random.randint(0,a_one_one_two.shape[0]-1)][random.randint(0,a_one_one_two.shape[1]-1)] = random.randint(0,nK-1)
+        a_one_one_two[random.randint(0,a_one_one_two.shape[0]-1)][random.randint(0,a_one_one_two.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        a_two_one_two[random.randint(0,a_two_one_two.shape[0]-1)][random.randint(0,a_two_one_two.shape[1]-1)] = random.randint(0,nK-1)
+        a_two_one_two[random.randint(0,a_two_one_two.shape[0]-1)][random.randint(0,a_two_one_two.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        a_one_two_one[random.randint(0,a_one_two_one.shape[0]-1)][random.randint(0,a_one_two_one.shape[1]-1)] = random.randint(0,nK-1)
+        a_one_two_one[random.randint(0,a_one_two_one.shape[0]-1)][random.randint(0,a_one_two_one.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        a_two_two_one[random.randint(0,a_two_two_one.shape[0]-1)][random.randint(0,a_two_two_one.shape[1]-1)] = random.randint(0,nK-1)
+        a_two_two_one[random.randint(0,a_two_two_one.shape[0]-1)][random.randint(0,a_two_two_one.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        a_org_one_two[random.randint(0,a_org_one_two.shape[0]-1)][random.randint(0,a_org_one_two.shape[1]-1)] = random.randint(0,nK-1)
+        a_org_one_two[random.randint(0,a_org_one_two.shape[0]-1)][random.randint(0,a_org_one_two.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        a_org_two_one[random.randint(0,a_org_two_one.shape[0]-1)][random.randint(0,a_org_two_one.shape[1]-1)] = random.randint(0,nK-1)
+        a_org_two_one[random.randint(0,a_org_two_one.shape[0]-1)][random.randint(0,a_org_two_one.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        b_one_one_two[random.randint(0,b_one_one_two.shape[0]-1)][random.randint(0,b_one_one_two.shape[1]-1)] = random.randint(0,nK-1)
+        b_one_one_two[random.randint(0,b_one_one_two.shape[0]-1)][random.randint(0,b_one_one_two.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        b_two_one_two[random.randint(0,b_two_one_two.shape[0]-1)][random.randint(0,b_two_one_two.shape[1]-1)] = random.randint(0,nK-1)
+        b_two_one_two[random.randint(0,b_two_one_two.shape[0]-1)][random.randint(0,b_two_one_two.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        b_one_two_one[random.randint(0,b_one_two_one.shape[0]-1)][random.randint(0,b_one_two_one.shape[1]-1)] = random.randint(0,nK-1)
+        b_one_two_one[random.randint(0,b_one_two_one.shape[0]-1)][random.randint(0,b_one_two_one.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        b_two_two_one[random.randint(0,b_two_two_one.shape[0]-1)][random.randint(0,b_two_two_one.shape[1]-1)] = random.randint(0,nK-1)
+        b_two_two_one[random.randint(0,b_two_two_one.shape[0]-1)][random.randint(0,b_two_two_one.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        b_org_one_two[random.randint(0,b_org_one_two.shape[0]-1)][random.randint(0,b_org_one_two.shape[1]-1)] = random.randint(0,nK-1)
+        b_org_one_two[random.randint(0,b_org_one_two.shape[0]-1)][random.randint(0,b_org_one_two.shape[1]-1)] = random.choice(shiftset)
     if random.randint(0,range_num) == 0:
-        b_org_two_one[random.randint(0,b_org_two_one.shape[0]-1)][random.randint(0,b_org_two_one.shape[1]-1)] = random.randint(0,nK-1)
+        b_org_two_one[random.randint(0,b_org_two_one.shape[0]-1)][random.randint(0,b_org_two_one.shape[1]-1)] = random.choice(shiftset)
     
     #print(np.zeros(a_org_one_two.shape))
     #判斷是否符合
@@ -194,7 +194,6 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
     nEMPLOYEE = tl.nE
     nDAY = tl.nD
     nK = tl.nK
-    nK_phone = tl.nK_phone
     nT = tl.nT
     nR = tl.nR
     nW = tl.nW
@@ -403,7 +402,7 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
         if time.time() - tStart > timelimit:    #如果時間已到，就跳出
             print('限制時間已至，於第',i,'世代跳出')
             break
-        score_liz = alg(score_liz, main, nDAY, nEMPLOYEE, nK_phone, posibility)
+        score_liz = alg(score_liz, main, nDAY, nEMPLOYEE, SHIFTset['phone'], posibility)
         if i % 100 == 0:
             print('第',i+1,'世代最佳分數：',score_liz[0][2], ' Time: ', int(time.time() - tStart),'s')
         gene_log.append([i+1,time.time() - tStart,score_liz[0][2]])
