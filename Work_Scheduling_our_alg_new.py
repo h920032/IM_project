@@ -11,6 +11,7 @@ from tool.functions.LIMIT_ORDER import LIMIT_ORDER
 from tool.functions.CONFIRM import confirm
 #from tool.score_1para import score
 from tool.final_score import final_score
+from tool.tool import ERROR
 import tool.tool as tl
 import datetime, calendar, sys
 
@@ -1231,6 +1232,9 @@ for p in range(parent):
 print('\n產生',parent,'個結果於 initail pool (',success,'個合理解) ，共花費', (time.time()-tStart) ,'秒')
 print("\n親代最佳分數: result = ",miniresult,'\n\n')
 #print(minidf)
+
+if success <= 0:
+    ERROR('無合理解，請檢查限制式是否互相矛盾或限制不合理。')
 
 available_sol = []
 

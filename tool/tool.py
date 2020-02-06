@@ -30,8 +30,8 @@ if IS_APPLE:
     ENCODING = 'utf-8'      #ios系統下，不需要考慮那麼多
     print('作業系統： iOS, 使用編碼： utf-8')
 else:
-    ENCODING = 'utf-8-sig'  #excel必須是具有BOM的utf-8才不會亂碼
-    print('作業系統： Winodws, 使用編碼： 帶有BOM的utf-8')
+    ENCODING = 'default'  #excel必須是具有BOM的utf-8才不會亂碼
+    print('作業系統： Winodws, 使用編碼： default')
 
 # 讀檔基本資料                  
 DIR = '../data'                         #預設總資料夾檔案路徑
@@ -41,7 +41,7 @@ DIR_PARA = '../data/parameters/'        #parameters的檔案路徑
 
 # 紀錄檔案
 RECORD_FILE = './tool/record.log'      #運行紀錄檔案
-with open(RECORD_FILE, 'w', encoding=ENCODING) as f:      #用with一次性完成open、close檔案
+with open(RECORD_FILE, 'w', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
     f.write('tool.py 開始執行：'+str(datetime.now())+'\n\n')
 
 # 基本資料
@@ -126,8 +126,12 @@ def ERROR(error_text):
 def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, \
              header_=None,skiprows_=None,index_col_=None,encoding_=ENCODING):
     try:
-        t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
-                        encoding=encoding_,engine='python')
+        if ENCODING == 'default':
+            t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
+                        engine='python')
+        else:
+            t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
+                            encoding_=ENCODING,engine='python')
         #print(t)
         return t
     except FileNotFoundError:
@@ -1007,13 +1011,13 @@ class OUTPUT:
         global NAME_list, ID_list
         df = self._addHoliday(self.Schedule, ID_list, 'ID')   #假日補X
         df.insert(0, 'Name', NAME_list)                       #加上員工名字
-        if makeFile: df.to_csv(self.outputName['main'], encoding=ENCODING)
+        if makeFile: df.to_csv(self.outputName['main'], encoding='utf-8-sig')
         return df
 
     # 輸出冗員與缺工人數表
     def printLackAndOver(self, makeFile=True):
         new_2 = self._addHoliday(self.LackOverList, self.T_type, 'time')    #假日補X
-        if makeFile: new_2.to_csv(self.outputName['sub'], encoding=ENCODING)
+        if makeFile: new_2.to_csv(self.outputName['sub'], encoding='utf-8-sig')
         return new_2
     
     # 輸出綜合資訊
