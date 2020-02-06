@@ -30,7 +30,7 @@ if IS_APPLE:
     ENCODING = 'utf-8'      #ios系統下，不需要考慮那麼多
     print('作業系統： iOS, 使用編碼： utf-8')
 else:
-    ENCODING = 'default'  #excel必須是具有BOM的utf-8才不會亂碼
+    ENCODING = 'default'  #excel編碼的默認值(無中文為utf-8,有中文為Big5)
     print('作業系統： Winodws, 使用編碼： default')
 
 # 讀檔基本資料                  
