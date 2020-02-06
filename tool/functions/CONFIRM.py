@@ -25,7 +25,7 @@ necessary constraints:
 
 (9)若在非ASSIGN情況下不能排AS、MS、O班
 
-(10)無技能者不得排技能班
+(10)無特殊技能者不得排特殊技能班
 
 """
 
@@ -548,7 +548,7 @@ def confirm(schedule):
         return not_assigned_err
     
     #=========================================================================================================================================================
-    #(10)無技能者不得排技能班
+    #(10)無特殊技能者不得排特殊技能班
 
     not_skilled_bool = True
     not_skilled_err =''
@@ -563,8 +563,9 @@ def confirm(schedule):
                 sk_ok = False
                 skilled = False
                 for sk in E_SKILL:
-                    if i in E_SKILL[sk]:
-                        skilled = True
+                    if sk != 'phone':
+                        if i in E_SKILL[sk]:
+                            skilled = True
                 if skilled == True:
                     sk_ok = True
 

@@ -1,1 +1,1 @@
-./data_Ting/
+./data/
