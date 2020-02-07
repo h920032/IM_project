@@ -9,7 +9,7 @@ import tool.functions.gene_alg_new as gen
 from tool.functions.CSR_order import CSR_ORDER
 from tool.functions.LIMIT_ORDER import LIMIT_ORDER
 from tool.functions.CONFIRM import confirm
-#from tool.score_1para import score
+#from old.score_1para import score
 from tool.final_score import final_score
 from tool.tool import ERROR
 import tool.tool as tl
@@ -53,6 +53,7 @@ month = tl.MONTH
 nEMPLOYEE = tl.nE                  #總員工人數
 nDAY      = tl.nD                  #總日數
 nK        = tl.nK                  #班別種類數
+nSK       = tl.nSK                 #技能種類數
 nT        = tl.nT                  #總時段數
 nR        = tl.nR                  #午休種類數
 nW        = tl.nW                  #總週數
@@ -79,6 +80,7 @@ LMNIGHT  = tl.LastWEEK_night       #LMNIGHT_i - 表示員工i在上月終未滿�
 FRINIGHT = tl.LastDAY_night        #FRINIGHT_i - 1表示員工i在上月最後一工作日排晚班，0則否
 nightdaylimit = EMPLOYEE_t['night_perWeek']
 Shift_name = tl.CLASS_list
+SKILL_list = tl.SKILL_list
 
 # -----排班特殊限制-----#
 LOWER = tl.LOWER                   #LOWER - 日期j，班別集合ks，職位p，上班人數下限
@@ -118,6 +120,7 @@ NOT_VACnextdayset = tl.NAH_list
 
 # -------班別集合-------#
 SHIFTset= tl.K_CLASS_set                       #SHIFTset - 通用的班別集合，S=1,…,nS
+SKILLset= tl.SK_CLASS_set                       #SKILLset - 技能與班別的對應集合，SK=1,…,nSK
 S_NIGHT = SHIFTset['night']                     #S_NIGHT - 所有的晚班
 S_NOON = SHIFTset['noon']                       #S_NOON - 所有的午班
 S_BREAK =tl.K_BREAK_set
@@ -328,7 +331,14 @@ def ABLE(this_i,this_j,this_k):
             else:   #無此技能
                 ans = False
                 return ans            
-               
+
+    #無特殊技能者不得排特殊技能班
+    for item in SKILL_list:
+        if (this_k in SKILLset[item]):
+            if (this_i not in E_SKILL[item]):
+                ans = False
+                return ans
+            break        
     
     return ans                 
 
@@ -969,7 +979,7 @@ for p in range(parent):
             else: 
                 DAY_DEMAND = []
                 DAY_DEMAND.extend(CURRENT_DEMAND)
-                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['phone'], DAY, maxsurplus, maxnight, maxnoon, EMPLOYEE, arranged)
+                SHIFT_SET = SHIFT_ORDER(DAY_DEMAND, SHIFTset['all'], DAY, maxsurplus, maxnight, maxnoon, EMPLOYEE, arranged)
                 order = 0
                 #for q in range(10):
                 #    print(y, SHIFT_SET[q])
@@ -1035,7 +1045,7 @@ for p in range(parent):
                 else:
                     DAY_DEMAND = []
                     DAY_DEMAND.extend(CURRENT_DEMAND[j])
-                    SHIFT_SET = SHIFT_ORDER([DAY_DEMAND], SHIFTset['phone'], [j], maxsurplus, maxnight, maxnoon, [i], arranged)
+                    SHIFT_SET = SHIFT_ORDER([DAY_DEMAND], SHIFTset['all'], [j], maxsurplus, maxnight, maxnoon, [i], arranged)
                     SHIFT_LIST = []
                     for k in range(len(SHIFT_SET)):
                         SHIFT_LIST.append(SHIFT_SET[k][2])
@@ -1093,17 +1103,18 @@ for p in range(parent):
                 surplus_temp = -1 * CURRENT_DEMAND[j][t]
                 if surplus_temp > surplus:
                     surplus = surplus_temp
-
+    
     nightCount_temp = {}
     for i in EMPLOYEE:
         nightCount_temp[i] = 0
         if (nightdaylimit[i]>0):
+            count = 0
             for j in DAY:
                 for k in S_NIGHT:
                     if work[i, j, k] == True:
-                        nightCount_temp[i] += 1
+                        count += 1
                         break
-            nightCount_temp[i] = nightCount_temp[i] / nightdaylimit[i]
+            nightCount_temp[i] = count / nightdaylimit[i]  
         if nightCount_temp[i] > nightCount:
             nightCount = nightCount_temp[i]
     
@@ -1183,7 +1194,7 @@ for p in range(parent):
                     sumbreak += 1
     
     result = P0 * sumlack + P1 * surplus + P2 * nightCount + P3 * sumbreak + P4 * noonCount
-    #print(result2, sumlack, surplus, nightCount, sumbreak, noonCount)
+    #print(result, sumlack, surplus, nightCount, sumbreak, noonCount)
     
     #print("result2 = ", result2)
     for j in range(nDAY):

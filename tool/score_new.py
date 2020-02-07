@@ -26,4 +26,4 @@ def score(df_x,main):
     f.close()
     #os.system(main)
     #print(data)
-    return int(data[0])
+    return float(data[0])

@@ -25,6 +25,7 @@ import random as rd
 nEMPLOYEE = tl.nE                  #總員工人數
 nDAY      = tl.nD                  #總日數
 nK        = tl.nK                  #班別種類數
+nSK       = tl.nSK                 #技能種類數
 nT        = tl.nT                  #總時段數
 nR        = tl.nR                  #午休種類數
 nW        = tl.nW                  #總週數
@@ -47,6 +48,7 @@ LMNIGHT  = tl.LastWEEK_night       #LMNIGHT_i - 表示員工i在上月終未滿�
 FRINIGHT = tl.LastDAY_night        #FRINIGHT_i - 1表示員工i在上月最後一工作日排晚班，0則否
 nightdaylimit = EMPLOYEE_t['night_perWeek']
 Shift_name = tl.CLASS_list
+SKILL_list = tl.SKILL_list
 
 # -----排班特殊限制-----#
 LOWER = tl.LOWER                   #LOWER - 日期j，班別集合ks，職位p，上班人數下限
@@ -81,7 +83,8 @@ VACnextdayset = tl.AH_list                     #VACnextdayset - 假期後或週�
 NOT_VACnextdayset = tl.NAH_list 
 
 # -------班別集合-------#
-SHIFTset= tl.K_CLASS_set                       #SHIFTset - 通用的班別集合，S=1,…,nS
+SHIFTset= tl.K_CLASS_set                        #SHIFTset - 通用的班別集合，S=1,…,nS
+SKILLset= tl.SK_CLASS_set                       #SKILLset - 技能與班別的對應集合，SK=1,…,nSK
 S_NIGHT = SHIFTset['night']                     #S_NIGHT - 所有的晚班
 S_NOON = SHIFTset['noon']                       #S_NOON - 所有的午班
 S_BREAK =tl.K_BREAK_set
@@ -242,12 +245,20 @@ for i in EMPLOYEE:
     m.addConstr(noonCount >= quicksum(work[i,j,k]  for k in S_NOON for j in DAY), "c21")
 
 
-#AS MS O to A
+#非指定班別不得排班
 
 for i in EMPLOYEE:
     for j in DAY:
         for k in SHIFTset['not_assigned']:
             m.addConstr(work[i,j,k] <=  assign_par[i][j][k], "c22")
+
+#擁有技能者才可排技能班
+for i in EMPLOYEE:
+    for j in DAY:
+        for sk in SKILL_list:
+            for k in SKILLset[sk]:
+                m.addConstr(work[i,j,k] <=  (i in E_SKILL[sk]), "c23")
+
 
 #============================================================================#
 #process

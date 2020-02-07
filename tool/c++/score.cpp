@@ -5,7 +5,7 @@ int score(VAR *var, char **argv);
 
 int main(int argc, char **argv)
 {
-	int final_score = 0;
+	float final_score = 0;
 	VAR *var = new VAR;
 	read_fromfile(var, argv);
 	final_score = score(var, argv);
@@ -33,9 +33,9 @@ int score(VAR *var, char **argv)
 			}
 	
 	int **output_people = new int*[var->nDAY];
-	int lack = 0;
-	int surplus = 0;
-	int surplus_t = 0;
+	float lack = 0;
+	float surplus = 0;
+	float surplus_t = 0;
 	for (int i = 0; i < var->nDAY; i++)
 	{
 		output_people[i] = new int[var->nT];
@@ -95,13 +95,13 @@ int score(VAR *var, char **argv)
 					break;
 				}
 			}
-	int break_sum = 0;
+	float break_sum = 0;
 	for (int i = 0; i < var->nEMPLOYEE; i++)
 		for (int j = 0; j < var->nW; j++)
 			for (int k = 0; k < var->s_break.size(); k++)
 				break_sum += breakcount[i][j][k];
 	
-	int nooncount = 0;
+	float nooncount = 0;
 	for (int i = 0; i < var->nEMPLOYEE; i++)
 	{
 		int count = 0;
@@ -123,6 +123,6 @@ int score(VAR *var, char **argv)
 	}
 */	
 	//cout << lack << " " << surplus << " " << night << " " << break_sum << " " << nooncount << endl;
-	int result = var->P0 * lack + var->P1 * surplus + var->P2 * night + var->P3 * break_sum + var->P4 * nooncount;
+	float result = var->P0 * lack + var->P1 * surplus + var->P2 * night + var->P3 * break_sum + var->P4 * nooncount;
 	return (result);
 }

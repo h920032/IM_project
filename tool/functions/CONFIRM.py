@@ -40,7 +40,9 @@ def confirm(schedule):
     
     EMPLOYEE_t = tl.Employee_t
     assign = tl.ASSIGN
-    SHIFTset= tl.K_CLASS_set                       
+    SHIFTset= tl.K_CLASS_set
+    SKILL_list = tl.SKILL_list
+    SKILLset= tl.SK_CLASS_set           
     S_NIGHT = SHIFTset['night']                    
     D_WEEK = tl.D_WEEK_set
     nightdaylimit = EMPLOYEE_t['night_perWeek']
@@ -549,36 +551,32 @@ def confirm(schedule):
     
     #=========================================================================================================================================================
     #(10)無特殊技能者不得排特殊技能班
-
+    #需要參數:schedule, SKILL_list, SKILLset
     not_skilled_bool = True
     not_skilled_err =''
     for i in range(len(schedule)):
-        
-        
         #對第i個員工的日子j
         for j in range(len(schedule[i])):
-            
-            #other
-            if schedule[i][j] in SHIFTset['other']:
-                sk_ok = False
-                skilled = False
-                for sk in E_SKILL:
-                    if sk != 'phone':
-                        if i in E_SKILL[sk]:
-                            skilled = True
-                if skilled == True:
-                    sk_ok = True
+            for sk in SKILL_list:
+                #other
+                if schedule[i][j] in SKILLset[sk]:
+                    sk_ok = False
+                    if i in E_SKILL[sk]:
+                        sk_ok = True
 
-                if sk_ok != True:
-                    not_skilled_bool = False
-                    not_skilled_err +=str(i)
-                    not_skilled_err +='th employee does not have the skill in able to be assinged to '
-                    not_skilled_err +=str(schedule[i][j])
-                    not_skilled_err +=' at '
-                    not_skilled_err +=str(j)
-                    not_skilled_err +='th'
-                    not_skilled_err +='working day.'
+                    if sk_ok != True:
+                        not_skilled_bool = False
+                        not_skilled_err +=str(i)
+                        not_skilled_err +='th employee does not have the skill in able to be assinged to '
+                        not_skilled_err +=str(schedule[i][j])
+                        not_skilled_err +=' at '
+                        not_skilled_err +=str(j)
+                        not_skilled_err +='th'
+                        not_skilled_err +='working day.'
+                        break
                     break
+            if not_skilled_bool == False:
+                break
         
         if not_skilled_bool == False:
             break

@@ -67,6 +67,7 @@ NAME_list   = []        #員工中文名字
 ID_list     = []        #員工ID
 DATE_list   = []        #日期
 CLASS_list  = []        #班別名稱
+SKILL_list  = []        #技能種類
 BREAK_list  = []        #午休時段名稱(時間)
 # -------其他-------#
 AH_list     = []        #days after holiday
@@ -87,6 +88,7 @@ D_WEEK_set    = []                                                              
 D_WDAY_set    = {'Mon':[],'Tue':[],'Wed':[],'Thu':[],'Fri':[],'Sat':[],'Sun':[]}  #周幾有哪些天
 # -------班別集合-------#
 K_CLASS_set   = {'all':[], 'night':['N1','W6','M1'], 'phone':[]}    #班別分類(只有phone內的班別能減少缺工)
+SK_CLASS_set  = {}                                                  #技能與班別的對應
 K_BREAK_set   = []                                                  #有哪些午休時段
 
 
@@ -493,8 +495,8 @@ READ_path()
 #=============================================================================#
 # 讀取參數
 def READ_parameters(path=DIR_PARA):
-    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list
-    global K_CLASS_set, K_BREAK_set,   CONTAIN, ClassTime_t
+    global P, TIME_LIMIT,   nK, nR, nSK,  BREAK_list, CLASS_list, POSI_list, SKILL_list
+    global K_CLASS_set, SK_CLASS_set, K_BREAK_set,   CONTAIN, ClassTime_t
 
     # weight p1~4
     Weight_t    = readFile(path+'weight_p.csv', index_col_=0)        #權重
@@ -516,6 +518,12 @@ def READ_parameters(path=DIR_PARA):
     for ki in range(nK):
         K_CLASS_set[CLASS_list[ki]] = [ki]      #每個班別自身也都是獨立的(單一元素)集合
     
+    # skill-classes correlation
+    SK_KSet_t = readFile(path+'fixed/fix_skill_classes.csv', index_col_=[0])
+    nSK = SK_KSet_t.shape[0]    #技能種類數
+    for ki in range(nSK):               #將檔案中的技能集合登錄成dict
+        SKILL_list.append( str(SK_KSet_t.index[ki]) )
+        SK_CLASS_set[SK_KSet_t.index[ki]] = [ Tran_t2n(x, CLASS_list) for x in SK_KSet_t.iloc[ki].dropna().values ]  
     
     # rest set
     RSet_t      = readFile(path+'fixed/fix_resttime.csv', index_col_=[0])               #rest set
@@ -544,7 +552,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
     #要改的
     global YEAR, MONTH,   nW, mDAY, nE
     global NAME_list, ID_list,   LastWEEK_night, LastDAY_night,   AH_list, NAH_list, WEEK_list
-    global D_WDAY_set, D_WEEK_set,   E_SKILL_set, E_POSI_set
+    global D_WDAY_set, D_WEEK_set,   E_SKILL_set, E_POSI_set, SK_CLASS_set
     global ASSIGN, DEMAND, Employee_t, assign_par
     #要用的
     global nD, DATE_list, CLASS_list
@@ -572,7 +580,7 @@ def READ_per_MONTH(path=DIR_PER_MONTH):
 
     SKILL_NAME  = list(filter(lambda x: re.match('skill-',x), Employee_t.columns))  #自動讀取技能名稱
     E_SKILL_set = SetSKILL(Employee_t[ SKILL_NAME ])                                #特定技能的員工集合
-    E_POSI_set  = SetPOSI(Employee_t['Position'], POSI_list)                        #某職稱以上的員工集合      
+    E_POSI_set  = SetPOSI(Employee_t['Position'], POSI_list)                        #某職稱以上的員工集合  
     
 
     # Schedule (NM 及 NW 從人壽提供之上個月的班表裡面計算)

@@ -110,50 +110,62 @@ def alg(score_liz, main, nDAY, nEMPLOYEE, shiftset, posibility = 0.05):
     if confirm(a_one_one_two) == 'All constraints are met.':
         #print('a_one_one_two',a_one_one_two)
         score_liz.append((a_one_one_two,new[num_list[0]][1],score(a_one_one_two.tolist(), main)))
+        #print(score(a_one_one_two.tolist(), main))
        
     if confirm(a_two_one_two) == 'All constraints are met.':
         #print('a_two_one_two',a_two_one_two)
         score_liz.append((a_two_one_two,new[num_list[1]][1],score(a_two_one_two.tolist(), main)))
+        #print(score(a_two_one_two.tolist(), main))
     
     if confirm(a_one_two_one) == 'All constraints are met.':
         #print('a_one_two_one',a_one_two_one)
         score_liz.append((a_one_two_one,new[num_list[0]][1],score(a_one_two_one.tolist(), main)))
+        #print(score(a_one_two_one.tolist(), main))
     
     if confirm(a_two_two_one) == 'All constraints are met.':
         #print('a_two_two_one',a_two_two_one)
         score_liz.append((a_two_two_one,new[num_list[1]][1],score(a_two_two_one.tolist(), main)))
+        #print(score(a_two_two_one.tolist(), main))
     
     if confirm(a_org_one_two) == 'All constraints are met.':
         #print('a_org_one_two',a_org_one_two)
         score_liz.append((a_org_one_two,np.zeros(a_org_one_two.shape),score(a_org_one_two.tolist(), main)))
+        #print(score(a_org_one_two.tolist(), main))
     
     if confirm(a_org_two_one) == 'All constraints are met.':
         #print('a_org_two_one',a_org_two_one)
         score_liz.append((a_org_two_one,np.zeros(a_org_two_one.shape),score(a_org_two_one.tolist(), main)))
+        #print(score(a_org_two_one.tolist(), main))
     
     if confirm(b_one_one_two) == 'All constraints are met.':
         #print('b_one_one_two',b_one_one_two)
         score_liz.append((b_one_one_two,new[num_list[0]][1],score(b_one_one_two.tolist(), main)))
+        #print(score(b_one_one_two.tolist(), main))
     
     if confirm(b_two_one_two) == 'All constraints are met.':
         #print('b_two_one_two',b_two_one_two)
         score_liz.append((b_two_one_two,new[num_list[1]][1],score(b_two_one_two.tolist(), main)))
+        #print(score(b_two_one_two.tolist(), main))
     
     if confirm(b_one_two_one) == 'All constraints are met.':
         #print('b_one_two_one',b_one_two_one)
         score_liz.append((b_one_two_one,new[num_list[0]][1],score(b_one_two_one.tolist(), main)))
+        #print(score(b_one_two_one.tolist(), main))
     
     if confirm(b_two_two_one) == 'All constraints are met.':
         #print('b_two_two_one',b_two_two_one)
         score_liz.append((b_two_two_one,new[num_list[1]][1],score(b_two_two_one.tolist(), main)))
+        #print(score(b_two_two_one.tolist(), main))
 
     if confirm(b_org_one_two) == 'All constraints are met.':
         #print('b_org_one_two',b_org_one_two)
         score_liz.append((b_org_one_two,np.zeros(b_org_one_two.shape),score(b_org_one_two.tolist(), main)))
+        #print(score(b_org_one_two.tolist(), main))
 
     if confirm(b_org_two_one) == 'All constraints are met.':
         #print('b_org_two_one',b_org_two_one)
         score_liz.append((b_org_two_one,np.zeros(b_org_two_one.shape),score(b_org_two_one.tolist(), main)))
+        #print(score(b_org_two_one.tolist(), main))
              
     # sort = sorted(sort, key = lambda s: s[2],reverse = True)
     #sort = sorted(sort, key = lambda s: s[2])
@@ -402,7 +414,7 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
         if time.time() - tStart > timelimit:    #如果時間已到，就跳出
             print('限制時間已至，於第',i,'世代跳出')
             break
-        score_liz = alg(score_liz, main, nDAY, nEMPLOYEE, SHIFTset['phone'], posibility)
+        score_liz = alg(score_liz, main, nDAY, nEMPLOYEE, SHIFTset['all'], posibility)
         if i % 100 == 0:
             print('第',i+1,'世代最佳分數：',score_liz[0][2], ' Time: ', int(time.time() - tStart),'s')
         gene_log.append([i+1,time.time() - tStart,score_liz[0][2]])
