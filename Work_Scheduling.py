@@ -6,18 +6,7 @@ import pandas as pd
 from tool.final_score import final_score
 import tool.tool as tl
 import random as rd
-"""
-0101更新
-    上限改為可以指定某CSR（限制式10)
-    新增午休表格fix_resttime.csv
-    S_break及午休種類改為可以彈性調整
-    tool.py Ktype直接刪除，皆改為直接由主程式碼代入function
-    nightCount取晚班最大值時有考慮到係數（限制式14)
-0110更新
-    輸入輸出
-0112檢測完畢
-0113又出錯了
-"""
+
 """
 # Indexs 都從0開始
 
@@ -264,9 +253,9 @@ for i in EMPLOYEE:
 #process
 m.params.LogFile = './tool/gurobi.log'         #設定gurobi記錄檔的存放位置與檔名 不知為何有時沒有效果
 try:
-    m.params.TimeLimit = timelimit.loc[0][0]    #設定最多跑多久
+    m.params.TimeLimit = timelimit    #設定最多跑多久
 except:
-    if type(timelimit)=='int':
+    if type(timelimit)==int:
         m.params.TimeLimit = timelimit
     else:
         m.params.TimeLimit = 300                #預設跑五分鐘
