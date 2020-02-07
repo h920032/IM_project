@@ -646,6 +646,7 @@ for p in range(parent):
     maxnight = 0
     maxnoon = 0
     maxsurplus = 0
+    unconfimed = False
     skilled = {}
     for j in DAY:
         for k in SHIFTset['other']:
@@ -765,6 +766,9 @@ for p in range(parent):
                         BOUND -= 1
                     else:
                         continue
+                if BOUND > 0:
+                    unconfimed = True
+                    continue
             elif LIMIT[0] == 'ratio':
                 DAY_DEMAND = []
                 DAY_DEMAND.extend(CURRENT_DEMAND[j])
@@ -817,6 +821,9 @@ for p in range(parent):
                             BOUND -= 1
                         else:
                             continue
+                    if BOUND > 0:
+                        unconfimed = True
+                        continue
             elif LIMIT[0] == 'skill':
                 for k in LIMIT[3]:
                     BOUND = LIMIT[4]
@@ -867,6 +874,9 @@ for p in range(parent):
                                     skilled[Shift_name[k],j] = True
                         else:
                             continue
+                    if BOUND > 0:
+                        unconfimed = True
+                        continue
             elif LIMIT[0] == 'skill_special':
                 for k in LIMIT[3]:
                     BOUND = LIMIT[4]
@@ -917,6 +927,9 @@ for p in range(parent):
                                     skilled[Shift_name[k],j] = True
                         else:
                             continue
+                    if BOUND > 0:
+                        unconfimed = True
+                        continue
     
     sequence += 1
     if sequence >= len(LIMIT_MATRIX) and char == 'a':
@@ -966,6 +979,17 @@ for p in range(parent):
         print('Loading...')
         #優先排能減少缺工冗員最多的班
         for y in range(nEMPLOYEE*nDAY*nK):
+            if unconfimed == True:
+                for i in range(nEMPLOYEE):
+                    for j in range(nDAY):
+                        if arranged[i][j] == False:
+                            work[i,j,1] = True
+                            for t in range(nT):
+                                if CONTAIN[1][t] == 1:              
+                                    CURRENT_DEMAND[j][t] -= 1
+                            arranged[i][j] = True
+                            fix_temp[i][j] = 0
+                break
             finished = True
             count = 0
             for i in range(nEMPLOYEE):
@@ -1034,6 +1058,17 @@ for p in range(parent):
         rd.shuffle(E_LIST)
         
         for i in E_LIST:
+            if unconfimed == True:
+                for ii in range(nEMPLOYEE):
+                    for j in range(nDAY):
+                        if arranged[ii][j] == False:
+                            work[ii,j,1] = True
+                            for t in range(nT):
+                                if CONTAIN[1][t] == 1:              
+                                    CURRENT_DEMAND[j][t] -= 1
+                            arranged[ii][j] = True
+                            fix_temp[ii][j] = 0
+                break
             DAY_SET = DAY_ORDER(DAY, CURRENT_DEMAND)
             DAY_LIST = []
             for h in range(len(DAY_SET)):
@@ -1090,6 +1125,7 @@ for p in range(parent):
     #work, fix_temp, CURRENT_DEMAND = ARRANGEMENT(work, nEMPLOYEE, nDAY, nK, CONTAIN, CURRENT_DEMAND, nT)
     fix.append(fix_temp)
     #print(fix)
+    
     
     #=================================================================================================#
     #計算變數
@@ -1159,7 +1195,7 @@ for p in range(parent):
                     break
             else:
                 print('CSR ',E_NAME[i],' 在',DATES[j],'號的排班發生錯誤。')
-                print('請嘗試讓程式運行更多時間，或是減少限制條件。\n')
+                ERROR('請嘗試讓程式運行更多時間，或是減少限制條件。\n')
         which_worktime.append(tmp)
         which_worktime2.append(tmp2)
             
@@ -1241,11 +1277,11 @@ for p in range(parent):
     #====================================================================================================#
     #====================================================================================================#
 print('\n產生',parent,'個結果於 initail pool (',success,'個合理解) ，共花費', (time.time()-tStart) ,'秒')
-print("\n親代最佳分數: result = ",miniresult,'\n\n')
-#print(minidf)
-
 if success <= 0:
     ERROR('無合理解，請檢查限制式是否互相矛盾或限制不合理。')
+
+print("\n親代最佳分數: result = ",miniresult,'\n\n')
+#print(score(minidf))
 
 available_sol = []
 
