@@ -59,7 +59,7 @@ int score(VAR *var, char **argv)
 	{
 		if (var->nightdaylimit[i] > 0)
 		{
-			int count = 0;
+			float count = 0;
 			for (int j = 0; j < var->nDAY; j++)
 			{
 				vector<int>::iterator it = find(var->night.begin(), var->night.end(), var->df_x[i][j]);
@@ -104,7 +104,7 @@ int score(VAR *var, char **argv)
 	float nooncount = 0;
 	for (int i = 0; i < var->nEMPLOYEE; i++)
 	{
-		int count = 0;
+		float count = 0;
 		for (int j = 0; j < var->nDAY; j++)
 		{
 			vector<int>::iterator it = find(var->noon.begin(), var->noon.end(), var->df_x[i][j]);
