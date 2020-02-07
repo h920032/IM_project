@@ -493,7 +493,7 @@ READ_path()
 #=============================================================================#
 # 讀取參數
 def READ_parameters(path=DIR_PARA):
-    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list, nK_phone
+    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list
     global K_CLASS_set, K_BREAK_set,   CONTAIN, ClassTime_t
 
     # weight p1~4
@@ -515,7 +515,7 @@ def READ_parameters(path=DIR_PARA):
         K_CLASS_set[KSet_t.index[ki]] = [ Tran_t2n(x, CLASS_list) for x in KSet_t.iloc[ki].dropna().values ]
     for ki in range(nK):
         K_CLASS_set[CLASS_list[ki]] = [ki]      #每個班別自身也都是獨立的(單一元素)集合
-    nK_phone = len(K_CLASS_set['phone'])
+    
     
     # rest set
     RSet_t      = readFile(path+'fixed/fix_resttime.csv', index_col_=[0])               #rest set
@@ -526,8 +526,8 @@ def READ_parameters(path=DIR_PARA):
     
     # position
     POSI_list   = readFile(path+'fixed/position.csv').iloc[0].tolist()  #職位高低(低到高)
-    if POSI_list[0] != '約聘':
-        ERROR('沒有偵測到約聘職位，很可能data資料夾檔案因中文編碼問題而出現亂碼，請試著將所有含中文的data資料夾檔案另存新檔並覆蓋原有檔案。')
+    #if POSI_list[0] != '約聘':
+    #    ERROR('沒有偵測到約聘職位，很可能data資料夾檔案因中文編碼問題而出現亂碼，請試著將所有含中文的data資料夾檔案另存新檔並覆蓋原有檔案。')
     
     # time limit
     try:
