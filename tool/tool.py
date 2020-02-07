@@ -27,11 +27,11 @@ U_ttest = ""
 global IS_APPLE
 IS_APPLE = True if os.name in ['darwin','linux'] else False     #是不是蘋果
 if IS_APPLE:
-    ENCODING = 'default'      #ios系統下，不需要考慮那麼多
-    print('作業系統： iOS, 使用編碼： default')
+    ENCODING = 'utf-8'      #ios系統下，不需要考慮那麼多
+    print('作業系統： iOS, 使用編碼： utf-8')
 else:
-    ENCODING = 'default'  #excel編碼的默認值(無中文為utf-8,有中文為Big5)
-    print('作業系統： Winodws, 使用編碼： default')
+    ENCODING = 'utf-8-sig'  #excel編碼的默認值(無中文為utf-8,有中文為utf-8-sig或是Big5)
+    print('作業系統： Winodws, 使用編碼： utf-8-sig')
 
 # 讀檔基本資料                  
 DIR = '../data'                         #預設總資料夾檔案路徑
@@ -41,7 +41,7 @@ DIR_PARA = '../data/parameters/'        #parameters的檔案路徑
 
 # 紀錄檔案
 RECORD_FILE = './tool/record.log'      #運行紀錄檔案
-with open(RECORD_FILE, 'w', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
+with open(RECORD_FILE, 'w', encoding=ENCODING) as f:      #用with一次性完成open、close檔案
     f.write('tool.py 開始執行：'+str(datetime.now())+'\n\n')
 
 # 基本資料
@@ -112,13 +112,13 @@ Upper_shift = []
 # print到記錄檔
 def PRINT(text):
     print(text)
-    with open(RECORD_FILE,'a', encoding='utf-8-sig') as f:      #用with一次性完成open、close檔案
+    with open(RECORD_FILE,'a', encoding=ENCODING) as f:      #用with一次性完成open、close檔案
         f.write(text+'\n')
 
 # 回報錯誤、儲存錯誤檔案並結束程式
 def ERROR(error_text):
     print('\n\n= ! = '+error_text+'\n\n')
-    with open('./ERROR.log','w', encoding='utf-8-sig') as f:    #用with一次性完成open、close檔案
+    with open('./ERROR.log','w', encoding=ENCODING) as f:    #用with一次性完成open、close檔案
         f.write(error_text)
     sys.exit()
 
@@ -140,8 +140,13 @@ def readFile(dir, default=pd.DataFrame(), acceptNoFile=False, \
         else:
             ERROR('找不到檔案：'+dir)
     except:
-        #encoding='utf-8-sig',
-        return default  #有檔案但是讀不了:多半是沒有限制式，使skiprow後為空。 一律用預設值
+        try: #檔案編碼格式不同
+            t = pd.read_csv(dir, header=header_,skiprows=skiprows_,index_col=index_col_,\
+                        engine='python')
+            #print(t)
+            return t
+        except:
+            return default  #有檔案但是讀不了:多半是沒有限制式，使skiprow後為空。 一律用預設值
 
 """===========================================
 index與實際數值轉換
@@ -488,7 +493,7 @@ READ_path()
 #=============================================================================#
 # 讀取參數
 def READ_parameters(path=DIR_PARA):
-    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list
+    global P, TIME_LIMIT,   nK, nR,   BREAK_list, CLASS_list, POSI_list, nK_phone
     global K_CLASS_set, K_BREAK_set,   CONTAIN, ClassTime_t
 
     # weight p1~4
@@ -510,7 +515,7 @@ def READ_parameters(path=DIR_PARA):
         K_CLASS_set[KSet_t.index[ki]] = [ Tran_t2n(x, CLASS_list) for x in KSet_t.iloc[ki].dropna().values ]
     for ki in range(nK):
         K_CLASS_set[CLASS_list[ki]] = [ki]      #每個班別自身也都是獨立的(單一元素)集合
-    
+    nK_phone = len(K_CLASS_set['phone'])
     
     # rest set
     RSet_t      = readFile(path+'fixed/fix_resttime.csv', index_col_=[0])               #rest set
@@ -1013,13 +1018,13 @@ class OUTPUT:
         global NAME_list, ID_list
         df = self._addHoliday(self.Schedule, ID_list, 'ID')   #假日補X
         df.insert(0, 'Name', NAME_list)                       #加上員工名字
-        if makeFile: df.to_csv(self.outputName['main'], encoding='utf-8-sig')
+        if makeFile: df.to_csv(self.outputName['main'], encoding=ENCODING)
         return df
 
     # 輸出冗員與缺工人數表
     def printLackAndOver(self, makeFile=True):
         new_2 = self._addHoliday(self.LackOverList, self.T_type, 'time')    #假日補X
-        if makeFile: new_2.to_csv(self.outputName['sub'], encoding='utf-8-sig')
+        if makeFile: new_2.to_csv(self.outputName['sub'], encoding=ENCODING)
         return new_2
     
     # 輸出綜合資訊
