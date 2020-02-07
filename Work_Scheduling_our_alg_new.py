@@ -821,9 +821,6 @@ for p in range(parent):
                             BOUND -= 1
                         else:
                             continue
-                    if BOUND > 0:
-                        unconfimed = True
-                        continue
             elif LIMIT[0] == 'skill':
                 for k in LIMIT[3]:
                     BOUND = LIMIT[4]

@@ -8366,3 +8366,69 @@ Solution count 10: 96055 96055 96055 ... 96955
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 9.605500000000e+04, best bound 9.605499986537e+04, gap 0.0000%
+
+Gurobi 8.1.1 (win64) logging started 02/08/20 03:40:56
+
+Changed value of parameter LogFile to ./tool/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 1000000000.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 22474 rows, 17898 columns and 412409 nonzeros
+Variable types: 483 continuous, 17415 integer (17415 binary)
+Coefficient statistics:
+  Matrix range     [2e-01, 5e+00]
+  Objective range  [8e+01, 2e+04]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve removed 19201 rows and 7079 columns
+Presolve time: 0.67s
+Presolved: 3273 rows, 10819 columns, 122985 nonzeros
+Variable types: 300 continuous, 10519 integer (10416 binary)
+
+Root relaxation: infeasible, 4971 iterations, 0.16 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0               - infeasible      -     -    0s
+
+Explored 0 nodes (4971 simplex iterations) in 0.95 seconds
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.1.1 (win64) logging started 02/08/20 03:43:10
+
+Changed value of parameter LogFile to ./tool/gurobi.log
+   Prev: gurobi.log  Default: 
+Changed value of parameter TimeLimit to 1000000000.0
+   Prev: 1e+100  Min: 0.0  Max: 1e+100  Default: 1e+100
+Optimize a model with 21965 rows, 18333 columns and 429899 nonzeros
+Variable types: 483 continuous, 17850 integer (17850 binary)
+Coefficient statistics:
+  Matrix range     [2e-01, 5e+00]
+  Objective range  [8e+01, 1e+04]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 3e+01]
+Presolve removed 19175 rows and 7202 columns
+Presolve time: 0.78s
+Presolved: 2790 rows, 11131 columns, 140703 nonzeros
+Variable types: 301 continuous, 10830 integer (10695 binary)
+
+Root relaxation: infeasible, 4147 iterations, 0.20 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0               - infeasible      -     -    1s
+
+Explored 0 nodes (4147 simplex iterations) in 1.12 seconds
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
