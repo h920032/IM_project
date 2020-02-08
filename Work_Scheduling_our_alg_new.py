@@ -729,6 +729,15 @@ for p in range(parent):
                         break
                     i = LOWER_SET[x][0]
                     k = LOWER_SET[x][1]
+                    if k in SHIFTset['not_assigned']:
+                        continue
+                    skill_limit = False
+                    for oth in SKILL:
+                        if k == SHIFTset[oth[0]][0]:
+                            skill_limit = True
+                            break
+                    if skill_limit == True:
+                        continue
                     if ABLE(i, j, k) == True: #若此人可以排此班，就排
                         repeat = False
                         if REPEAT(i, j, k) == True:
@@ -775,6 +784,15 @@ for p in range(parent):
                 RATIO_SET = LIMIT_CSR_SHIFT_ORDER(DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                 rd.shuffle(LIMIT[3])
                 for k in LIMIT[3]:
+                    if k in SHIFTset['not_assigned']:
+                        continue
+                    skill_limit = False
+                    for oth in SKILL:
+                        if k == SHIFTset[oth[0]][0]:
+                            skill_limit = True
+                            break
+                    if skill_limit == True:
+                        continue
                     BOUND = LIMIT[4]
                     #RATIO_CSR_SET = RATIO_CSR_ORDER(DAY_DEMAND, k, j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                     RATIO_CSR_LIST = []
@@ -821,8 +839,13 @@ for p in range(parent):
                             BOUND -= 1
                         else:
                             continue
+                    if BOUND > 0:
+                        unconfimed = True
+                        continue
             elif LIMIT[0] == 'skill':
                 for k in LIMIT[3]:
+                    if k in SHIFTset['not_assigned']:
+                        continue
                     BOUND = LIMIT[4]
                     SPECIAL_CSR_SET = SPECIAL_CSR_ORDER(k, j, maxnight, CSR_LIST)
                     SPECIAL_CSR_LIST = []
@@ -876,6 +899,8 @@ for p in range(parent):
                         continue
             elif LIMIT[0] == 'skill_special':
                 for k in LIMIT[3]:
+                    if k in SHIFTset['not_assigned']:
+                        continue
                     BOUND = LIMIT[4]
                     SPECIAL_CSR_SET = SPECIAL_CSR_ORDER(k, j, maxnight, CSR_LIST)
                     SPECIAL_CSR_LIST = []
