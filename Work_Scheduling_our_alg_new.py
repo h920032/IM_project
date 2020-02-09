@@ -662,7 +662,7 @@ success = 0
 #產生100個親代的迴圈
 for p in range(parent):
     
-    ordercount = (p)%10+1     #每重算一次SHIFT_SET的排序數
+    ordercount = (p)%5+2     #每重算一次SHIFT_SET的排序數
     maxnight = 0
     maxnoon = 0
     maxsurplus = 0
@@ -1069,7 +1069,7 @@ for p in range(parent):
                     fix_temp[i][j] = 1
                     break
     if p < cutpoint:
-        print('Loading...')
+        #print('Loading...')
         #優先排能減少缺工冗員最多的班
         for y in range(nEMPLOYEE*nDAY*nK):
             if unconfimed == True:
@@ -1091,7 +1091,10 @@ for p in range(parent):
                         count += 1
                         finished = False
             #print(y, count)
+            sys.stdout.write("\rLoading...("+str(count)+")*")
+            sys.stdout.flush()
             if finished == True:
+                sys.stdout.write("\n")
                 break
             else: 
                 DAY_DEMAND = []
