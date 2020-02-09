@@ -338,7 +338,25 @@ def ABLE(this_i,this_j,this_k):
             if (this_i not in E_SKILL[item]):
                 ans = False
                 return ans
-            break        
+
+    #年資限制
+    for i in range(len(PERCENT)):
+        item = PERCENT[i]
+        if (this_k in SHIFTset[item[1]]):
+            if (this_j in DAYset[item[0]]):
+                if (this_i not in E_SENIOR[i]):
+                    countS = 0
+                    countT = 0
+                    for s in E_SENIOR[i]:
+                        if work[s,this_j,this_k] == True:
+                            countS += 1
+                    for t in EMPLOYEE:
+                        if work[t,this_j,this_k] == True:
+                            countT += 1
+                    if (countS/(countT+1) < item[2]):
+                        ans = False
+                        return ans
+
     
     return ans                 
 
@@ -531,14 +549,16 @@ def LIMIT_CSR_SHIFT_ORDER(demand, shift_list, day, maxsurplus, maxnight, maxnoon
             d = P0 * np.sum(dem_l) + P1 * dem_su + P2 * dem_ni + P3 * dem_br + P4 * dem_no
             for oth in SKILL:
                 if SHIFTset[oth[0]][0] not in SHIFTset['phone']:
-                    #if skilled[oth[0],day]==False:
-                    #    print(E_SKILL[oth[2]], oth[0], day, skilled[oth[0],day])
-                    if i in E_SKILL[oth[2]] and skilled[oth[0],day] == False:
+                    if i in E_SKILL[oth[2]] and len(skilled[oth[0],day]) < oth[1]:
                         d = d * 1000000*nEMPLOYEE*nDAY*nT
             for oth in SKILL_SPECIAL:
                 if SHIFTset[oth[0]][0] not in SHIFTset['phone']:
-                    if i in E_SKILL[oth[2]] and skilled[oth[0],day] == False:
-                        d = d * 1000000*nEMPLOYEE*nDAY*nT
+                    if day in VACnextdayset:
+                        if i in E_SKILL[oth[2]] and len(skilled[oth[0],day]) < oth[1]:
+                            d = d * 1000000*nEMPLOYEE*nDAY*nT
+                    elif day in NOT_VACnextdayset:
+                        if i in E_SKILL[oth[2]] and len(skilled[oth[0],day]) < oth[3]:
+                            d = d * 1000000*nEMPLOYEE*nDAY*nT
             ans.append([i,s,d])
     ans.sort(key=takeNeck, reverse=False)
 
@@ -649,8 +669,8 @@ for p in range(parent):
     unconfimed = False
     skilled = {}
     for j in DAY:
-        for k in SHIFTset['other']:
-            skilled[Shift_name[k],j] = False
+        for k in SHIFTset['all']:
+            skilled[Shift_name[k],j] = []
         
     #動態需工人數
     CURRENT_DEMAND = [tmp for tmp in range(nDAY)]
@@ -731,13 +751,29 @@ for p in range(parent):
                     k = LOWER_SET[x][1]
                     if k in SHIFTset['not_assigned']:
                         continue
-                    skill_limit = False
                     for oth in SKILL:
                         if k == SHIFTset[oth[0]][0]:
-                            skill_limit = True
+                            if skilled[Shift_name[k],j] != []:
+                                for sk in skilled[Shift_name[k],j]:
+                                    if sk in CSR_LIST:
+                                        BOUND -= 1
                             break
-                    if skill_limit == True:
-                        continue
+                    for oth in SKILL_SPECIAL:
+                        if k == SHIFTset[oth[0]][0]:
+                            if skilled[Shift_name[k],j] != []:
+                                for sk in skilled[Shift_name[k],j]:
+                                    if sk in CSR_LIST:
+                                        BOUND -= 1
+                            break
+                    for ra in PERCENT:
+                        if j in DAYset[ra[0]]:
+                            if k in SHIFTset[ra[1]]:
+                                if skilled[Shift_name[k],j] != []:
+                                    for sk in skilled[Shift_name[k],j]:
+                                        if sk in CSR_LIST:
+                                            BOUND -= 1
+                    if BOUND <= 0:
+                        break
                     if ABLE(i, j, k) == True: #若此人可以排此班，就排
                         repeat = False
                         if REPEAT(i, j, k) == True:
@@ -773,6 +809,7 @@ for p in range(parent):
                             if no > maxnoon:
                                 maxnoon = no
                         BOUND -= 1
+                        skilled[Shift_name[k],j].append(i)
                     else:
                         continue
                 if BOUND > 0:
@@ -784,16 +821,37 @@ for p in range(parent):
                 RATIO_SET = LIMIT_CSR_SHIFT_ORDER(DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                 rd.shuffle(LIMIT[3])
                 for k in LIMIT[3]:
+                    BOUND = LIMIT[4]
                     if k in SHIFTset['not_assigned']:
                         continue
                     skill_limit = False
                     for oth in SKILL:
                         if k == SHIFTset[oth[0]][0]:
                             skill_limit = True
+                            #if skilled[Shift_name[k],j] != []:
+                            #    for sk in skilled[Shift_name[k],j]:
+                            #        if sk in CSR_LIST:
+                            #            BOUND -= 1
                             break
+                    for oth in SKILL_SPECIAL:
+                        if k == SHIFTset[oth[0]][0]:
+                            skill_limit = True
+                            #if skilled[Shift_name[k],j] != []:
+                            #    for sk in skilled[Shift_name[k],j]:
+                            #        if sk in CSR_LIST:
+                            #            BOUND -= 1
+                            break
+                    for low in LOWER:
+                        if j == low[0]:
+                            if k in SHIFTset[low[1]]:
+                                if skilled[Shift_name[k],j] != []:
+                                    for sk in skilled[Shift_name[k],j]:
+                                        if sk in CSR_LIST:
+                                            BOUND -= 1
+                    if BOUND <= 0:
+                        continue
                     if skill_limit == True:
                         continue
-                    BOUND = LIMIT[4]
                     #RATIO_CSR_SET = RATIO_CSR_ORDER(DAY_DEMAND, k, j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                     RATIO_CSR_LIST = []
                     for i in range(len(RATIO_SET)):
@@ -837,6 +895,7 @@ for p in range(parent):
                                 if no > maxnoon:
                                     maxnoon = no
                             BOUND -= 1
+                            skilled[Shift_name[k],j].append(i)
                         else:
                             continue
                     if BOUND > 0:
@@ -847,6 +906,22 @@ for p in range(parent):
                     if k in SHIFTset['not_assigned']:
                         continue
                     BOUND = LIMIT[4]
+                    for low in LOWER:
+                        if j == low[0]:
+                            if k in SHIFTset[low[1]]:
+                                if skilled[Shift_name[k],j] != []:
+                                    for sk in skilled[Shift_name[k],j]:
+                                        if sk in CSR_LIST:
+                                            BOUND -= 1
+                    for ra in PERCENT:
+                        if j in DAYset[ra[0]]:
+                            if k in SHIFTset[ra[1]]:
+                                if skilled[Shift_name[k],j] != []:
+                                    for sk in skilled[Shift_name[k],j]:
+                                        if sk in CSR_LIST:
+                                            BOUND -= 1
+                    if BOUND <= 0:
+                        continue
                     SPECIAL_CSR_SET = SPECIAL_CSR_ORDER(k, j, maxnight, CSR_LIST)
                     SPECIAL_CSR_LIST = []
                     for i in range(len(SPECIAL_CSR_SET)):
@@ -889,9 +964,7 @@ for p in range(parent):
                                 if no > maxnoon:
                                     maxnoon = no
                             BOUND -= 1
-                            if BOUND <= 0:
-                                if k not in SHIFTset['phone']:
-                                    skilled[Shift_name[k],j] = True
+                            skilled[Shift_name[k],j].append(i)
                         else:
                             continue
                     if BOUND > 0:
@@ -944,9 +1017,7 @@ for p in range(parent):
                                 if no > maxnoon:
                                     maxnoon = no
                             BOUND -= 1
-                            if BOUND <= 0:
-                                if k not in SHIFTset['phone']:
-                                    skilled[Shift_name[k],j] = True
+                            skilled[Shift_name[k],j].append(i)
                         else:
                             continue
                     if BOUND > 0:
