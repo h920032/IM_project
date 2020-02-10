@@ -471,10 +471,12 @@ def SHIFT_ORDER(demand, shift, day, maxsurplus, maxnight, maxnoon, csr, arranged
     
     return ans 
 
-def LIMIT_CSR_SHIFT_ORDER(demand, shift_list, day, maxsurplus, maxnight, maxnoon, csr_list, skilled):
+def LIMIT_CSR_SHIFT_ORDER(TYPE, demand, shift_list, day, maxsurplus, maxnight, maxnoon, csr_list, skilled):
     ans = []
     for i in csr_list:
         for s in shift_list:
+            if ABLE(i,day,s)==False:
+                continue
             demand_t = []
             demand_t.extend(demand)
             for t in range(nT):
@@ -551,6 +553,12 @@ def LIMIT_CSR_SHIFT_ORDER(demand, shift_list, day, maxsurplus, maxnight, maxnoon
                 if SHIFTset[oth[0]][0] not in SHIFTset['phone']:
                     if i in E_SKILL[oth[2]] and len(skilled[oth[0],day]) < oth[1]:
                         d = d * 1000000*nEMPLOYEE*nDAY*nT
+                elif SHIFTset[oth[0]][0] in S_NIGHT and s == SHIFTset[oth[0]][0]:
+                    d = d - P2
+                elif SHIFTset[oth[0]][0] in S_NOON and s == SHIFTset[oth[0]][0]:
+                    d = d - P4
+                elif SHIFTset[oth[0]][0] in SHIFTset['morning'] and s == SHIFTset[oth[0]][0]:
+                    d = d - P0 * np.sum(dem_l)
             for oth in SKILL_SPECIAL:
                 if SHIFTset[oth[0]][0] not in SHIFTset['phone']:
                     if day in VACnextdayset:
@@ -559,6 +567,25 @@ def LIMIT_CSR_SHIFT_ORDER(demand, shift_list, day, maxsurplus, maxnight, maxnoon
                     elif day in NOT_VACnextdayset:
                         if i in E_SKILL[oth[2]] and len(skilled[oth[0],day]) < oth[3]:
                             d = d * 1000000*nEMPLOYEE*nDAY*nT
+                elif SHIFTset[oth[0]][0] in S_NIGHT and s == SHIFTset[oth[0]][0]:
+                    d = d - P2
+                elif SHIFTset[oth[0]][0] in S_NOON and s == SHIFTset[oth[0]][0]:
+                    d = d - P4
+                elif SHIFTset[oth[0]][0] in SHIFTset['morning'] and s == SHIFTset[oth[0]][0]:
+                    d = d - P0 * np.sum(dem_l)
+            if TYPE == 'lower':
+                for per in range(len(PERCENT)):
+                    ra = PERCENT[per]
+                    if day in DAYset[ra[0]]:
+                            if s in SHIFTset[ra[1]]:
+                                if i in E_SENIOR[per]:
+                                    d = d - P0 * np.sum(dem_l)
+            elif TYPE == 'ratio':
+                for low in LOWER:
+                    if day == low[0]:
+                        if s in SHIFTset[low[1]]:
+                            if i in E_POSITION[low[2]]:
+                                d = d - P0 * np.sum(dem_l)
             ans.append([i,s,d])
     ans.sort(key=takeNeck, reverse=False)
 
@@ -742,7 +769,7 @@ for p in range(parent):
                 #for i in CSR_LIST:
                 DAY_DEMAND = []
                 DAY_DEMAND.extend(CURRENT_DEMAND[j])
-                LOWER_SET = LIMIT_CSR_SHIFT_ORDER(DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
+                LOWER_SET = LIMIT_CSR_SHIFT_ORDER(LIMIT[0], DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                 
                 for x in range(len(LOWER_SET)):
                     if BOUND <= 0:
@@ -818,7 +845,7 @@ for p in range(parent):
             elif LIMIT[0] == 'ratio':
                 DAY_DEMAND = []
                 DAY_DEMAND.extend(CURRENT_DEMAND[j])
-                RATIO_SET = LIMIT_CSR_SHIFT_ORDER(DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
+                RATIO_SET = LIMIT_CSR_SHIFT_ORDER(LIMIT[0], DAY_DEMAND, LIMIT[3], j, maxsurplus, maxnight, maxnoon, CSR_LIST, skilled)
                 rd.shuffle(LIMIT[3])
                 for k in LIMIT[3]:
                     BOUND = LIMIT[4]
