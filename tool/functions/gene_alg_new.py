@@ -396,6 +396,11 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
     main += " "
     
     #print(main)
+    shiftset = []
+    shiftset.extend(SHIFTset['phone'])
+    for i in SHIFTset['not_assigned']:
+        if i in shiftset:
+            shiftset.remove(i)
 
     print('per_month_dir =',per_month_dir)
     i_nb = []
@@ -414,7 +419,7 @@ def gene_alg(timelimit,avaliable_sol,fix,gen,per_month_dir=tl.DIR_PER_MONTH,fixe
         if time.time() - tStart > timelimit:    #如果時間已到，就跳出
             print('限制時間已至，於第',i,'世代跳出')
             break
-        score_liz = alg(score_liz, main, nDAY, nEMPLOYEE, SHIFTset['phone'], posibility)
+        score_liz = alg(score_liz, main, nDAY, nEMPLOYEE, shiftset, posibility)
         if i % 100 == 0:
             print('第',i+1,'世代最佳分數：',score_liz[0][2], ' Time: ', int(time.time() - tStart),'s')
         gene_log.append([i+1,time.time() - tStart,score_liz[0][2]])

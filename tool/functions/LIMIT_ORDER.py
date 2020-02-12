@@ -77,17 +77,58 @@ def LIMIT_ORDER(N):
 	"""===========================================
 	資料前處理
 	==========================================="""
-	# #upper limit: (all), j_set, k_set, n
-	# for i in U:
-	# 	n = int(i[2])
-	# 	avg = avgNeed(i[0],i[1], DAY,K,K_TIME,Need)
-	# 	neck = float( n - avg )						#剩餘可動人手 = 上限人數 - 平均需求人數 (很可能是負數)
-	# 	limits.append([ 'upper', POSI['任意'], DAY[i[0]], K[i[1]], avg, neck])	
-
+	posi = {}
+	for i in POSI:
+		posi[i] = len(POSI[i])
+		for j in POSI[i]:
+			done = False
+			for k in SK:
+				if j in SKILL[k[2]] and k[2] != 'phone':
+					posi[i] -= 1
+					done = True
+					break
+			if done == True:
+				continue
+			for ks in SK_S:
+				if j in SKILL[ks[2]] and k[2] != 'phone':
+					posi[i] -= 1
+					break
+	senior = [tmp for tmp in range(len(SENIOR))]
+	for i in range(len(SENIOR)):
+		senior[i] = len(SENIOR[i])
+		for j in SENIOR[i]:
+			done = False
+			for k in SK:
+				if j in SKILL[k[2]] and k[2] != 'phone':
+					senior[i] -= 1
+					done = True
+					break
+			if done == True:
+				continue
+			for ks in SK_S:
+				if j in SKILL[ks[2]] and k[2] != 'phone':
+					senior[i] -= 1
+					break
+	skill = {}
+	for i in SKILL:
+		skill[i] = len(SKILL[i])
+		for j in SKILL[i]:
+			done = False
+			for k in SK:
+				if i != k[2] and j in SKILL[k[2]] and k[2] != 'phone':
+					skill[i] -= 1
+					done = True
+					break
+			if done == True:
+				continue
+			for ks in SK_S:
+				if i != ks[2] and j in SKILL[ks[2]] and k[2] != 'phone':
+					skill[i] -= 1
+					break
 	# lower limit: j, k_set, i(position), n
 	for i in L:
 		n = int(i[3])
-		neck = float( len(POSI[i[2]]) - n )
+		neck = float( posi[i[2]] - n )
 		limits.append([ 'lower', POSI[i[2]], [int(i[0])], K[i[1]], n, neck])	
 
 	#senior limit: j_set, k_set, n, i(senior) 
@@ -96,21 +137,21 @@ def LIMIT_ORDER(N):
 		n = float(i[2])
 		bound = n*avgNeed(i[0], i[1], DAY,K,K_TIME,Need)/len(K[i[1]])
 		#計算瓶頸程度：總可用人數 - 需求人數(n*平均需求人數/總班別數)
-		neck = len(SENIOR[ii]) - bound	#瓶頸程度=剩餘可動人手
+		neck = senior[ii] - bound	#瓶頸程度=剩餘可動人手
 		limits.append([ 'ratio', SENIOR[ii], DAY[i[0]], K[i[1]], bound, neck])	
 	
 	# skill limit: k_set, need, i(skill)
 	for i in SK:
 		n = int(i[1])
-		neck = float( len(SKILL[i[2]]) - n )
+		neck = float( skill[i[2]] - n )
 		limits.append([ 'skill', SKILL[i[2]], DAY['all'], K[i[0]], n, neck])	
 	
 	# skill_special limit: k_set, need, i(skill), special_need
 	for i in SK_S:
 		n = int(i[1])
 		n_s = int(i[3])
-		neck = float( len(SKILL[i[2]]) - n )
-		neck_s = float( len(SKILL[i[2]]) - n_s )
+		neck = float( skill[i[2]] - n )
+		neck_s = float( skill[i[2]] - n_s )
 		limits.append([ 'skill', SKILL[i[2]], nVAC, K[i[0]], n, neck])
 		limits.append([ 'skill_special', SKILL[i[2]], VAC, K[i[0]], n_s, neck_s])	
 	"""===========================================
