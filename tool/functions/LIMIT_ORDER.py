@@ -74,6 +74,7 @@ def LIMIT_ORDER(N):
 	nVAC = tl.NAH_list
 	K = tl.K_CLASS_set
 	K_TIME = tl.CONTAIN
+	IGNORE = False
 	"""===========================================
 	資料前處理
 	==========================================="""
@@ -135,7 +136,10 @@ def LIMIT_ORDER(N):
 	for ii in range(len(S)):	#get SENIOR without index
 		i = S[ii]
 		n = float(i[2])
-		bound = n*avgNeed(i[0], i[1], DAY,K,K_TIME,Need)/len(K[i[1]])
+		if IGNORE == True:
+			bound = 1
+		else:
+			bound = n*avgNeed(i[0], i[1], DAY,K,K_TIME,Need)/len(K[i[1]])
 		#計算瓶頸程度：總可用人數 - 需求人數(n*平均需求人數/總班別數)
 		neck = senior[ii] - bound	#瓶頸程度=剩餘可動人手
 		limits.append([ 'ratio', SENIOR[ii], DAY[i[0]], K[i[1]], bound, neck])	

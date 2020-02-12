@@ -4,12 +4,10 @@ import re, time
 import numpy as np
 import pandas as pd
 import random as rd
-#import tool.functions.gene_alg as gen
 import tool.functions.gene_alg_new as gen
 from tool.functions.CSR_order import CSR_ORDER
 from tool.functions.LIMIT_ORDER import LIMIT_ORDER
 from tool.functions.CONFIRM import confirm
-#from old.score_1para import score
 from tool.final_score import final_score
 from tool.tool import ERROR
 import tool.tool as tl
@@ -26,11 +24,11 @@ cutpoint = 10       #不同安排方式的切分點
 generation = 1000
 mutate_prob = 0.05
 shuffle = False
-LACK = 100
+LACK = tl.nE
 SURPLUS = tl.nE * 0.5
 NIGHT = 3
 BREAKCOUNT = tl.nE * tl.nW
-NOON = 1    
+NOON = 1
 
 # 生成Initial pool的100個親代
 INITIAL_POOL = []
@@ -451,10 +449,10 @@ def SHIFT_ORDER(demand, shift, day, sumlack_t, maxsurplus, maxnight, sumbreak_t,
                             break    
 
                     d = P0 * sumlack + P1 * maxsurplus_t + P2 * maxnight_t + P3 * sumbreak + P4 * maxnoon_t
-                    if sumlack > LACK:
-                        d = d * 100
+                    if sumlack > LACK :
+                        d = d * 100 * int(sumlack / LACK)
                     if maxsurplus_t > SURPLUS:
-                        d = d *100
+                        d = d * 100
                     if maxnight_t > NIGHT:
                         d = d * 100
                     if sumbreak > BREAKCOUNT:
@@ -522,9 +520,9 @@ def LIMIT_CSR_SHIFT_ORDER(TYPE, demand, shift_list, day, sumlack_t, maxsurplus, 
 
             d = P0 * sumlack + P1 * maxsurplus_t + P2 * maxnight_t + P3 * sumbreak + P4 * maxnoon_t
             if sumlack > LACK:
-                d = d * 100
+                d = d * 100 * int(sumlack / LACK)
             if maxsurplus_t > SURPLUS:
-                d = d *100
+                d = d * 100
             if maxnight_t > NIGHT:
                 d = d * 100
             if sumbreak > BREAKCOUNT:
@@ -632,7 +630,7 @@ success = 0
 #產生100個親代的迴圈
 for p in range(parent):
     
-    ordercount = (p)%2+1     #每重算一次SHIFT_SET的排序數
+    ordercount = (p)%1+1     #每重算一次SHIFT_SET的排序數
     maxnight = 0
     maxnoon = 0
     maxsurplus = 0
