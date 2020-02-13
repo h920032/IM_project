@@ -19,7 +19,7 @@ import datetime, calendar, sys, copy
 # 產生親代的迴圈數
 parent = 100	    # int
 ordernum = 1        #limit_order的排序數量
-cutpoint = 10       #不同安排方式的切分點
+cutpoint = 5       #不同安排方式的切分點
 #基因演算法的世代數量
 generation = 1000
 mutate_prob = 0.05
@@ -29,6 +29,7 @@ SURPLUS = tl.nE * 0.5
 NIGHT = 3
 BREAKCOUNT = tl.nE * tl.nW
 NOON = 1
+IGNORE = False
 
 # 生成Initial pool的100個親代
 INITIAL_POOL = []
@@ -448,17 +449,12 @@ def SHIFT_ORDER(demand, shift, day, sumlack_t, maxsurplus, maxnight, sumbreak_t,
                                     break
                             break    
 
-                    d = P0 * sumlack + P1 * maxsurplus_t + P2 * maxnight_t + P3 * sumbreak + P4 * maxnoon_t
-                    if sumlack > LACK :
-                        d = d * 100 * int(sumlack / LACK)
-                    if maxsurplus_t > SURPLUS:
-                        d = d * 100
-                    if maxnight_t > NIGHT:
-                        d = d * 100
-                    if sumbreak > BREAKCOUNT:
-                        d = d * 100
-                    if maxnoon_t > NOON:
-                        d = d * 100
+                    d = P0 * (sumlack+10000*(sumlack>LACK)*(sumlack-LACK)) + \
+                        P1 * (maxsurplus_t+10000*(maxsurplus_t>SURPLUS)*(maxsurplus_t-SURPLUS)) + \
+                        P2 * (maxnight_t+10000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
+                        P3 * (sumbreak+10000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
+                        P4 * (maxnoon_t+10000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
+                    
                     ans.append([c,day[a],i,d])
     ans.sort(key=takeNeck, reverse=False)
     
@@ -518,17 +514,12 @@ def LIMIT_CSR_SHIFT_ORDER(TYPE, demand, shift_list, day, sumlack_t, maxsurplus, 
                             break
                     break    
 
-            d = P0 * sumlack + P1 * maxsurplus_t + P2 * maxnight_t + P3 * sumbreak + P4 * maxnoon_t
-            if sumlack > LACK:
-                d = d * 100 * int(sumlack / LACK)
-            if maxsurplus_t > SURPLUS:
-                d = d * 100
-            if maxnight_t > NIGHT:
-                d = d * 100
-            if sumbreak > BREAKCOUNT:
-                d = d * 100
-            if maxnoon_t > NOON:
-                d = d * 100
+            d = P0 * (sumlack+10000*(sumlack>LACK)*(sumlack-LACK)) + \
+                P1 * (maxsurplus_t+10000*(maxsurplus_t>SURPLUS)*(maxsurplus_t-SURPLUS)) + \
+                P2 * (maxnight_t+10000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
+                P3 * (sumbreak+10000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
+                P4 * (maxnoon_t+10000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
+            
             ans.append([i,s,d])
     ans.sort(key=takeNeck, reverse=False)
 
@@ -571,13 +562,10 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, sumbreak_t, maxnoon, csr_list):
                         break
                 break 
 
-        d = P2 * maxnight_t + P3 * sumbreak + P4 * maxnoon_t
-        if maxnight_t > NIGHT:
-            d = d * 100
-        if sumbreak > BREAKCOUNT:
-            d = d * 100
-        if maxnoon_t > NOON:
-            d = d * 100
+        d = P2 * (maxnight_t+10000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
+            P3 * (sumbreak+10000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
+            P4 * (maxnoon_t+10000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
+        
         ans.append([i,d])
     ans.sort(key=takeNeck, reverse=False)
    
@@ -603,9 +591,9 @@ def DAY_ORDER(day, demand_list):
             dem_su = 0
         else:
             dem_su = 1
-        d = P0 * np.sum(dem_l) + P1 * dem_su
+        d = P0 * np.sum(dem_l) + P1 * (1-dem_su)
         ans.append([day[i],d])
-    ans.sort(key=takeNeck, reverse=False)
+    ans.sort(key=takeNeck, reverse=True)
 
     return ans 
 #=======================================================================================================#
@@ -616,7 +604,7 @@ def DAY_ORDER(day, demand_list):
 #====================================================================================================#
 #=======================================================================================================#
 
-LIMIT_MATRIX = LIMIT_ORDER(ordernum) #生成多組限制式matrix
+LIMIT_MATRIX = LIMIT_ORDER(ordernum, IGNORE) #生成多組限制式matrix
 #print(LIMIT_MATRIX)
 sequence = 0 #限制式順序
 char = 'a' #CSR沒用度順序

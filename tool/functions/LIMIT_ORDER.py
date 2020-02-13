@@ -59,7 +59,7 @@ def exchange(index1, index2, alist):
 #=============================================================================#
 # main function
 
-def LIMIT_ORDER(N):
+def LIMIT_ORDER(N, IGNORE):
 	limits = []	#裝第一組（完全照順序排序）的list
 	L = tl.LOWER
 	SK = tl.NOTPHONE_CLASS
@@ -74,7 +74,6 @@ def LIMIT_ORDER(N):
 	nVAC = tl.NAH_list
 	K = tl.K_CLASS_set
 	K_TIME = tl.CONTAIN
-	IGNORE = False
 	"""===========================================
 	資料前處理
 	==========================================="""
