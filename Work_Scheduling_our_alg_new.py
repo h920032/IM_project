@@ -449,11 +449,11 @@ def SHIFT_ORDER(demand, shift, day, sumlack_t, maxsurplus, maxnight, sumbreak_t,
                                     break
                             break    
 
-                    d = P0 * (sumlack+10000*(sumlack>LACK)*(sumlack-LACK)) + \
-                        P1 * (maxsurplus_t+10000*(maxsurplus_t>SURPLUS)*(maxsurplus_t-SURPLUS)) + \
-                        P2 * (maxnight_t+10000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
-                        P3 * (sumbreak+10000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
-                        P4 * (maxnoon_t+10000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
+                    d = P0 * (sumlack+1000000*(sumlack>LACK)*(sumlack-LACK)) + \
+                        P1 * (maxsurplus_t+1000000*(maxsurplus_t>SURPLUS)*(maxsurplus_t-SURPLUS)) + \
+                        P2 * (maxnight_t+1000000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
+                        P3 * (sumbreak+1000000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
+                        P4 * (maxnoon_t+1000000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
                     
                     ans.append([c,day[a],i,d])
     ans.sort(key=takeNeck, reverse=False)
@@ -514,11 +514,11 @@ def LIMIT_CSR_SHIFT_ORDER(TYPE, demand, shift_list, day, sumlack_t, maxsurplus, 
                             break
                     break    
 
-            d = P0 * (sumlack+10000*(sumlack>LACK)*(sumlack-LACK)) + \
-                P1 * (maxsurplus_t+10000*(maxsurplus_t>SURPLUS)*(maxsurplus_t-SURPLUS)) + \
-                P2 * (maxnight_t+10000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
-                P3 * (sumbreak+10000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
-                P4 * (maxnoon_t+10000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
+            d = P0 * (sumlack+1000000*(sumlack>LACK)*(sumlack-LACK)) + \
+                P1 * (maxsurplus_t+1000000*(maxsurplus_t>SURPLUS)*(maxsurplus_t-SURPLUS)) + \
+                P2 * (maxnight_t+1000000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
+                P3 * (sumbreak+1000000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
+                P4 * (maxnoon_t+1000000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
             
             ans.append([i,s,d])
     ans.sort(key=takeNeck, reverse=False)
@@ -562,9 +562,9 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, sumbreak_t, maxnoon, csr_list):
                         break
                 break 
 
-        d = P2 * (maxnight_t+10000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
-            P3 * (sumbreak+10000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
-            P4 * (maxnoon_t+10000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
+        d = P2 * (maxnight_t+1000000*(maxnight_t>NIGHT)*(maxnight_t-NIGHT)) +\
+            P3 * (sumbreak+1000000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
+            P4 * (maxnoon_t+1000000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
         
         ans.append([i,d])
     ans.sort(key=takeNeck, reverse=False)
