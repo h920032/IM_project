@@ -170,8 +170,8 @@ def LIMIT_ORDER(N, IGNORE):
 	main = []
 	nl = len(limits)
 	
-	if nl < 4:                             #至少要4條限制式
-		print("error: not enough limits")
+	#if nl < 4:                             
+	#	print("error: not enough limits")
 	
 	ll = list(range(nl))
 	

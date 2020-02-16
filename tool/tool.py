@@ -495,7 +495,7 @@ READ_path()
 #=============================================================================#
 # 讀取參數
 def READ_parameters(path=DIR_PARA):
-    global P, TIME_LIMIT,   nK, nR, nSK,  BREAK_list, CLASS_list, POSI_list, SKILL_list
+    global P, TIME_LIMIT,   nK, nR, nSK,  BREAK_list, CLASS_list, POSI_list, SKILL_list, P2_t, P4_t
     global K_CLASS_set, SK_CLASS_set, K_BREAK_set,   CONTAIN, ClassTime_t
 
     # weight p1~4
@@ -504,6 +504,8 @@ def READ_parameters(path=DIR_PARA):
     P[2]        = Weight_t[1]['P2'] * 200            #目標式中的調整權重(nightCount)
     P[3]        = Weight_t[1]['P3'] * 2.5            #目標式中的調整權重(breakCount)
     P[4]        = Weight_t[1]['P4'] * 130            #目標式中的調整權重(noonCount)
+    P2_t        = (100-Weight_t[1]['P2'])/20
+    P4_t        = int((100-Weight_t[1]['P4'])/30)
 
     # class time
     ClassTime_t = readFile(path+'fixed/fix_class_time.csv', header_=0, index_col_=[0])  #class-time table

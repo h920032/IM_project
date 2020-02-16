@@ -26,10 +26,10 @@ mutate_prob = 0.05
 shuffle = False
 LACK = tl.nE
 SURPLUS = tl.nE * 0.5
-NIGHT = 3
+NIGHT = tl.P2_t
 BREAKCOUNT = tl.nE * tl.nW
-NOON = 1
-IGNORE = False
+NOON = tl.P4_t
+IGNORE = True
 
 # 生成Initial pool的100個親代
 INITIAL_POOL = []
@@ -568,6 +568,8 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, sumbreak_t, maxnoon, csr_list):
         
         ans.append([i,d])
     ans.sort(key=takeNeck, reverse=False)
+    if shuffle == True:
+        rd.shuffle(ans)
    
     return ans
 
@@ -711,8 +713,6 @@ for p in range(parent):
         for h in range(len(DAY_SET)):
             DAY_LIST.append(DAY_SET[h][0])
         for j in DAY_LIST:
-            if shuffle == True:
-                rd.shuffle(CSR_LIST)
             if LIMIT[0] == 'lower' :
                 BOUND = LIMIT[4]
                 #for i in CSR_LIST:
