@@ -14,16 +14,20 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
 ## 輸入資料格式說明
 *    **CSR員工資料表 (data/per_month/Employee.csv)**
 欄位: 英文名字、中文名字、員工id、員工年資、員工職位、員工技能(1為有，0為沒有)、員工一週能排的晚班次數、員工上月斷頭周晚班次數、員工上月末日週五是否晚班(1為有，0為沒有)
+
 <img src="https://i.imgur.com/O1NvcKc.png" width = "600" align=center/>
 
 *    **預計要排班表之年與月份 (data/per_month/Date.csv)**
+
 <img src="https://i.imgur.com/SgEYpYY.png" width = "300" align=center/>
 
 *    **進線人力需求表 (data/per_month/Need.csv)**
+
 <img src="https://i.imgur.com/rL4R5jM.png" width = "600" align=center/>
 
 *    **上個月的班表結果 (data/per_month/Schedule_2019_3.csv)**
 (假設上個月的班表為2019的3月份班表)
+
 <img src="https://i.imgur.com/gjNUPLo.png" width = "600" align=center/>
 
 *    **班別時間表 (data/parameters/fixed/fix_class_time.csv)**
@@ -36,10 +40,12 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
 
 *    **班別的午休時間 (data/parameters/fixed/fix_resttime.csv)**
 第一欄為午休時段，隨後的項目為在該時段午休的班別
+
 <img src="https://i.imgur.com/9C8MLOf.png" width = "500" align=center/>
 
 *    **CSR的職位高低排名 (data/parameters/fixed/position.csv)**
 由左至右為職位的低到高
+
 <img src="https://i.imgur.com/MY3vbCu.png" width = "500" align=center/>
 
 ## 可調整參數說明
@@ -59,10 +65,12 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
 |$P_4$|每位CSR排午班次數公平性的重要程度|數字|
 
 資料示意圖:
+
 <img src="https://i.imgur.com/Ld0C7Gr.png" width = "150" align=center/>
 
 部分月份的計算權重示意圖 :
 ( 下圖由左至右分別為月份、缺工人數、冗員人數、每位CSR的晚班次數、午休、每位CSR的午班次數 )
+
 <img src="https://i.imgur.com/cf9vInO.png" width = "600" align=center/>
 
 由第10列可得知五個數值的平均值，並且以缺工人數當成參考點來換算其餘欄位的相對數值，以此來得知該如何調P1到P4的權重數值。
@@ -75,6 +83,7 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
     3. 班別英文代號（A3、CD...之類的）
 
 資料示意圖：
+
 <img src="https://i.imgur.com/du3Gipc.png" width = "300" align=center/>
 ( CSR 1430於1號安排O班別 )
 ( CSR CSCALYSSA於2號安排O班別 )
@@ -87,6 +96,7 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
     4. 最少需要多少人（正整數）
 
 資料示意圖：
+
 <img src="https://i.imgur.com/0K2PYPa.png" width = "300" align=center/>
 ( 2543這位CSR最多只能排兩次星期一的晚班 )
 ( 2511這位CSR最多只能排兩次星期五的晚班 )
@@ -99,6 +109,7 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
     4. 指定的年資（數字 )
 
 資料示意圖：
+
 <img src="https://i.imgur.com/RFGD6lw.png" width = "300" align=center/>
 ( 星期一的晚班，1.5年年資以上者需達45% )
 ( 星期三的早班，1年年資以上者需達55% )
@@ -109,6 +120,7 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
     2. 次數上限 ( 正整數 )
     
 資料示意圖：
+
 <img src="https://i.imgur.com/9aGrpIa.png" width = "400" align=center/>
 ( 每位CSR最多只能排2次M1這個班別 )
 
@@ -118,9 +130,11 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
 ## 輸出格式說明
 *    **排班結果**
 (週末顯示為"X")
+
 <img src="https://i.imgur.com/8U4rwKt.png" width = "600" align=center/>
 
 *    **冗員與缺工人數**
+
 <img src="https://i.imgur.com/gGc5onH.png" width = "600" align=center/>
 
 *    **其他資訊**
