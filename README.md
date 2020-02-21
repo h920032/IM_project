@@ -14,7 +14,7 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
 ## 輸入資料格式說明
 *    **CSR員工資料表 (data/per_month/Employee.csv)**
 欄位: 英文名字、中文名字、員工id、員工年資、員工職位、員工技能(1為有，0為沒有)、員工一週能排的晚班次數、員工上月斷頭周晚班次數、員工上月末日週五是否晚班(1為有，0為沒有)
-<img src="https://i.imgur.com/O1NvcKc.png" width = "150" align=center />
+<img src="https://i.imgur.com/O1NvcKc.png" width = "600" align=center/>
 
 *    **預計要排班表之年與月份 (data/per_month/Date.csv)**
 ![](https://i.imgur.com/SgEYpYY.png =300x)
@@ -124,12 +124,10 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
 *    **其他資訊**
 
 
-| 員工排班表           | ![](https://i.imgur.com/JMQIgtg.png =400x) |
+| 員工排班表           |<img src="https://i.imgur.com/JMQIgtg.png" width = "150" align=center/>|
 | -------------------- | ------------------------------------------ |
-| 員工本月晚班次       | ![](https://i.imgur.com/xrXRlL0.png =150x) |
-| 每個時段缺工百分比表 | ![](https://i.imgur.com/3HqyVJG.png =150x) |
-| 每天缺工百分比表     | ![](https://i.imgur.com/2rLJS2l.png =150x) |
-| 缺工人數表           |![](https://i.imgur.com/76ivr6g.png =400x)|
-|員工每週有哪幾種休息時間|![](https://i.imgur.com/MDHOuPG.png =400x)|
-
-
+| 員工本月晚班次       | <img src="https://i.imgur.com/xrXRlL0.png" width = "150" align=center/> |
+| 每個時段缺工百分比表 | <img src="https://i.imgur.com/3HqyVJG.png" width = "150" align=center/> |
+| 每天缺工百分比表     | <img src="https://i.imgur.com/2rLJS2l.png" width = "150" align=center/> |
+| 缺工人數表           |<img src="https://i.imgur.com/76ivr6g.png" width = "150" align=center/>|
+|員工每週有哪幾種休息時間|<img src="https://i.imgur.com/MDHOuPG.png" width = "150" align=center/>|
