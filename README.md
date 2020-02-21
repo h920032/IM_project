@@ -12,9 +12,9 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
 ---
 
 ## 輸入資料格式說明
-a*    **CSR員工資料表 (data/per_month/Employee.csv)**
+*    **CSR員工資料表 (data/per_month/Employee.csv)**
 欄位: 英文名字、中文名字、員工id、員工年資、員工職位、員工技能(1為有，0為沒有)、員工一週能排的晚班次數、員工上月斷頭周晚班次數、員工上月末日週五是否晚班(1為有，0為沒有)
-![](https://i.imgur.com/O1NvcKc.png =600x400)
+<img src="https://i.imgur.com/O1NvcKc.png" width = "300" height = "200" align=center />
 
 *    **預計要排班表之年與月份 (data/per_month/Date.csv)**
 ![](https://i.imgur.com/SgEYpYY.png =300x)
