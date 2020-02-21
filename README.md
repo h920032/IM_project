@@ -85,7 +85,7 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
 資料示意圖：
 
 <img src="https://i.imgur.com/du3Gipc.png" width = "300" align=center/>
-( CSR 1430於1號安排O班別 )
+( CSR 1430於1號安排O班別 )</br>
 ( CSR CSCALYSSA於2號安排O班別 )
 
 *    **指定日子與班別之一般CSR員工或指定職位人數下限 (data/parameters/lower_limit.csv)**
@@ -98,7 +98,7 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
 資料示意圖：
 
 <img src="https://i.imgur.com/0K2PYPa.png" width = "300" align=center/>
-( 2543這位CSR最多只能排兩次星期一的晚班 )
+( 2543這位CSR最多只能排兩次星期一的晚班 )</br>
 ( 2511這位CSR最多只能排兩次星期五的晚班 )
 
 *    **特定班別只需某項技能之排班限制 (data/parameters/skill_class_limit.csv)**
@@ -111,7 +111,7 @@ $P_{1\sim4}$ 皆為≧0的數字。 0為無視此條件，100為和主要條件�
 資料示意圖：
 
 <img src="https://i.imgur.com/RFGD6lw.png" width = "300" align=center/>
-( 星期一的晚班，1.5年年資以上者需達45% )
+( 星期一的晚班，1.5年年資以上者需達45% )</br>
 ( 星期三的早班，1年年資以上者需達55% )
 
 *    **CSR員工排某班別的次數上限 (data/parameters/class_upperlimit.csv)**
