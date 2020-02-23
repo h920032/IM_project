@@ -68,14 +68,14 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
 （以秒計算，讀取、輸出資料的時間皆不列入計算）  
 
 *    **目標式係數 (parameters/weight_p.csv)**  
-$P_1~P_4$ 皆為≧0的數字。  0為無視此條件，100為和主要條件（缺工數）有同樣影響力
+<img src="https://render.githubusercontent.com/render/math?math=P_1~P_4"> 皆為≧0的數字。  0為無視此條件，100為和主要條件（缺工數）有同樣影響力
 
 |數學變數名稱|變數意涵|輸入格式|
 | -------- | -------- | -------- |
-|$P_1$|冗員多寡的重要程度|數字|
-|$P_2$|每位CSR排晚班次數公平性的重要程度|數字|
-|$P_3$|每位CSR每週內每天午休時間一致性的重要程度|數字|
-|$P_4$|每位CSR排午班次數公平性的重要程度|數字|
+|<img src="https://render.githubusercontent.com/render/math?math=P_1">|冗員多寡的重要程度|數字|
+|<img src="https://render.githubusercontent.com/render/math?math=P_2">|每位CSR排晚班次數公平性的重要程度|數字|
+|<img src="https://render.githubusercontent.com/render/math?math=P_3">|每位CSR每週內每天午休時間一致性的重要程度|數字|
+|<img src="https://render.githubusercontent.com/render/math?math=P_4">|每位CSR排午班次數公平性的重要程度|數字|
 
 資料示意圖:  
 <img src="https://i.imgur.com/Ld0C7Gr.png" width = "150" align=center/>
