@@ -91,7 +91,7 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
      1. Class： 班別代號（例如：M1, A2 …等）
      2. Limit： 每月值班次數上限（每位CSR一個月內最多排這麼多次此班別)
 資料示意圖：
-<img src=" https://i.imgur.com/LYDfEaJ.png" width = "250" align=center/>  
+<img src="https://i.imgur.com/LYDfEaJ.png" width = "250" align=center/>  
 (上圖表示：每月每個CSR最多排M1班2次)
 
 *    **於指定的日子與班別，指定職位以上之CSR須達人數下限 (parameters/lower_limit.csv)**  
