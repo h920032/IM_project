@@ -189,7 +189,7 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
 
 |試算表名稱			|示意圖|
 |------------------ | ---- |
-|班表				|<img src=" https://i.imgur.com/i9uB9q4.png " width="500"/>|
+|班表				|<img src="https://i.imgur.com/i9uB9q4.png " width="500"/>|
 |缺工冗員表			|<img src=" https://i.imgur.com/WXkMagX.png " width="500"/>|
 |缺工人數			|<img src=" https://i.imgur.com/5v5ciC8.png " width="500"/>|
 |每天缺工百分比		|<img src=" https://i.imgur.com/shlrxEi.png " width="350"/>|
