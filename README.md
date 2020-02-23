@@ -194,5 +194,5 @@ python3已經包含(不須另外安裝)的套件：datetime、calendar
 |缺工人數			|<img src="https://i.imgur.com/5v5ciC8.png " width="500"/>|
 |每天缺工百分比		|<img src="https://i.imgur.com/shlrxEi.png " width="200"/>|
 |各時段缺工百分比	|<img src="https://i.imgur.com/3HqyVJG.png " width="200"/>|
-|午班、晚班次數		|<img src="https://i.imgur.com/sOXukIB.png " width="400"/>|
+|午班、晚班次數		|<img src="https://i.imgur.com/sOXukIB.png " width="300"/>|
 |每週休息時間		|<img src="https://i.imgur.com/Kza9KOZ.png " width="500"/>|
