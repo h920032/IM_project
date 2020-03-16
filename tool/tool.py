@@ -675,21 +675,28 @@ def READ_limits(path=DIR_PARA):
     # -------讀取限制式-------#
     # lower
     LOWER = readFile(path+'lower_limit.csv',skiprows_=[0]).values.tolist()     #日期j，班別集合ks，職位p，上班人數下限
-    for i in range(len(LOWER)):
-        d = Tran_t2n( LOWER[i][0], DATE_list)
-        LOWER[i][0] = d
+    try:   #為了因應條件全空時
+    	for i in range(len(LOWER)):
+    		d = Tran_t2n( LOWER[i][0], DATE_list)
+    		LOWER[i][0] = d
+    except:
+    	LOWER = []
     
     # upper
     Upper_t     = readFile(path+'upper_limit'+U_ttest+'.csv', skiprows_=[0])   #指定星期幾、班別，人數上限
-    Upper_t[0]  = [ str(x) for x in Upper_t[0] ]                    #強制將ID設為string
-    #UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
-    for c in range(Upper_t.shape[0]):
-        e = Tran_t2n(Upper_t.iloc[c,0], ID_list)
-        #回報錯誤
-        if e==None:
-            print('指定排班表中發現不明ID：',Upper_t.iloc[c,0],\
-                '不在員工資料的ID列表中，請再次確認ID正確性（包含大小寫、空格、換行）')
-        UPPER.append( [e, Upper_t.iloc[c,1], Upper_t.iloc[c,2], Upper_t.iloc[c,3]] )
+    try:   #為了因應條件全空時
+        Upper_t[0]  = [ str(x) for x in Upper_t[0] ]                    #強制將ID設為string
+        #UPPER - 員工i，日子集合js，班別集合ks，排班次數上限
+        for c in range(Upper_t.shape[0]):
+            e = Tran_t2n(Upper_t.iloc[c,0], ID_list)
+            #回報錯誤
+            if e==None:
+                print('指定排班表中發現不明ID：',Upper_t.iloc[c,0],\
+                    '不在員工資料的ID列表中，請再次確認ID正確性（包含大小寫、空格、換行）')
+            UPPER.append( [e, Upper_t.iloc[c,1], Upper_t.iloc[c,2], Upper_t.iloc[c,3]] )    	
+    except:
+        UPPER = []
+
     
 
     # senior
@@ -706,16 +713,19 @@ def READ_limits(path=DIR_PARA):
     SKset_t     = readFile(path+'skill_class_limit.csv',header_=0)            #class set for skills
     NOTPHONE_CLASS = []                 # 特殊班別每天人數相同
     NOTPHONE_CLASS_special = []         # 特殊班別假日後一天人數不同
-    for i in range(SKset_t.shape[0]):
-        if(SKset_t['Special'][i]==1):
-            tmp = SKset_t.iloc[i].values.tolist()
-            del tmp[3]
-            NOTPHONE_CLASS_special.append(tmp)
-        else:
-            tmp = SKset_t.iloc[i].values.tolist()
-            del tmp[3]
-            del tmp[3]
-            NOTPHONE_CLASS.append(tmp)
+    try:   #為了因應條件全空時
+        for i in range(SKset_t.shape[0]):
+            if(SKset_t['Special'][i]==1):
+                tmp = SKset_t.iloc[i].values.tolist()
+                del tmp[3]
+                NOTPHONE_CLASS_special.append(tmp)
+            else:
+                tmp = SKset_t.iloc[i].values.tolist()
+                del tmp[3]
+                del tmp[3]
+                NOTPHONE_CLASS.append(tmp)
+    except:
+    	NOTPHONE_CLASS = []
 
     # skill upper limit
     Upper_shift = readFile(path+'class_upperlimit.csv', skiprows_=[0]).values.tolist()

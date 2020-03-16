@@ -1,0 +1,7 @@
+﻿all,O,A2,A3,A4,A5,MS,AS,P2,P3,P4,P5,N1,M1,W6,CD,OB,C2,C3,C4,C5,B2,B3,B4,B5
+morning,A2,A3,A4,A5,AS,,,,,,,,,,,,,,,,,,,
+noon,P2,P3,P4,P5,MS,,,,,,,,,,,,,,,,,,,
+night,N1,M1,W6,,,,,,,,,,,,,,,,,,,,,
+other,CD,OB,,,,,,,,,,,,,,,,,,,,,,
+phone,A2,A3,A4,A5,MS,AS,P2,P3,P4,P5,N1,M1,W6,C2,C3,C4,C5,B2,B3,B4,B5,,,
+not_assigned,O,MS,AS,,,,,,,,,,,,,,,,,,,,,

@@ -71,14 +71,12 @@ def confirm(schedule):
         as_worktype = i[2]
         if schedule[as_index][as_day] != as_worktype:
             as_bool = False
-            as_err +=str(as_index)
-            as_err +='th employee'
-            as_err +='is not successfully assigned to'
-            as_err +=str(as_worktype)
-            as_err +=' at '
-            as_err +=str(as_day)
-            as_err +='th'
-            as_err +='working day.'
+            as_err +='員工 '
+            as_err += str(tl.NAME_list[as_index])       #str(as_index)
+            as_err +='is not successfully assigned to '
+            as_err += str(tl.CLASS_list[as_worktype])   #str(as_worktype)
+            as_err +=' at date '
+            as_err += str(tl.DATE_list[as_day])         #str(as_day)
             break
 
     if as_bool == False:

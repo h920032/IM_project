@@ -1112,8 +1112,9 @@ for p in range(parent):
                         count += 1
                         finished = False
             #print(y, count)
-            sys.stdout.write("\rLoading...("+str(int(count/10))+")*")
-            sys.stdout.flush()
+            if count%10==0:
+                sys.stdout.write("\rLoading...("+str(int(count/10))+")*")
+                sys.stdout.flush()
             if finished == True:
                 sys.stdout.write("\n")
                 break
@@ -1359,7 +1360,7 @@ for p in range(parent):
     #=================================================================================================#
     #確認解是否可行
     #=================================================================================================#
-    message = 'All constraints are met.'
+    message = 'All constraints are met.\n'
     message = confirm(df_list)
         
     
@@ -1410,15 +1411,15 @@ for p in range(parent):
                 work[i, j, k] = False
     
     
-    if message != 'All constraints are met.':
+    if message != 'All constraints are met.\n':
         INITIAL_POOL[p].result = INITIAL_POOL[p].result * 1000000
     else:
         success += 1
 
     print('\n生成INITIAL POOL： parent =',p,', result =', INITIAL_POOL[p].result)
     print(message)
-    if message != 'All constraints are met.':
-        print('Some constraints fails.')
+    if message != 'All constraints are met.\n':
+        print('Some constraints fails.\n')
     if INITIAL_POOL[p].result < miniresult:
         miniresult = INITIAL_POOL[p].result
         #minidf = INITIAL_POOL[p].df_x1

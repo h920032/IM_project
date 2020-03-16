@@ -90,7 +90,7 @@ def LIMIT_ORDER(N, IGNORE):
 			if done == True:
 				continue
 			for ks in SK_S:
-				if j in SKILL[ks[2]] and k[2] != 'phone':
+				if j in SKILL[ks[2]] and ks[2] != 'phone': # 3/16 bug
 					posi[i] -= 1
 					break
 	senior = [tmp for tmp in range(len(SENIOR))]
@@ -106,7 +106,7 @@ def LIMIT_ORDER(N, IGNORE):
 			if done == True:
 				continue
 			for ks in SK_S:
-				if j in SKILL[ks[2]] and k[2] != 'phone':
+				if j in SKILL[ks[2]] and ks[2] != 'phone': # 3/16 bug
 					senior[i] -= 1
 					break
 	skill = {}
@@ -122,7 +122,7 @@ def LIMIT_ORDER(N, IGNORE):
 			if done == True:
 				continue
 			for ks in SK_S:
-				if i != ks[2] and j in SKILL[ks[2]] and k[2] != 'phone':
+				if i != ks[2] and j in SKILL[ks[2]] and ks[2] != 'phone': # 3/16 bug
 					skill[i] -= 1
 					break
 	# lower limit: j, k_set, i(position), n
