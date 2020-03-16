@@ -647,6 +647,8 @@ for p in range(parent):
     
     #指定班別
     for c in ASSIGN:
+        if ABLE(c[0],c[1],c[2]) == False:
+            unconfimed = True
         work[c[0],c[1],c[2]] = True
         for w in WEEK:
             if c[1] in D_WEEK[w]:
