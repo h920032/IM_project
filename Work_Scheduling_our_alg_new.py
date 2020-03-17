@@ -1362,7 +1362,7 @@ for p in range(parent):
     #=================================================================================================#
     #確認解是否可行
     #=================================================================================================#
-    message = 'All constraints are met.\n'
+    message = 'All constraints are met.'
     message = confirm(df_list)
         
     
@@ -1413,14 +1413,14 @@ for p in range(parent):
                 work[i, j, k] = False
     
     
-    if message != 'All constraints are met.\n':
+    if message != 'All constraints are met.':
         INITIAL_POOL[p].result = INITIAL_POOL[p].result * 1000000
     else:
         success += 1
 
     print('\n生成INITIAL POOL： parent =',p,', result =', INITIAL_POOL[p].result)
-    print(message)
-    if message != 'All constraints are met.\n':
+    print(message+'\n')
+    if message != 'All constraints are met.':
         print('Some constraints fails.\n')
     if INITIAL_POOL[p].result < miniresult:
         miniresult = INITIAL_POOL[p].result
