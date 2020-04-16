@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import random as rd
 import tool.functions.gene_alg_new as gen
-from tool.functions.CSR_order import CSR_ORDER
+#from tool.functions.CSR_order import CSR_ORDER
 from tool.functions.LIMIT_ORDER import LIMIT_ORDER
 from tool.functions.CONFIRM import confirm
 from tool.final_score import final_score
@@ -609,7 +609,7 @@ def DAY_ORDER(day, demand_list):
 LIMIT_MATRIX = LIMIT_ORDER(ordernum, IGNORE) #生成多組限制式matrix
 #print(LIMIT_MATRIX)
 sequence = 0 #限制式順序
-char = 'a' #CSR沒用度順序
+#char = 'a' #CSR沒用度順序
 fix = [] #存可行解的哪些部分是可以動的
 
 
@@ -705,7 +705,7 @@ for p in range(parent):
             if LIMIT[3][0] == n:
                 nightbound = True
                 break
-        CSR_LIST = CSR_ORDER(char, LIMIT[0], LIMIT[1], EMPLOYEE_t, Posi, nightbound) #員工沒用度排序
+        CSR_LIST = LIMIT[1] #CSR_ORDER(char, LIMIT[0], LIMIT[1], EMPLOYEE_t, Posi, nightbound) #員工沒用度排序
         #rd.shuffle(LIMIT[2])
         demand_list = []
         for m in LIMIT[2]:
@@ -1040,23 +1040,6 @@ for p in range(parent):
                     if BOUND > 0:
                         unconfimed = True
                         continue
-    
-    sequence += 1
-    if sequence >= len(LIMIT_MATRIX) and char == 'a':
-        sequence = 0
-        char = 'b'
-    elif sequence >= len(LIMIT_MATRIX) and char == 'b':
-        sequence = 0
-        char = 'c'
-    elif sequence >= len(LIMIT_MATRIX) and char == 'c':
-        sequence = 0
-        char = 'd'
-    elif sequence >= len(LIMIT_MATRIX) and char == 'd':
-        sequence = 0
-        char = 'e'
-    elif sequence >= len(LIMIT_MATRIX) and char == 'e':
-        sequence = 0
-        char = 'a'
     
     
     
