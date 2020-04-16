@@ -1041,6 +1041,9 @@ for p in range(parent):
                         unconfimed = True
                         continue
     
+    sequence += 1
+    if sequence >= len(LIMIT_MATRIX):
+        sequence = 0
     
     
     #=================================================================================================#
