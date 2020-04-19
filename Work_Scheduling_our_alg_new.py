@@ -1051,6 +1051,7 @@ for p in range(parent):
     #=================================================================================================#
     fix_temp = []
     arranged = []
+    f = 0 #arranging class when unconfimed
     for i in range(nEMPLOYEE):
         employee = []
         arranged_t = []
@@ -1074,18 +1075,18 @@ for p in range(parent):
                 for i in range(nEMPLOYEE):
                     for j in range(nDAY):
                         if arranged[i][j] == False:
-                            work[i,j,1] = True
+                            work[i,j,f] = True
                             for w in WEEK:
                                 if j in D_WEEK[w]:
                                     for br in BREAK:
-                                        if (1 in S_BREAK[br]):
+                                        if (f in S_BREAK[br]):
                                             if breakCount[i,w,br] == False:
                                                 breakCount[i,w,br] = True
                                                 sumbreak_t += 1
                                             break
                                     break
                             for t in range(nT):
-                                if CONTAIN[1][t] == 1:              
+                                if CONTAIN[f][t] == 1:              
                                     CURRENT_DEMAND[j][t] -= 1
                                     if CURRENT_DEMAND[j][t] >= 0:
                                         sumlack_t -= 1
@@ -1100,9 +1101,9 @@ for p in range(parent):
                         count += 1
                         finished = False
             #print(y, count)
-            if count%10==0:
-                sys.stdout.write("\rLoading...("+str(int(count/10))+")*")
-                sys.stdout.flush()
+            #if count%10==0:
+            sys.stdout.write("\rLoading...("+str(int((nEMPLOYEE*nDAY-count)*100/(nEMPLOYEE*nDAY)))+"%)*")
+            sys.stdout.flush()
             if finished == True:
                 sys.stdout.write("\n")
                 break
@@ -1180,18 +1181,18 @@ for p in range(parent):
                 for ii in range(nEMPLOYEE):
                     for j in range(nDAY):
                         if arranged[ii][j] == False:
-                            work[ii,j,1] = True
+                            work[ii,j,f] = True
                             for w in WEEK:
                                 if j in D_WEEK[w]:
                                     for br in BREAK:
-                                        if (1 in S_BREAK[br]):
+                                        if (f in S_BREAK[br]):
                                             if breakCount[ii,w,br] == False:
                                                 breakCount[ii,w,br] = True
                                                 sumbreak_t += 1
                                             break
                                     break
                             for t in range(nT):
-                                if CONTAIN[1][t] == 1:              
+                                if CONTAIN[f][t] == 1:              
                                     CURRENT_DEMAND[j][t] -= 1
                                     if CURRENT_DEMAND[j][t] >= 0:
                                         sumlack_t -= 1
