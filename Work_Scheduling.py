@@ -257,7 +257,7 @@ for i in EMPLOYEE:
     for j in DAY:
         for sk in SKILL_list:
             for k in SKILLset[sk]:
-                m.addConstr(work[i,j,k] <=  (i in E_SKILL[sk]), "c23")
+                m.addConstr(work[i,j,k] <=  quicksum((i in E_SKILL[ski])*(k in SKILLset[ski]) for ski in SKILL_list), "c23")
 
 
 #============================================================================#
