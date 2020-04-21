@@ -597,7 +597,177 @@ def DAY_ORDER(day, demand_list):
         ans.append([day[i],d])
     ans.sort(key=takeNeck, reverse=True)
 
-    return ans 
+    return ans
+
+def CSR_ORDER(what_order,CSR_List,EMPLOYEE, Posi, nightbound, day=-1, shift=-1, lower_not_ended=True):
+    EMPLOYEE_t = EMPLOYEE.copy()
+    ## 以員工技能少、年資低、職位低為優先        
+    if (what_order == "lower"):
+        nEMPLOYEE = EMPLOYEE_t.shape[0]
+        available_CSR = len(CSR_List)
+        
+        index = range(0,1)
+        small_dataframe = pd.DataFrame(index=index,columns=EMPLOYEE_t.columns)
+        ## 把職位轉為數字以便排優先順序        
+        for i in range (nEMPLOYEE) :
+            if nightbound == True:
+                EMPLOYEE_t.at[i,'night_perWeek'] = 7 - EMPLOYEE_t.iloc[i,9]
+            for j in range(len(Posi)):
+                if (EMPLOYEE_t.iloc[i,4] == Posi[j]):                
+                    EMPLOYEE_t.at[i,'Position'] = j
+                    break
+                               
+        temp_dataframe = EMPLOYEE_t.iloc[:,[0,3,4,5,6,7,8,9]]
+        
+        for i in range (nEMPLOYEE) :            
+            for j in range (available_CSR):                
+                if (CSR_List[j] == int(temp_dataframe.index.values[i])): 
+                    small_dataframe = pd.concat([temp_dataframe.iloc[[i],:],small_dataframe],sort = False)
+        
+        sort_order = []
+        existed = False
+        for i in SKILL:
+            for j in sort_order:
+                if 'skill-'+str(i[2]) == j[0]:
+                    existed = True
+                    j[1] = j[1] + 1
+            if existed == True:
+                existed = False
+                continue
+            sort_order.append(['skill-'+str(i[2]),i[1],len(E_SKILL[i[2]])])
+        for i in SKILL_SPECIAL:
+            for j in sort_order:
+                if 'skill-'+str(i[2]) == j[0]:
+                    existed = True
+                    j[1] = j[1] + 1
+            if existed == True:
+                existed = False
+                continue
+            sort_order.append(['skill-'+str(i[2]),i[1]*0.8+i[3]*0.2,len(E_SKILL[i[2]])])
+        for j in sort_order:
+            j[2] = j[2]/j[1]
+        sort_order.sort(key=takeNeck, reverse=False)
+        sort_t = []
+        for j in sort_order:
+            sort_t.append(j[0])
+        sort_t.extend(['night_perWeek','Senior','Position'])
+        
+        small_dataframe = small_dataframe.dropna(thresh=2)
+        sorted_dataframe = small_dataframe.sort_values(sort_t,ascending = True)
+        
+        
+        newCSR_List = list()
+        for i in range (len(sorted_dataframe)):           
+            newCSR_List.append(int(sorted_dataframe.index.values[i]))
+  
+        return (newCSR_List)
+    
+    ## 以技能少、職位低、年資低為優先 
+    elif (what_order == "ratio"):
+        nEMPLOYEE = EMPLOYEE_t.shape[0]
+        available_CSR = len(CSR_List)
+        
+        for i in range (nEMPLOYEE) :
+            if nightbound == True:
+                EMPLOYEE_t.at[i,'night_perWeek'] = 7 - EMPLOYEE_t.iloc[i,9]
+        temp_dataframe = EMPLOYEE_t.iloc[:,[0,3,4,5,6,7,8,9]]
+        
+        index = range(0,1)
+        small_dataframe = pd.DataFrame(index=index,columns=EMPLOYEE_t.columns)
+        
+        for i in range (nEMPLOYEE) :            
+            for j in range (available_CSR):                
+                if (CSR_List[j] == int(temp_dataframe.index.values[i])): 
+                    small_dataframe = pd.concat([temp_dataframe.iloc[[i],:],small_dataframe],sort = False)
+        
+        sort_order = []
+        existed = False
+        for i in SKILL:
+            for j in sort_order:
+                if 'skill-'+str(i[2]) == j[0]:
+                    existed = True
+                    j[1] = j[1] + 1
+            if existed == True:
+                existed = False
+                continue
+            sort_order.append(['skill-'+str(i[2]),i[1],len(E_SKILL[i[2]])])
+        for i in SKILL_SPECIAL:
+            for j in sort_order:
+                if 'skill-'+str(i[2]) == j[0]:
+                    existed = True
+                    j[1] = j[1] + 1
+            if existed == True:
+                existed = False
+                continue
+            sort_order.append(['skill-'+str(i[2]),i[1]*0.8+i[3]*0.2,len(E_SKILL[i[2]])])
+        for j in sort_order:
+            j[2] = j[2]/j[1]
+        sort_order.sort(key=takeNeck, reverse=False)
+        sort_t = []
+        for j in sort_order:
+            sort_t.append(j[0])
+        sort_t.extend(['night_perWeek','Senior','Position'])
+
+        small_dataframe = small_dataframe.dropna(thresh=2)
+        sorted_dataframe = small_dataframe.sort_values(sort_t,ascending = True)
+        
+        
+        newCSR_List = list()
+        for i in range (len(sorted_dataframe)):           
+            newCSR_List.append(int(sorted_dataframe.index.values[i]))
+        
+        return (newCSR_List)
+    ## 技能員工當中先排年資淺再排職位低的員工      
+    elif (what_order == "skill" or what_order == "skill_special"):
+        nEMPLOYEE = EMPLOYEE_t.shape[0]
+        available_CSR = len(CSR_List)
+        
+        #temp_dataframe = EMPLOYEE_t.iloc[:,[0,3]]
+        
+        index = range(0,1)
+        small_dataframe = pd.DataFrame(index=index,columns=EMPLOYEE_t.columns)
+        ## 把職位轉為數字以便排優先順序        
+        for i in range (nEMPLOYEE) :
+            #if nightbound == True:
+            #   EMPLOYEE_t.at[i,'night_perWeek'] = 7 - EMPLOYEE_t.iloc[i,9]
+            for j in range(len(Posi)):
+                if (EMPLOYEE_t.iloc[i,4] == Posi[j]):                
+                    EMPLOYEE_t.at[i,'Position'] = j
+                    break
+                                
+        temp_dataframe = EMPLOYEE_t.iloc[:,[0,3,4,6,7,8,9]]
+
+        for i in range (nEMPLOYEE) :            
+            for j in range (available_CSR):                
+                if (CSR_List[j] == int(temp_dataframe.index.values[i])): 
+                    small_dataframe = pd.concat([temp_dataframe.iloc[[i],:],small_dataframe],sort = False)
+        
+        asc = False
+        if lower_not_ended:
+            asc = True
+        elif shift in SKILLset['phone']:
+            asc = True
+        else:
+            for i in Upper_shift:
+                for j in range(len(Shift_name)):
+                    if i[0]==Shift_name[j] and j==shift:
+                        for l in CSR_List:
+                            for k in LOWER:
+                                if l in E_POSITION[k[2]] and int(k[0])==day and (len(E_POSITION[k[2]])-int(k[3])==0):
+                                    asc = True
+                                    break
+                            if asc == True:
+                                break
+                        break
+        
+        small_dataframe = small_dataframe.dropna(thresh=2)
+        sorted_dataframe = small_dataframe.sort_values(['Position','Senior','night_perWeek'],ascending = asc)
+        
+        newCSR_List = list()
+        for i in range (len(sorted_dataframe)):           
+            newCSR_List.append(int(sorted_dataframe.index.values[i]))  
+        
+        return (newCSR_List)
 #=======================================================================================================#
 #====================================================================================================#
 #=================================================================================================#
@@ -625,6 +795,7 @@ for p in range(parent):
     maxnoon = 0
     maxsurplus = 0
     unconfimed = False
+    lne = True
     skilled = {}
     for j in DAY:
         for k in SHIFTset['all']:
@@ -705,8 +876,8 @@ for p in range(parent):
             if LIMIT[3][0] == n:
                 nightbound = True
                 break
-        CSR_LIST = LIMIT[1] #CSR_ORDER(char, LIMIT[0], LIMIT[1], EMPLOYEE_t, Posi, nightbound) #員工沒用度排序
-        #rd.shuffle(LIMIT[2])
+        CSR_LIST = CSR_ORDER(LIMIT[0], LIMIT[1], EMPLOYEE_t, Posi, nightbound) #員工沒用度排序
+        #rd.shuffle(CSR_LIST)
         demand_list = []
         for m in LIMIT[2]:
             demand_list.append(CURRENT_DEMAND[m])
@@ -716,6 +887,7 @@ for p in range(parent):
             DAY_LIST.append(DAY_SET[h][0])
         for j in DAY_LIST:
             if LIMIT[0] == 'lower' :
+                lne = False
                 BOUND = LIMIT[4]
                 #for i in CSR_LIST:
                 DAY_DEMAND = []
@@ -896,6 +1068,8 @@ for p in range(parent):
                         continue
             elif LIMIT[0] == 'skill':
                 for k in LIMIT[3]:
+                    if lne == False and k not in SHIFTset['phone']:
+                        CSR_LIST = CSR_ORDER(LIMIT[0], LIMIT[1], EMPLOYEE_t, Posi, nightbound, j, k, lne)
                     if k in SHIFTset['not_assigned']:
                         continue
                     BOUND = LIMIT[4]
@@ -977,6 +1151,8 @@ for p in range(parent):
                         continue
             elif LIMIT[0] == 'skill_special':
                 for k in LIMIT[3]:
+                    if lne == False and k not in SHIFTset['phone']:
+                        CSR_LIST = CSR_ORDER(LIMIT[0], LIMIT[1], EMPLOYEE_t, Posi, nightbound, j, k, lne)
                     if k in SHIFTset['not_assigned']:
                         continue
                     BOUND = LIMIT[4]
@@ -1051,7 +1227,7 @@ for p in range(parent):
     #=================================================================================================#
     fix_temp = []
     arranged = []
-    f = 0 #arranging class when unconfimed
+    f = 7 #arranging class when unconfimed
     for i in range(nEMPLOYEE):
         employee = []
         arranged_t = []
