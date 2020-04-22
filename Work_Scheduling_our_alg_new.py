@@ -341,7 +341,11 @@ def ABLE(this_i,this_j,this_k,consider=False):
         if (this_k in SKILLset[item]):
             if (this_i not in E_SKILL[item]):
                 ans = False
-                return ans
+            else:
+                ans = True
+                break
+    if ans == False:
+        return ans
 
     #年資限制
     if consider == True:

@@ -561,6 +561,7 @@ def confirm(schedule):
                     sk_ok = False
                     if i in E_SKILL[sk]:
                         sk_ok = True
+                        break
 
                     if sk_ok != True:
                         not_skilled_bool = False
@@ -571,8 +572,8 @@ def confirm(schedule):
                         not_skilled_err +=str(j)
                         not_skilled_err +='th'
                         not_skilled_err +='working day.'
-                        break
-                    break
+                        
+                    
             if not_skilled_bool == False:
                 break
         
