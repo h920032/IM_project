@@ -524,6 +524,17 @@ def LIMIT_CSR_SHIFT_ORDER(TYPE, demand, shift_list, day, sumlack_t, maxsurplus, 
                 P3 * (sumbreak+1000000*(sumbreak>BREAKCOUNT)*(sumbreak-BREAKCOUNT)) +\
                 P4 * (maxnoon_t+1000000*(maxnoon_t>NOON)*(maxnoon_t-NOON))
             
+            for oth in SKILL:
+                if s == SHIFTset[oth[0]][0]:
+                    if i in E_SKILL[oth[2]]:
+                        d = 0
+                        break
+            for oth in SKILL_SPECIAL:
+                if s == SHIFTset[oth[0]][0]:
+                    if i in E_SKILL[oth[2]]:
+                        d = 0
+                        break
+
             ans.append([i,s,d])
     ans.sort(key=takeNeck, reverse=False)
 
@@ -1231,7 +1242,7 @@ for p in range(parent):
     #=================================================================================================#
     fix_temp = []
     arranged = []
-    f = 7 #arranging class when unconfimed
+    f = 1 #arranging class when unconfimed
     for i in range(nEMPLOYEE):
         employee = []
         arranged_t = []
