@@ -466,6 +466,7 @@ def SHIFT_ORDER(demand, shift, day, sumlack_t, maxsurplus, maxnight, sumbreak_t,
 
 def LIMIT_CSR_SHIFT_ORDER(TYPE, demand, shift_list, day, sumlack_t, maxsurplus, maxnight, sumbreak_t, maxnoon, csr_list, skilled):
     ans = []
+    rd.shuffle(csr_list)
     for i in csr_list:
         for s in shift_list:
             sumlack = copy.deepcopy(sumlack_t)
@@ -542,6 +543,7 @@ def LIMIT_CSR_SHIFT_ORDER(TYPE, demand, shift_list, day, sumlack_t, maxsurplus, 
 
 def SPECIAL_CSR_ORDER(shift, day, maxnight, sumbreak_t, maxnoon, csr_list):
     ans = []
+    rd.shuffle(csr_list)
     for i in csr_list:
         sumbreak = copy.deepcopy(sumbreak_t)
         maxnight_t = copy.deepcopy(maxnight)
@@ -585,7 +587,7 @@ def SPECIAL_CSR_ORDER(shift, day, maxnight, sumbreak_t, maxnoon, csr_list):
     ans.sort(key=takeNeck, reverse=False)
     if shuffle == True:
         rd.shuffle(ans)
-   
+
     return ans
 
 def DAY_ORDER(day, demand_list):
