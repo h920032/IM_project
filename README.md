@@ -1,4 +1,6 @@
-﻿#  全球人壽客服排班  輸入輸出格式說明文件
+# Customer service staff scheduling automation
+ 
+ #  全球人壽客服排班  輸入輸出格式說明文件
 
 *    **套件需求**  
 需先使用pip安裝：numpy、pandas  
